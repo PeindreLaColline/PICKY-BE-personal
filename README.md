@@ -35,60 +35,39 @@
 **디렉토리 구조**
 
 ```planeText
-LG-Uplus-Movie-SNS-PICKY-FE/
-│
-├── public/                         // 정적 파일 (HTML, 이미지 등)
-│   
-├── src/                            // 소스 코드 폴더
-│   ├── api/                        // 서버 API 관리
-│   │
-│   ├── assets/                     // 정적 파일 (이미지, 폰트 등)
-│   │   ├── icons/                  // 아이콘 파일
-│   │   └── images/                 // 이미지 파일
-│   │
-│   ├── stories/                    // 전역에서 재사용 가능한 UI 컴포넌트
-│   │   └── ComponentName/
-│   │       ├── index.tsx           // 컴포넌트 코드
-│   │       ├── index.style.tsx     // 스타일 코드
-│   │       └── index.stories.tsx  // Storybook 스토리 파일
-│   │
-│   ├── constants/                 // 프로젝트 전역 상수
-│   │   ├── errorCodes.ts          // 에러 코드 정의
-│   │   ├── routes.ts              // 라우트 상수
-│   │   └── globalConstants.ts     // 기타 글로벌 상수
-│   │
-│   ├── hooks/                     // 커스텀 훅
-│   │
-│   ├── pages/                     // 각 페이지별 컴포넌트
-│   │   └── PageName/              // 예: 특정 페이지
-│   │       ├── index.tsx          // 페이지 메인 컴포넌트
-│   │       ├── index.styles.tsx   // 페이지 스타일 파일
-│   │       └── components/        // 페이지 전용 하위 컴포넌트
-│   │           └── ComponentName
-│   │              ├── index.tsx
-│   │              └── index.styles.tsx
-│   │
-│   ├── recoil/                    // 상태 관리 (Recoil)
-│   │   ├── atoms/                 // Recoil Atom 정의
-│   │   └── selectors/             // Recoil Selector 정의
-│   │
-│   ├── styles/                    // 글로벌 스타일 및 테마
-│   │
-│   ├── types/                     // TypeScript 타입 정의
-│   │   ├── api.ts                 // API 관련 타입
-│   │   ├── components.ts          // 컴포넌트 관련 타입
-│   │   └── pages.ts               // 페이지 관련 타입
-│   │
-│   ├── routes/                    // 라우팅 관련 설정
-│   │   ├── index.tsx              // 메인 라우팅 설정
-│   │   └── privateRoutes.tsx      // Private Route 설정
-│   │
-│   ├── App.tsx                    // 메인 리액트 컴포넌트
-│   └── main.tsx                   // 애플리케이션 진입점
-│
-├── vite.config.ts                 // Vite 설정 파일
-├── package.json                   // 프로젝트 설정 파일
-└── yarn.lock                      // 패키지 버전 관리 파일
+├── main
+    │   ├── java
+    │   │   └── com
+    │   │       └── ureca
+    │   │           └── picky_be
+    │   │               ├── PickyBeApplication.java
+    │   │               ├── base
+    │   │               │   ├── business
+    │   │               │   │   └── auth
+    │   │               │   ├── implementation
+    │   │               │   │   └── user
+    │   │               │   │       └── UserManager.java
+    │   │               │   ├── persistence
+    │   │               │   │   └── UserRepository.java
+    │   │               │   └── presentation
+    │   │               │       ├── controller
+    │   │               │       │   ├── HomeController.java
+    │   │               │       │   └── auth
+    │   │               │       │       └── AuthController.java
+    │   │               │       └── web
+    │   │               │           ├── JwtAuthenticationFilter.java
+    │   │               │           ├── JwtDto.java
+    │   │               │           ├── JwtProperties.java
+    │   │               │           └── JwtTokenProvider.java
+    │   │               ├── config
+    │   │               │   ├── SecurityConfig.java
+    │   │               │   └── SwaggerConfig.java
+    │   │               └── jpa
+    │   │                   ├── config
+    │   │                   │   ├── BaseEntity.java
+    │   │                   │   └── JpaConfig.java
+    │   │                   └── user
+    │   │                       └── User.java
 ```
 
 ---
@@ -96,9 +75,9 @@ LG-Uplus-Movie-SNS-PICKY-FE/
 ### 설치 및 실행 방법
 
 ```bash
-// 프로젝트 Clone 방법
-git clone https://github.com/LG-Uplus-Movie-SNS-PICKY/LG-Uplus-Movie-SNS-PICKY-FE.git
-cd LG-Uplus-Movie-SNS-PICKY
+git clone https://github.com/LG-Uplus-Movie-SNS-PICKY/PICKY-BE.git
+docker-compose up -d
+이후 프로젝트 실행
 ```
 
 ---
