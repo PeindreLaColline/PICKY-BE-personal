@@ -33,41 +33,7 @@
 
 **디렉토리 구조**
 
-```planeText
-├── main
-    │   ├── java
-    │   │   └── com
-    │   │       └── ureca
-    │   │           └── picky_be
-    │   │               ├── PickyBeApplication.java
-    │   │               ├── base
-    │   │               │   ├── business
-    │   │               │   │   └── auth
-    │   │               │   ├── implementation
-    │   │               │   │   └── user
-    │   │               │   │       └── UserManager.java
-    │   │               │   ├── persistence
-    │   │               │   │   └── UserRepository.java
-    │   │               │   └── presentation
-    │   │               │       ├── controller
-    │   │               │       │   ├── HomeController.java
-    │   │               │       │   └── auth
-    │   │               │       │       └── AuthController.java
-    │   │               │       └── web
-    │   │               │           ├── JwtAuthenticationFilter.java
-    │   │               │           ├── JwtDto.java
-    │   │               │           ├── JwtProperties.java
-    │   │               │           └── JwtTokenProvider.java
-    │   │               ├── config
-    │   │               │   ├── SecurityConfig.java
-    │   │               │   └── SwaggerConfig.java
-    │   │               └── jpa
-    │   │                   ├── config
-    │   │                   │   ├── BaseEntity.java
-    │   │                   │   └── JpaConfig.java
-    │   │                   └── user
-    │   │                       └── User.java
-```
+![KakaoTalk_Photo_2024-11-20-01-06-52](https://github.com/user-attachments/assets/edd360c5-7d24-49e2-bc59-945193993086)
 
 ---
 
