@@ -71,7 +71,9 @@
 
 ```bash
 git clone https://github.com/LG-Uplus-Movie-SNS-PICKY/PICKY-BE.git
-docker-compose up -d
+
+도커 실행 후, docker-compose up -d 실행
+
 이후 프로젝트 실행
 ```
 
