@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @Entity
-public class PlayList {
+public class Playlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
