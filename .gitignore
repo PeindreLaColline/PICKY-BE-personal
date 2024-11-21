@@ -42,9 +42,3 @@ out/
 **/mysql-prod.yml
 **/redis.yml
 **/jwt.yml
-
-# Properties #
-**/mysql-local.yml
-**/mysql-prod.yml
-**/redis.yml
-**/jwt.yml
