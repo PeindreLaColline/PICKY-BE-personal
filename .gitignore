@@ -36,3 +36,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Properties #
+**/mysql-local.yml
+**/mysql-prod.yml
+**/redis.yml
+**/jwt.yml
