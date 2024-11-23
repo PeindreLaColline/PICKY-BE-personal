@@ -1,26 +1,33 @@
-package com.ureca.picky_be.jpa.board;
+package com.ureca.picky_be.jpa.linereview;
+
 
 import com.ureca.picky_be.jpa.config.BaseEntity;
-import com.ureca.picky_be.jpa.movie.Movie;
 import com.ureca.picky_be.jpa.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-@Getter
 @Entity
-public class Board extends BaseEntity {
+@Getter
+public class LineReviewLikes extends BaseEntity {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name="line_review_id")
+    private LineReview lineReview;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movie_id")
-    private Movie movie;
+    @JoinColumn(name="user_id")
+    private User user;
 
-    private String boardContext;
+    @Enumerated(EnumType.STRING)
+    private Preference preference;
+
+
+
+
 
 }
