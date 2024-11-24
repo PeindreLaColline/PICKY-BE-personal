@@ -1,15 +1,41 @@
 package com.ureca.picky_be.jpa.movie;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Getter;
+import com.ureca.picky_be.jpa.config.BaseEntity;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.util.Date;
 
 @Getter
 @Entity
-public class Movie {
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Movie extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private Date releaseDate;
+
+    private String posterUrl;
+
+    @Column(nullable = false)
+    @ColumnDefault("0.0")
+    private double totalRating;
+
+    @Column(nullable = false)
+    private String plot;
+
+    @Column(nullable = false)
+    private int runningTime;
+
+    private String trailerUrl;
+
+    private String ostUrl;
+
 }
