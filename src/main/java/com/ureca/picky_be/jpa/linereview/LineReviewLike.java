@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class LineReviewLikes extends BaseEntity {
+public class LineReviewLike extends BaseEntity {
 
 
     @Id

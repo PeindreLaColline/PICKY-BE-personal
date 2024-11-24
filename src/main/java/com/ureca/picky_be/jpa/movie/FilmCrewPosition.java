@@ -1,6 +1,6 @@
 package com.ureca.picky_be.jpa.movie;
 
-public enum MovieCrewPosition {
+public enum FilmCrewPosition {
     DIRECTOR,
     ACTOR,
 }

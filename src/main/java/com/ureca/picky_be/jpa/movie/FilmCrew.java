@@ -1,13 +1,13 @@
 package com.ureca.picky_be.jpa.movie;
 
 import com.ureca.picky_be.jpa.config.BaseEntity;
-import com.ureca.picky_be.jpa.filmcrew.FilmCrew;
+import com.ureca.picky_be.jpa.movieworker.MovieWorker;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter
 @Entity
-public class MovieCrew extends BaseEntity {
+public class FilmCrew extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,12 +15,12 @@ public class MovieCrew extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="film_crew_id")
-    private FilmCrew filmCrew;
+    private MovieWorker movieWorker;
 
     @Enumerated(EnumType.STRING)
-    private MovieCrewPosition movieCrewPosition;
+    private FilmCrewPosition filmCrewPosition;
 
     //    @Column(nullable = false)
-    private String movieCrewRole;
+    private String role;
 
 }

@@ -26,10 +26,10 @@ public class LineReview extends BaseEntity {
     private Movie movie;
 
     @ColumnDefault("0.0")
-    private int lineReviewRating;
+    private int rating;
 
     @Column(nullable = false)
-    private String lineReviewContext;
+    private String context;
 
 
 

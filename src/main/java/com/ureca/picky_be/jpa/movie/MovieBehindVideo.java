@@ -14,7 +14,7 @@ public class MovieBehindVideo extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String movieBehindVideoUrl;
+    private String url;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "movie_id", nullable = false)

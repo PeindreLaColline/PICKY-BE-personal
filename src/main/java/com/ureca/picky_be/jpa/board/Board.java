@@ -21,6 +21,6 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
-    private String boardContext;
+    private String context;
 
 }

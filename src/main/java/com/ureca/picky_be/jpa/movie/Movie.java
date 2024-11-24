@@ -14,29 +14,28 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Movie extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String movieTitle;
+    private String title;
 
     @Column(nullable = false)
-    private Date movieReleaseDate;
+    private Date releaseDate;
 
-    private String moviePosterUrl;
+    private String posterUrl;
 
     @Column(nullable = false)
     @ColumnDefault("0.0")
-    private Double movieTotalRating;
+    private double totalRating;
 
     @Column(nullable = false)
-    private String moviePlot;
+    private String plot;
 
     @Column(nullable = false)
-    private int movieRunningTime;
+    private int runningTime;
 
-    private String movieTrailerUrl;
+    private String trailerUrl;
 
-    private String movieOstUrl;
+    private String ostUrl;
 
 }

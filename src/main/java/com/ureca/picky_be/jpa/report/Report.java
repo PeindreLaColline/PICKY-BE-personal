@@ -22,15 +22,17 @@ public class Report extends BaseEntity {
     private User user;
 
     @Column(nullable = false)
-    private Double reviewId;
+    private Long reviewId;
 
     @Column(nullable = false)
-    private Review reviewType;
+    @Enumerated(EnumType.STRING)
+    private ReviewType reviewType;
 
     @Column(nullable = false)
-    private String reportReason;
+    private String reason;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ReportType reportType;
 
 

@@ -18,7 +18,7 @@ public class BoardContent extends BaseEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    private String boardContentUrl;
+    private String contentUrl;
 
     @Enumerated(EnumType.STRING)
     private BoardContentType boardContentType;

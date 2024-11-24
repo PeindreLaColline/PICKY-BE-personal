@@ -20,6 +20,6 @@ public class Platform extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PlatformType platformType;
 
-    private String platform_url;
+    private String url;
 
 }
