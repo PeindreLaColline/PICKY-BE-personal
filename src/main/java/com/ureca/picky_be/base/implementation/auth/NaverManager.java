@@ -15,6 +15,8 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 @Component
 public class NaverManager {
@@ -23,7 +25,7 @@ public class NaverManager {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
-    RestClient restClient = RestClient.create();
+    private final RestClient restClient = RestClient.create();
 
     public String buildCodeUrl(String state){
         return  UriComponentsBuilder
@@ -54,13 +56,37 @@ public class NaverManager {
 
     private String buildTokenUrl(String state, String code){
         return UriComponentsBuilder
-                .fromHttpUrl(naverConfig.getCodeUrl())
+                .fromHttpUrl(naverConfig.getTokenUrl())
                 .queryParam("client_id", naverConfig.getClientId())
                 .queryParam("client_secret", naverConfig.getClientSecret())
                 .queryParam("grant_type", "authorization_code")
                 .queryParam("state", state)
                 .queryParam("code", code)
                 .build().toUriString();
+    }
+
+    public String getUserInfo(String accessToken) {
+        try {
+            Map response = restClient
+                    .get()
+                    .uri(buildInfoUrl())
+                    .header("Authorization", "Bearer " + accessToken)
+                    .retrieve()
+                    .body(Map.class);
+
+            return (String) ((Map) response.get("response")).get("email");
+        } catch (RestClientResponseException e) {
+            throw new IllegalStateException("네이버 유저 정보 요청 호출을 실패했습니다: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("네이버 유저 정보 요청 중 예외가 발생했습니다.", e);
+        }
+    }
+
+    private String buildInfoUrl(){
+        return UriComponentsBuilder
+                .fromHttpUrl(naverConfig.getInfoUrl())
+                .build()
+                .toUriString();
     }
 
     public LocalJwtDto getLocalJwt(String email, String accessToken) {
@@ -77,29 +103,6 @@ public class NaverManager {
                 .email(email)
                 .build();
         return userRepository.save(newUser);
-    }
-
-    public String getUserInfo(String accessToken) {
-        try {
-            return restClient
-                    .get()
-                    .uri(buildInfoUrl())
-                    .header("Authorization", "Bearer " + accessToken)
-                    .retrieve()
-                    .toEntity(String.class)
-                    .getBody();
-        } catch (RestClientResponseException e) {
-            throw new IllegalStateException("네이버 유저 정보 요청 호출을 실패했습니다: " + e.getMessage(), e);
-        } catch (Exception e) {
-            throw new RuntimeException("네이버 유저 정보 요청 중 예외가 발생했습니다.", e);
-        }
-    }
-
-    private String buildInfoUrl(){
-        return UriComponentsBuilder
-                .fromHttpUrl(naverConfig.getInfoUrl())
-                .build()
-                .toUriString();
     }
 
     public String sendResponseToFrontend(OAuth2Token oAuth2Token, String email, LocalJwtDto jwt) {
