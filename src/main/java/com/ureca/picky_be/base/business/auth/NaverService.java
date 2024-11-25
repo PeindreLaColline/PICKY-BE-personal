@@ -1,0 +1,34 @@
+package com.ureca.picky_be.base.business.auth;
+
+
+import com.ureca.picky_be.base.business.auth.dto.LoginUserReq;
+import com.ureca.picky_be.base.business.auth.dto.OAuth2Token;
+import com.ureca.picky_be.base.implementation.auth.NaverManager;
+import com.ureca.picky_be.base.presentation.web.LocalJwtDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@RequiredArgsConstructor
+@Service
+public class NaverService implements OAuth2UseCase{
+
+    private final NaverManager naverManager;
+
+    //TODO: state 랜덤 생성 및 유효성 검사
+    private String state="1234";
+
+    @Override
+    public String getLoginUrl(){
+        return naverManager.buildCodeUrl(state);
+    }
+
+    @Override
+    public String getUserInfo(LoginUserReq req) {
+        OAuth2Token oAuth2Token = naverManager.getOAuth2Token(req.state(), req.code());
+        String email = naverManager.getUserInfo(oAuth2Token.accessToken());
+        LocalJwtDto jwt = naverManager.getLocalJwt(email, oAuth2Token.accessToken());
+        String result = naverManager.sendResponseToFrontend(oAuth2Token, email, jwt);
+        return result;
+    }
+
+}

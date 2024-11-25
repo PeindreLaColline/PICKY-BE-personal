@@ -11,6 +11,9 @@ spring:
       - classpath:properties/redis.yml
       - classpath:properties/jwt.yml
       - classpath:properties/jpa.yml
+      - classpath:properties/naver.yml
+      - classpath:properties/frontend.yml
+
 
 ---
 spring:
