@@ -37,6 +37,11 @@ jobs:
           echo "${{ secrets.MYSQL_LOCAL }}" >> mysql-local.yml
           touch redis.yml
           echo "${{ secrets.REDIS }}" >> redis.yml
+          touch naver.yml
+          echo "${{ secrets.NAVER }}" >> naver.yml
+          touch frontend.yml
+          echo "${{ secrets.FRONTEND }}" >> frontend.yml
+          
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
