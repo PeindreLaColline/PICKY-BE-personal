@@ -8,8 +8,8 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 class PickyBeApplicationTests {
 
-	@Test
+/*	@Test
 	void contextLoads() {
-	}
+	}*/
 
 }

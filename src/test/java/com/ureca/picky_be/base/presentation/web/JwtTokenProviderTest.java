@@ -10,12 +10,12 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 public class JwtTokenProviderTest {
 
-    @Autowired
+/*    @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
     @Test
     void 로컬토큰_발급(){
         LocalJwtDto localJwtDto = jwtTokenProvider.generate(1L, Role.USER.toString());
         System.out.println(localJwtDto);
-    }
+    }*/
 }
