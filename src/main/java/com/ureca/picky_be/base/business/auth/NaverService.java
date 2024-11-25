@@ -24,7 +24,6 @@ public class NaverService implements OAuth2UseCase{
     @Override
     public String getUserInfo(String state, String code) {
         OAuth2Token oAuth2Token = naverManager.getOAuth2Token(state, code);
-        System.out.println(oAuth2Token);
         String email = naverManager.getUserInfo(oAuth2Token.accessToken());
         LocalJwtDto jwt = naverManager.getLocalJwt(email, oAuth2Token.accessToken());
         return naverManager.sendResponseToFrontend(oAuth2Token, email, jwt);

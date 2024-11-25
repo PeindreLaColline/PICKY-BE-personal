@@ -23,8 +23,6 @@ public class OAuth2Controller {
                                             @RequestParam String code,
                                             @RequestParam String state
                                             ){
-        System.out.println("code " + code);
-        System.out.println("state " + state);
         OAuth2UseCase oAuth2UseCase = oAuth2UseCaseResolver.resolve(platform);
         oAuth2UseCase.getUserInfo(state, code);
         return ResponseEntity.ok("소셜 로그인 성공");
