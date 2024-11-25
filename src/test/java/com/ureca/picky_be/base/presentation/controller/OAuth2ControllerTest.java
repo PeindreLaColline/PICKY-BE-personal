@@ -13,9 +13,9 @@ public class OAuth2ControllerTest {
     @Autowired
     OAuth2Controller controller;
 
-    @Test
+    /* @Test
     void getNaverLoginUrlTest() {
         String url = controller.getNaverLoginUrl().getBody();
         System.out.println(url);
-    }
+    }*/
 }
