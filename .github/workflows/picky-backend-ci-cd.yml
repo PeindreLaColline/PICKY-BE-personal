@@ -3,7 +3,7 @@ name: picky-backend-ci-cd
 on:
   push:
     branches:
-      - main
+      - dev
 
 permissions:
   contents: read
