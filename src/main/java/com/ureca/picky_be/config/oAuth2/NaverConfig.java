@@ -26,4 +26,7 @@ public class NaverConfig {
     @Value("${naver.info_url}")
     private String infoUrl;
 
+    @Value("${frontend.server}")
+    private String frontendServer;
+
 }

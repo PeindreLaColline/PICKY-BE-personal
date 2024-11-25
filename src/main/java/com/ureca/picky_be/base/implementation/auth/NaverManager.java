@@ -6,8 +6,8 @@ import com.ureca.picky_be.base.persistence.UserRepository;
 import com.ureca.picky_be.base.presentation.web.JwtTokenProvider;
 import com.ureca.picky_be.base.presentation.web.LocalJwtDto;
 import com.ureca.picky_be.config.oAuth2.NaverConfig;
-import com.ureca.picky_be.jpa.user.Platform;
 import com.ureca.picky_be.jpa.user.Role;
+import com.ureca.picky_be.jpa.user.SocialPlatform;
 import com.ureca.picky_be.jpa.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -37,7 +37,7 @@ public class NaverManager {
                 .toUriString();
     }
 
-    public OAuth2Token getAccessToken(String state, String code){
+    public OAuth2Token getOAuth2Token(String state, String code){
         try {
             return restClient
                     .get()
@@ -63,35 +63,33 @@ public class NaverManager {
                 .build().toUriString();
     }
 
-    public LocalJwtDto getLocalJwt(String accessToken) {
-        LoginUserResp resp = getUserInfo(accessToken);
-
-        User user = userRepository.findByEmailAndPlatform(resp.email(), Platform.NAVER)
-                .orElseGet(() -> createNewUser(resp.email()));
+    public LocalJwtDto getLocalJwt(String email, String accessToken) {
+        User user = userRepository.findByEmailAndSocialPlatform(email, SocialPlatform.NAVER)
+                .orElseGet(() -> createNewUser(email));
 
         return jwtTokenProvider.generate(user.getId(), user.getRole().toString());
     }
 
     private User createNewUser(String email) {
         User newUser = User.builder()
-                .platform(Platform.NAVER)
+                .socialPlatform(SocialPlatform.NAVER)
                 .role(Role.USER)
                 .email(email)
                 .build();
         return userRepository.save(newUser);
     }
 
-    private LoginUserResp getUserInfo(String accessToken) {
+    public String getUserInfo(String accessToken) {
         try {
             return restClient
                     .get()
                     .uri(buildInfoUrl())
                     .header("Authorization", "Bearer " + accessToken)
                     .retrieve()
-                    .toEntity(LoginUserResp.class)
+                    .toEntity(String.class)
                     .getBody();
         } catch (RestClientResponseException e) {
-            throw new IllegalStateException("네이버 유저 정보 요청 호출을 실피했습니다: " + e.getMessage(), e);
+            throw new IllegalStateException("네이버 유저 정보 요청 호출을 실패했습니다: " + e.getMessage(), e);
         } catch (Exception e) {
             throw new RuntimeException("네이버 유저 정보 요청 중 예외가 발생했습니다.", e);
         }
@@ -104,6 +102,28 @@ public class NaverManager {
                 .toUriString();
     }
 
+    public String sendResponseToFrontend(OAuth2Token oAuth2Token, String email, LocalJwtDto jwt) {
+        LoginUserResp resp = new LoginUserResp(oAuth2Token, email, jwt);
+        try {
+            restClient
+                    .post()
+                    .uri(buildFrontendUrl())
+                    .header("Content-Type", "application/json")
+                    .body(resp)
+                    .retrieve()
+                    .toBodilessEntity();
+            return "프론트엔드로 성공적으로 반환";
+        } catch (RestClientResponseException e) {
+            return "프론트엔드로 POST 요청 실패: " + e.getMessage();
+        } catch (Exception e) {
+            return "프론트엔드로 POST 요청 중 예외 발생: " + e.getMessage();
+        }
+    }
 
-
+    private String buildFrontendUrl(){
+        return UriComponentsBuilder
+                .fromHttpUrl(naverConfig.getFrontendServer())
+                .build()
+                .toUriString();
+    }
 }

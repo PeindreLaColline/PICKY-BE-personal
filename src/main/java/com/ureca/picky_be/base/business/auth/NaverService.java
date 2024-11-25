@@ -8,8 +8,8 @@ import com.ureca.picky_be.base.presentation.web.LocalJwtDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class NaverService implements OAuth2UseCase{
 
     private final NaverManager naverManager;
@@ -23,9 +23,12 @@ public class NaverService implements OAuth2UseCase{
     }
 
     @Override
-    public LocalJwtDto getLoginUserToken(LoginUserReq req) {
-        //TODO: 네이버 token은 어디에 저장할지 논의 (추후에 토큰 갱신이나 정보 다시 받을 일 있으면 필요함)
-        OAuth2Token oAuth2Token = naverManager.getAccessToken(state, req.code());
-        return naverManager.getLocalJwt(oAuth2Token.accessToken());
+    public String getUserInfo(LoginUserReq req) {
+        OAuth2Token oAuth2Token = naverManager.getOAuth2Token(req.state(), req.code());
+        String email = naverManager.getUserInfo(oAuth2Token.accessToken());
+        LocalJwtDto jwt = naverManager.getLocalJwt(email, oAuth2Token.accessToken());
+        String result = naverManager.sendResponseToFrontend(oAuth2Token, email, jwt);
+        return result;
     }
+
 }
