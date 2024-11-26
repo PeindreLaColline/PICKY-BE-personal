@@ -14,7 +14,7 @@ public class UserGenrePreference extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name="genre_id", nullable=false)

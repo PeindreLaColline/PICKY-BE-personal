@@ -14,13 +14,11 @@ public class Follow extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User follower;
+    @Column(name = "follower_id", nullable = false)
+    private Long followerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User following;
+    @Column(name = "following_id", nullable = false)
+    private Long followingId;
 
 
 }
