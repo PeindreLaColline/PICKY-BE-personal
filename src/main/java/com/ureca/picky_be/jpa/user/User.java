@@ -3,6 +3,7 @@ package com.ureca.picky_be.jpa.user;
 import com.ureca.picky_be.jpa.config.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.Date;
 
@@ -26,6 +27,7 @@ public class User extends BaseEntity {
     private Role role;
 
     @Column(name="is_active", nullable = false)
+    @ColumnDefault("true")
     private boolean isActive;
 
     @Column(nullable = false)
