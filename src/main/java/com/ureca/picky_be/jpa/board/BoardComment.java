@@ -16,10 +16,13 @@ public class BoardComment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "board_id")
+    @Column(name = "board_id", nullable = false)
     private Long boardId;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Long userId;
+
+    @Column(nullable = false)
+    private String content;
 
 }
