@@ -14,15 +14,12 @@ public class BoardContent extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
+    @Column(name = "board_id")
+    private Long boardId;
 
     private String contentUrl;
 
     @Enumerated(EnumType.STRING)
     private BoardContentType boardContentType;
-
-
 
 }
