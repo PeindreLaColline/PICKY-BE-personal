@@ -17,6 +17,7 @@ public class Platform extends BaseEntity {
     private Long movieId;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PlatformType platformType;
 
 

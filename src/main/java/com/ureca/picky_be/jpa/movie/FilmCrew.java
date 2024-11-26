@@ -18,6 +18,7 @@ public class FilmCrew extends BaseEntity {
     private MovieWorker movieWorkerId;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private FilmCrewPosition filmCrewPosition;
 
     //    @Column(nullable = false)

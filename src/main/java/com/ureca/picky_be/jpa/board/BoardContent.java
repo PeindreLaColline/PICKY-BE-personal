@@ -14,12 +14,14 @@ public class BoardContent extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "board_id")
+    @Column(name = "board_id", nullable = false)
     private Long boardId;
 
+    @Column(nullable = false)
     private String contentUrl;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private BoardContentType boardContentType;
 
 }

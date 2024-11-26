@@ -17,7 +17,7 @@ public class UserGenrePreference extends BaseEntity {
     @JoinColumn(name="user_id")
     private User user;
 
-    @Column(name="genre_id")
+    @Column(name="genre_id", nullable=false)
     private Long genreId;
 
     @Column(nullable = false)
