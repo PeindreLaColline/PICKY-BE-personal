@@ -48,4 +48,8 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private Nationality nationality;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
+
 }
