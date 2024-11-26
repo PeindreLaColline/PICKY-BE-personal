@@ -1,10 +1,8 @@
 package com.ureca.picky_be.jpa.movie;
 
 import com.ureca.picky_be.jpa.config.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.ureca.picky_be.jpa.playlist.Playlist;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter
@@ -15,6 +13,12 @@ public class MoviePlayList extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="playlist_id")
+    private Playlist playlist;
+
+    @Column(name="movie_id", nullable=false)
+    private Long movieId;
 
 
 }

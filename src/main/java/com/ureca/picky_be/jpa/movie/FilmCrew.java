@@ -14,13 +14,16 @@ public class FilmCrew extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="film_crew_id")
-    private MovieWorker movieWorker;
+    @JoinColumn(name="movie_worker_id")
+    private MovieWorker movieWorkerId;
 
     @Enumerated(EnumType.STRING)
     private FilmCrewPosition filmCrewPosition;
 
     //    @Column(nullable = false)
     private String role;
+
+    @Column(name = "movie_id", nullable = false)
+    private Long movieId;
 
 }

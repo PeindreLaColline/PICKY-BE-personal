@@ -13,12 +13,12 @@ public class Platform extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movie_id")
-    private Movie movie;
+    @Column(name = "movie_id", nullable = false)
+    private Long movieId;
 
     @Enumerated(EnumType.STRING)
     private PlatformType platformType;
+
 
     private String url;
 
