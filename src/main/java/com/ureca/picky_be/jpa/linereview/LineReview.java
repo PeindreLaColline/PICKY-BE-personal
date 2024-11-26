@@ -17,21 +17,16 @@ public class LineReview extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id", nullable=false)
-    private User user;
+    @Column(name="user_id")
+    private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="movie_id", nullable=false)
-    private Movie movie;
+    @Column(name="movie_id")
+    private Long movieId;
 
     @ColumnDefault("0.0")
     private int rating;
 
     @Column(nullable = false)
     private String context;
-
-
-
 
 }
