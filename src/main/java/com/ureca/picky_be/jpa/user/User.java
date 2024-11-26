@@ -20,26 +20,27 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    //nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(nullable = false)
+    private Role role = Role.USER;
 
     @Column(name="is_active", nullable = false)
     @ColumnDefault("true")
     private boolean isActive;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private Gender gender;
 
     private String profileUrl;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private Date birthdate;
 
     @Enumerated(EnumType.STRING)
@@ -47,11 +48,11 @@ public class User extends BaseEntity {
     private SocialPlatform socialPlatform;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private Nationality nationality;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private Status status;
 
 }
