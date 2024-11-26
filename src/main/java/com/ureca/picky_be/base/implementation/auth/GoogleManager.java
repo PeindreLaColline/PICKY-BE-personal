@@ -5,7 +5,6 @@ import com.ureca.picky_be.base.business.auth.dto.OAuth2Token;
 import com.ureca.picky_be.base.persistence.UserRepository;
 import com.ureca.picky_be.base.presentation.web.JwtTokenProvider;
 import com.ureca.picky_be.base.presentation.web.LocalJwtDto;
-import com.ureca.picky_be.config.oAuth2.GoogleConfig;
 import com.ureca.picky_be.jpa.user.Role;
 import com.ureca.picky_be.jpa.user.SocialPlatform;
 import com.ureca.picky_be.jpa.user.User;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
+import com.ureca.picky_be.config.oAuth2.GoogleConfig;
 
 import java.util.Map;
 
@@ -48,7 +48,7 @@ public class GoogleManager {
                     .toEntity(OAuth2Token.class)
                     .getBody();
         } catch (RestClientResponseException e) {
-            throw new IllegalStateException("네이버 token 요청 호출을 실패했습니다: " + e.getMessage(), e);
+            throw new IllegalStateException("구글 token 요청 호출을 실패했습니다: " + e.getMessage(), e);
         } catch (Exception e) {
             throw new RuntimeException("구글 token 요청 중 예외가 발생했습니다.", e);
         }
