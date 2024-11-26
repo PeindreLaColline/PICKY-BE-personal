@@ -16,28 +16,36 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(nullable = false)
     private boolean isActive;
 
+    @Column(nullable = false)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Gender gender;
 
     private String profileUrl;
 
+    @Column(nullable = false)
     private Date birthdate;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private SocialPlatform socialPlatform;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Nationality nationality;
 
 }
