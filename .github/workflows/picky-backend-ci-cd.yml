@@ -41,6 +41,8 @@ jobs:
           echo "${{ secrets.NAVER }}" >> naver.yml
           touch google.yml
           echo "${{ secrets.GOOGLE }}" >> google.yml
+          touch kakao.yml
+          echo "${{ secrets.KAKAO }}" >> kakao.yml
           touch frontend.yml
           echo "${{ secrets.FRONTEND }}" >> frontend.yml
           
