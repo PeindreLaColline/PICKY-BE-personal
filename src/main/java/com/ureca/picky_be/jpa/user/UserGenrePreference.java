@@ -14,16 +14,13 @@ public class UserGenrePreference extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="genre_id")
-    private Genre genre;
+    @Column(name="genre_id", nullable=false)
+    private Long genreId;
 
     @Column(nullable = false)
-    private int preferenceValue;
-
-
+    private double preferenceValue;
 
 }

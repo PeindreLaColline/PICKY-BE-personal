@@ -24,6 +24,7 @@ public class LineReviewLike extends BaseEntity {
     private User user;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Preference preference;
 
 

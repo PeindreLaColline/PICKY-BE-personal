@@ -17,10 +17,10 @@ public class LineReview extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="user_id")
+    @Column(name="user_id", nullable = false)
     private Long userId;
 
-    @Column(name="movie_id")
+    @Column(name="movie_id", nullable = false)
     private Long movieId;
 
     @ColumnDefault("0.0")

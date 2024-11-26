@@ -8,7 +8,6 @@ import lombok.Getter;
 @Entity
 public class Genre extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
