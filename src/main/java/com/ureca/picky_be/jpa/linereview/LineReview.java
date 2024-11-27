@@ -29,4 +29,6 @@ public class LineReview extends BaseEntity {
     @Column(nullable = false)
     private String context;
 
+    private boolean isDeleted;
+
 }

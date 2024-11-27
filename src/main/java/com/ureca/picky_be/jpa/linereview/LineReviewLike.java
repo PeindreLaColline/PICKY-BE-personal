@@ -28,7 +28,7 @@ public class LineReviewLike extends BaseEntity {
     private Preference preference;
 
 
-
+    private boolean isDeleted;
 
 
 }
