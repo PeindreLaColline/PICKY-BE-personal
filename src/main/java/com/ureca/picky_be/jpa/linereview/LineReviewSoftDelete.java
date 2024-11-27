@@ -23,7 +23,7 @@ public class LineReviewSoftDelete extends BaseEntity {
     private Long movieId;
 
     @ColumnDefault("0.0")
-    private int rating;
+    private double rating;
 
     @Column(nullable = false)
     private String context;
