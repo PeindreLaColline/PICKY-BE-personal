@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
                 .body(new ApiResponse<>(
                         false,
                         ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus().value(),
-                        "예상치 못한 문제가 발생했습니다. 권예진에게 문의하세요.",
+                        "예상치 못한 문제가 발생했습니다. 관리자에게 문의하세요.",
                         null
                 ));
     }

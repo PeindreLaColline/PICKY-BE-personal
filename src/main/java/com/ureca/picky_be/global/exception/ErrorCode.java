@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
-    // 오ㅓㅇ
+    // 기본 에러
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "E001", "잘못된 요청입니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "E002", "인증에 실패했습니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "E003", "접근 권한이 없습니다."),
