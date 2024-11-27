@@ -2,6 +2,7 @@ package com.ureca.picky_be.global.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ureca.picky_be.global.exception.GlobalExceptionHandler;
 import com.ureca.picky_be.global.response.ApiResponse;
 import com.ureca.picky_be.global.success.SuccessCode;
 import org.springframework.core.MethodParameter;
@@ -12,9 +13,14 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 @ControllerAdvice
+@RestControllerAdvice(
+        basePackages = "com.ureca.picky_be.base",
+        basePackageClasses = GlobalExceptionHandler.class
+)
 public class ApiResponseAdvice implements ResponseBodyAdvice<Object> {
 
     private final ObjectMapper objectMapper;
