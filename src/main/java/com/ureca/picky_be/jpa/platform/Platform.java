@@ -4,6 +4,8 @@ import com.ureca.picky_be.jpa.config.BaseEntity;
 import com.ureca.picky_be.jpa.movie.Movie;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Entity
@@ -16,8 +18,10 @@ public class Platform extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "movie_id", nullable = false)
-    private Long movieId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="movie_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Movie movieId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

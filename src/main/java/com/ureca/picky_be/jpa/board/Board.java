@@ -5,6 +5,8 @@ import com.ureca.picky_be.jpa.movie.Movie;
 import com.ureca.picky_be.jpa.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Entity
@@ -19,8 +21,11 @@ public class Board extends BaseEntity {
     @Column(name="user_id", nullable=false)
     private Long userId;
 
-    @Column(name = "movie_id", nullable=false)
-    private Long movieId;
+//    @Column(name = "movie_id", nullable=false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="movie_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Movie movieId;
 
     private String context;
 
