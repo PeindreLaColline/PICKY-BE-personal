@@ -1,4 +1,5 @@
 package com.ureca.picky_be.base.business.board.dto;
 
-public record GetMovieLogBoardsResp() {
+public record GetMovieLogBoardsResp(List<Boa>) {
+
 }
