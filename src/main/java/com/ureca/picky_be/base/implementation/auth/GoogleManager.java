@@ -124,7 +124,7 @@ public class GoogleManager {
         LoginUserResp resp = new LoginUserResp(oAuth2Token, email, jwt);
         try {
             restClient
-                    .get()
+                    .post()
                     .uri(buildFrontendUrl())
                     .header("Content-Type", "application/json")
                     .body(resp)
