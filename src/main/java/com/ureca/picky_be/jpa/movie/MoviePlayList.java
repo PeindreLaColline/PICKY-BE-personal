@@ -3,10 +3,13 @@ package com.ureca.picky_be.jpa.movie;
 import com.ureca.picky_be.jpa.config.BaseEntity;
 import com.ureca.picky_be.jpa.playlist.Playlist;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 @Entity
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MoviePlayList extends BaseEntity {
 
     @Id

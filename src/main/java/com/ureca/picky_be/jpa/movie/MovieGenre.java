@@ -2,11 +2,14 @@ package com.ureca.picky_be.jpa.movie;
 
 import com.ureca.picky_be.jpa.config.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MovieGenre extends BaseEntity {
 
     @Id

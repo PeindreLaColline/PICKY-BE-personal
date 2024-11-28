@@ -4,10 +4,13 @@ import com.ureca.picky_be.jpa.config.BaseEntity;
 import com.ureca.picky_be.jpa.movie.Movie;
 import com.ureca.picky_be.jpa.user.User;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 @Entity
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,5 +23,8 @@ public class Board extends BaseEntity {
     private Long movieId;
 
     private String context;
+
+    private boolean isSpoiler;
+
 
 }
