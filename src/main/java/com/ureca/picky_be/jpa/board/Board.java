@@ -8,6 +8,9 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @Builder
@@ -26,6 +29,9 @@ public class Board extends BaseEntity {
     @JoinColumn(name="movie_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Movie movieId;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<BoardContent> contents = new ArrayList<>();
 
     private String context;
 

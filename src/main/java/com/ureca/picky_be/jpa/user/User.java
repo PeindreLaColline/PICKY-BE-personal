@@ -1,10 +1,12 @@
 package com.ureca.picky_be.jpa.user;
 
+import com.ureca.picky_be.base.business.user.dto.UpdateUserReq;
 import com.ureca.picky_be.jpa.config.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -41,7 +43,7 @@ public class User extends BaseEntity {
     private String profileUrl;
 
     //@Column(nullable = false)
-    private Date birthdate;
+    private LocalDate birthdate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -55,4 +57,26 @@ public class User extends BaseEntity {
     //@Column(nullable = false)
     private Status status;
 
+    public void updateUser(UpdateUserReq req) {
+        if (req.name() != null) {
+            this.name = req.name();
+        }
+        if (req.nickname() != null) {
+            this.nickname = req.nickname();
+        }
+        if (req.profile_url() != null) {
+            this.profileUrl = req.profile_url();
+        }
+        if (req.birthdate() != null) {
+            this.birthdate = req.birthdate();
+        }
+        if (req.gender() != null) {
+            this.gender = req.gender();
+        }
+        if (req.nationality() != null) {
+            this.nationality = req.nationality();
+        }
+        this.status = Status.REGULAR;
+        this.isActive = true;
+    }
 }
