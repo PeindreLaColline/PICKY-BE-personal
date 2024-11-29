@@ -1,7 +1,0 @@
-kakao:
-  client_id: 9c1b5c0b9aeb9a89459dc98d1f02b6df
-  client_secret: Zu5AdP2E27qdQUKrlGPIYJJWwWOcBWMN
-  redirect_uri: http://localhost:8080/api/v1/oauth/kakao/user
-  code_url: https://kauth.kakao.com/oauth/authorize
-  token_url: https://kauth.kakao.com/oauth/token
-  info_url: https://kapi.kakao.com/v2/user/me
