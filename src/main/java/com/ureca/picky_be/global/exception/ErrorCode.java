@@ -21,8 +21,14 @@ public enum ErrorCode {
     // USER
     USER_SAVE_FAILED(HttpStatus.BAD_REQUEST, "USR001", "유저 저장에 실패했습니다."),
     USER_DELETE_FAILED(HttpStatus.BAD_REQUEST, "USR002", "유저 삭제에 실패했습니다."),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USR003", "해당 유저가 존재하지 않습니다.");
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USR003", "해당 유저가 존재하지 않습니다."),
 
+    // MOVIE
+    MOVIE_NOT_FOUND(HttpStatus.NOT_FOUND, "MOV001", "해당 영화가 존재하지 않습니다."),
+
+    // BOARD
+    BOARD_USER_NOT_WRITER(HttpStatus.UNAUTHORIZED, "BOD001", "해당 게시물 작성자와 일치하지 않습니다."),
+    BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "BOD002", "해당 게시물이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus; // HTTP 상태 코드
     private final String code;          // 에러 코드
