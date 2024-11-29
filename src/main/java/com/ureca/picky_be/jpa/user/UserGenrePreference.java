@@ -1,8 +1,6 @@
 package com.ureca.picky_be.jpa.user;
 
 import com.ureca.picky_be.jpa.config.BaseEntity;
-import com.ureca.picky_be.jpa.genre.Genre;
-import com.ureca.picky_be.jpa.linereview.Preference;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package com.ureca.picky_be.jpa.linereview;
+package com.ureca.picky_be.jpa.lineReview;
 
 
 import com.ureca.picky_be.jpa.config.BaseEntity;
@@ -8,9 +8,13 @@ import lombok.*;
 
 @Entity
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        name = "line_review_like",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"line_review_id", "user_id"})
+)
 public class LineReviewLike extends BaseEntity {
 
 
@@ -32,6 +36,11 @@ public class LineReviewLike extends BaseEntity {
 
 
     private boolean isDeleted;
+
+    public LineReviewLike updatePreference(Preference newPreference) {
+        this.preference = newPreference;
+        return this;
+    }
 
 
 }
