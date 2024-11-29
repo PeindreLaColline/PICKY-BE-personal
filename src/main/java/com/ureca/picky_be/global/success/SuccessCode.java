@@ -9,6 +9,7 @@ public enum SuccessCode {
     // User
     REQUEST_FRONT_SUCCESS(200, "프론트에 요청 완료"),
     REQUEST_DELETE_ACCOUNT_SUCCESS(200, "유저 계정 삭제 완료"),
+    UPDATE_USER_SUCCESS(200, "유저 정보 업데이트 완료"),
 
     //Movie
     CREATE_MOVIE_SUCCESS(201, "영화 생성 완료"),
