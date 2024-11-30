@@ -1,10 +1,19 @@
 package com.ureca.picky_be.base.implementation.auth;
 
 import com.ureca.picky_be.base.business.auth.dto.DeleteUserReq;
-import com.ureca.picky_be.base.business.auth.dto.LoginUrlResp;
+import com.ureca.picky_be.base.business.auth.dto.LoginUserInfo;
 import com.ureca.picky_be.base.business.auth.dto.LoginUserResp;
 import com.ureca.picky_be.base.business.auth.dto.OAuth2Token;
-import com.ureca.picky_be.base.persistence.UserRepository;
+import com.ureca.picky_be.base.persistence.board.BoardCommentRepository;
+import com.ureca.picky_be.base.persistence.board.BoardLikeRepository;
+import com.ureca.picky_be.base.persistence.board.BoardRepository;
+import com.ureca.picky_be.base.persistence.lineReview.LineReviewLikeRepository;
+import com.ureca.picky_be.base.persistence.lineReview.LineReviewRepository;
+import com.ureca.picky_be.base.persistence.lineReview.LineReviewSoftDeleteRepository;
+import com.ureca.picky_be.base.persistence.movie.MovieLikeRepository;
+import com.ureca.picky_be.base.persistence.user.UserGenrePreferenceRepository;
+import com.ureca.picky_be.base.persistence.user.UserRepository;
+import com.ureca.picky_be.config.oAuth2.GoogleConfig;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
@@ -21,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
-import com.ureca.picky_be.config.oAuth2.GoogleConfig;
 
 import java.util.Map;
 
@@ -33,9 +41,18 @@ public class GoogleManager {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
+    private final LineReviewRepository lineReviewRepository;
+    private final LineReviewLikeRepository lineReviewLikeRepository;
+    private final LineReviewSoftDeleteRepository lineReviewSoftDeleteRepository;
+    private final MovieLikeRepository movieLikeRepository;
+    private final BoardLikeRepository boardLikeRepository;
+    private final BoardCommentRepository boardCommentRepository;
+    private final BoardRepository boardRepository;
+    private final UserGenrePreferenceRepository userGenrePreferenceRepository;
+
     RestClient restClient = RestClient.create();
 
-    public LoginUrlResp buildCodeUrl(String state){
+/*    public LoginUrlResp buildCodeUrl(String state){
         return new LoginUrlResp(UriComponentsBuilder
                 .fromHttpUrl(googleConfig.getCodeUrl())
                 .queryParam("client_id", googleConfig.getClientId())
@@ -45,7 +62,7 @@ public class GoogleManager {
                 .queryParam("state", state)
                 .build()
                 .toUriString());
-    }
+    }*/
 
     public OAuth2Token getOAuth2Token(String code){
         try{
@@ -97,14 +114,27 @@ public class GoogleManager {
                 .toUriString();
     }
 
-    public LocalJwtDto getLocalJwt(String email, String accessToken) {
+    public LoginUserInfo getLocalJwt(String email, String accessToken) {
         try{
             User user = userRepository.findByEmailAndSocialPlatform(email, SocialPlatform.GOOGLE)
                     .orElseGet(() -> createNewUser(email));
-            return jwtTokenProvider.generate(user.getId(), user.getRole().toString());
+            return new LoginUserInfo(
+                    jwtTokenProvider.generate(user.getId(), user.getRole().toString()),
+                    user.getId()
+            );
         } catch (Exception e){
             throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
+    }
+
+    public boolean isRegistrationDone(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return user.getName() != null
+                && user.getNickname() != null
+                && user.getBirthdate() != null
+                && user.getGender() != null
+                && user.getNationality() != null;
     }
 
     private User createNewUser(String email) {
@@ -120,8 +150,8 @@ public class GoogleManager {
         }
     }
 
-    public SuccessCode sendResponseToFrontend(OAuth2Token oAuth2Token, String email, LocalJwtDto jwt) {
-        LoginUserResp resp = new LoginUserResp(oAuth2Token, email, jwt);
+    public SuccessCode sendResponseToFrontend(OAuth2Token oAuth2Token, LocalJwtDto jwt, boolean isRegistrationDone) {
+        LoginUserResp resp = new LoginUserResp(oAuth2Token, jwt, isRegistrationDone);
         try {
             restClient
                     .post()
@@ -146,7 +176,7 @@ public class GoogleManager {
     }
 
     @Transactional
-    public SuccessCode deleteAccount(DeleteUserReq req) {
+    public SuccessCode deleteAccount(Long userId, DeleteUserReq req) {
         restClient
                 .post()
                 .uri(buildDeleteUrl(req.oAuth2Token().accessToken()))
@@ -155,16 +185,28 @@ public class GoogleManager {
                 .toBodilessEntity();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         if (!authentication.isAuthenticated()) {
             throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
 
-        Long userId = Long.parseLong(authentication.getName());
-
         if (!userRepository.existsById(userId)) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
+
+        // 연관된 자료 삭제
+        lineReviewLikeRepository.deleteByUserId(userId);
+        lineReviewRepository.deleteByUserId(userId);
+        lineReviewSoftDeleteRepository.deleteByUserId(userId);
+
+        movieLikeRepository.deleteByUserId(userId);
+
+        boardLikeRepository.deleteByUserId(userId);
+        boardCommentRepository.deleteByUserId(userId);
+        boardRepository.deleteByUserId(userId);
+
+        userGenrePreferenceRepository.deleteByUserId(userId);
+
+        // 유저 삭제
         userRepository.deleteById(userId);
         return SuccessCode.REQUEST_DELETE_ACCOUNT_SUCCESS;
     }
