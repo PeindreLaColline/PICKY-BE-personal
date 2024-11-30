@@ -21,7 +21,7 @@ public class OAuth2Controller {
         return oAuth2UseCase.getLoginUrl();
     }*/
 
-    @Operation(summary = "플랫폼에서 요청 수신 (우리 프론트 사용X)", description = "내부에 프론트로 get요청 보내는 로직 있음(oAuth2Token, email, jwt)")
+    @Operation(summary = "플랫폼에서 요청 수신 (우리 프론트 사용X)", description = "내부에 프론트로 post요청 보내는 로직 있음(oAuth2Token, jwt, isRegisterationDone) 개발시 백엔드 김00에게 문의 바람- 협의 필요")
     @GetMapping("/{platform}/user")
     public SuccessCode getUserInfo(@PathVariable String platform,
                                    @RequestParam String code,
