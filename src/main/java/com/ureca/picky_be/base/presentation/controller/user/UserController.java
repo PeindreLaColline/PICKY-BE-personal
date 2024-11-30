@@ -19,7 +19,7 @@ public class UserController {
     private final UserUseCase userUseCase;
     private final MovieUseCase movieUseCase;
 
-    @Operation(summary = "첫 화면에서 유저 개인정보 기입, 및 마이페이지에서 개인정보 수정", description = "수정 안 하는 필드는 그냥 비워서 보내주세요")
+    @Operation(summary = "첫 화면에서 유저 개인정보 기입, 및 마이페이지에서 개인정보 수정", description = "처음에 회원가입할 때 개인정보 넣을 때, 마이페이지에서 개인정보 수정할 때 둘 다 사용가능합니다. 다만 필드는 null불가입니다 다 채워서 보내주세요 (마이페이지에서 개인정보 수정하는 부분이라면 기존 정보 넣어서 전송)")
     @PatchMapping
     public SuccessCode updateUserInfo(@RequestBody UpdateUserReq req) {
         return userUseCase.updateUserInfo(req);
