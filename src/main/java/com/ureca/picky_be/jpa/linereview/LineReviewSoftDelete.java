@@ -1,4 +1,4 @@
-package com.ureca.picky_be.jpa.linereview;
+package com.ureca.picky_be.jpa.lineReview;
 
 import com.ureca.picky_be.jpa.config.BaseEntity;
 import jakarta.persistence.*;

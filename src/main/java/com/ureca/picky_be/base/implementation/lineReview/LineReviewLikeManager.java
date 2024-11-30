@@ -28,7 +28,7 @@ public class LineReviewLikeManager {
     private final UserRepository userRepository;
 
     public LineReviewLike createLineReviewLike(CreateLineReviewLikeReq req, Long userId) {
-        LineReview lineReview = lineReviewRepository.findById(req.lineReviewID())
+        LineReview lineReview = lineReviewRepository.findById(req.lineReviewId())
                 .orElseThrow(() -> new CustomException(ErrorCode.LINEREVIEW_NOT_FOUND));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
@@ -39,7 +39,7 @@ public class LineReviewLikeManager {
 
         Preference preferenceEnum = Preference.fromString(req.preference());
 
-        Optional<LineReviewLike> existingLikeOpt = lineReviewLikeRepository.findByLineReviewIdAndUserId(req.lineReviewID(), user.getId());
+        Optional<LineReviewLike> existingLikeOpt = lineReviewLikeRepository.findByLineReviewIdAndUserId(req.lineReviewId(), user.getId());
 
         if (existingLikeOpt.isPresent()) {
             LineReviewLike existingLike = existingLikeOpt.get();
