@@ -1,10 +1,10 @@
 package com.ureca.picky_be.base.implementation.user;
 
 import com.ureca.picky_be.base.business.user.dto.UpdateUserReq;
-import com.ureca.picky_be.base.persistence.GenreRepository;
-import com.ureca.picky_be.base.persistence.MovieGenreRepository;
-import com.ureca.picky_be.base.persistence.UserGenrePreferenceRepository;
-import com.ureca.picky_be.base.persistence.UserRepository;
+import com.ureca.picky_be.base.persistence.movie.GenreRepository;
+import com.ureca.picky_be.base.persistence.movie.MovieGenreRepository;
+import com.ureca.picky_be.base.persistence.user.UserGenrePreferenceRepository;
+import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
@@ -12,13 +12,13 @@ import com.ureca.picky_be.jpa.genre.Genre;
 import com.ureca.picky_be.jpa.user.User;
 import com.ureca.picky_be.jpa.user.UserGenrePreference;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -29,58 +29,60 @@ public class UserManager {
     private final MovieGenreRepository movieGenreRepository;
 
     @Transactional
-    public SuccessCode updateUserInfo(UpdateUserReq req) {
+    public SuccessCode updateUserInfo(Long userId, UpdateUserReq req) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         validateUpdateUserReq(req);
-        User user = userRepository.findById(
-                Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())
-        ).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         user.updateUser(req);
-        if (req.movieId() != null && !req.movieId().isEmpty()) {
-            updateUserGenrePreference(user, req.movieId());
+        if (req.movieId() == null || req.movieId().isEmpty()) {
+            throw new CustomException(ErrorCode.USER_UPDATE_BAD_REQUEST);
         }
+        updateUserGenrePreference(user, req.movieId());
         return SuccessCode.UPDATE_USER_SUCCESS;
     }
 
     private void validateUpdateUserReq(UpdateUserReq req) {
-        if (req.name() == null || req.nickname() == null || req.profile_url() == null ||
-                req.birthdate() == null || req.gender() == null || req.nationality() == null) {
+        if (req.name() == null
+                || req.nickname() == null
+                || req.birthdate() == null
+                || req.gender() == null
+                || req.nationality() == null) {
             throw new CustomException(ErrorCode.USER_UPDATE_FAILED);
         }
     }
 
-    private void updateUserGenrePreference(User user, List<Long> movieIds) {
-        if (movieIds == null || movieIds.isEmpty()) {
-            return;
-        }
-
-        Map<Long, Integer> genreCountMap = new HashMap<>();
-        for (Long movieId : movieIds) {
-            List<Long> genreIds = movieGenreRepository.getGenreIdsByMovieId(movieId);
-            if (genreIds != null) {
-                for (Long genreId : genreIds) {
-                    genreCountMap.put(genreId, genreCountMap.getOrDefault(genreId, 0) + 1);
-                }
-            }
-        }
+    @Transactional
+    protected void updateUserGenrePreference(User user, List<Long> movieIds) {
+        Map<Long, Integer> genreCountMap = movieIds.stream()
+                .map(movieGenreRepository::getGenreIdsByMovieId)
+                .filter(Objects::nonNull)
+                .flatMap(List::stream)
+                .collect(Collectors.toMap(
+                        genreId -> genreId,
+                        genreId -> 1,
+                        Integer::sum
+                ));
 
         List<Map.Entry<Long, Integer>> topGenres = genreCountMap.entrySet().stream()
                 .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
                 .limit(5)
                 .toList();
 
-        for (Map.Entry<Long, Integer> entry : topGenres) {
-            UserGenrePreference preference = UserGenrePreference.builder()
-                    .user(user)
-                    .genreId(entry.getKey())
-                    .preferenceValue(entry.getValue().doubleValue())
-                    .build();
-            userGenrePreferenceRepository.save(preference);
-        }
+        List<UserGenrePreference> preferences = topGenres.stream()
+                .map(entry -> UserGenrePreference.builder()
+                        .user(user)
+                        .genreId(entry.getKey())
+                        .preferenceValue(entry.getValue().doubleValue())
+                        .build())
+                .toList();
+
+        userGenrePreferenceRepository.deleteByUserId(user.getId());
+        userGenrePreferenceRepository.saveAll(preferences);
     }
 
     @Transactional(readOnly = true)
-    public User getUserInfo(){
-        return userRepository.findById(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()))
+    public User getUserInfo(Long userId) {
+        return userRepository.findById(userId)
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 

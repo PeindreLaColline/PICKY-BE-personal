@@ -23,6 +23,11 @@ public enum ErrorCode {
     USER_SAVE_FAILED(HttpStatus.BAD_REQUEST, "USR001", "유저 저장에 실패했습니다."),
     USER_DELETE_FAILED(HttpStatus.BAD_REQUEST, "USR002", "유저 삭제에 실패했습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USR003", "해당 유저가 존재하지 않습니다."),
+    USER_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "USR004", "유저 정보 업데이트에 실패했습니다."),
+    USER_UPDATE_BAD_REQUEST(HttpStatus.BAD_REQUEST, "USR005", "선호 영화 ID를 받지 못했습니다."),
+
+    // GENRE
+    GENRE_NOT_FOUND(HttpStatus.NOT_FOUND, "GEN001", "해당 영화 장르를 찾지 못했습니다."),
 
     //LineReview
     LINEREVIEW_CREATE_FAILED(HttpStatus.BAD_REQUEST, "LR001", "한줄평 작성에 실패했습니다."),

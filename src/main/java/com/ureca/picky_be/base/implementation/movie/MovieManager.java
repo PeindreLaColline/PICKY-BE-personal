@@ -1,6 +1,6 @@
 package com.ureca.picky_be.base.implementation.movie;
 
-import com.ureca.picky_be.base.persistence.MovieRepository;
+import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.jpa.movie.Movie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

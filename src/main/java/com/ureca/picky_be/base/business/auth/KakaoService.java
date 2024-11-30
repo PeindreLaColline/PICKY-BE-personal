@@ -2,6 +2,7 @@ package com.ureca.picky_be.base.business.auth;
 
 import com.ureca.picky_be.base.business.auth.dto.DeleteUserReq;
 import com.ureca.picky_be.base.business.auth.dto.LoginUrlResp;
+import com.ureca.picky_be.base.business.auth.dto.LoginUserInfo;
 import com.ureca.picky_be.base.business.auth.dto.OAuth2Token;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.auth.KakaoManager;
@@ -26,13 +27,14 @@ public class KakaoService implements OAuth2UseCase {
     }*/
 
     @Override
-    public SuccessCode getUserInfo(String state, String code) {
+    public SuccessCode sendJwtToken(String state, String code) {
         OAuth2Token oAuth2Token = kakaoManager.getOAuth2Token(code);
         String email = kakaoManager.getUserInfo(oAuth2Token.accessToken());
-        LocalJwtDto jwt = kakaoManager.getLocalJwt(email, oAuth2Token.accessToken());
-/*        System.out.println(jwt);
-        System.out.println(oAuth2Token);*/
-        return kakaoManager.sendResponseToFrontend(oAuth2Token, jwt);
+        LoginUserInfo loginUserInfo = kakaoManager.getLocalJwt(email, oAuth2Token.accessToken());
+        System.out.println(loginUserInfo);
+        System.out.println(oAuth2Token);
+
+        return kakaoManager.sendResponseToFrontend(oAuth2Token, loginUserInfo.jwt(), kakaoManager.isRegistrationDone(authManager.getUserId()));
     }
 
     @Override

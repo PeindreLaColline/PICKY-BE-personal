@@ -3,12 +3,9 @@ package com.ureca.picky_be.base.presentation.controller.auth;
 import com.ureca.picky_be.base.business.auth.OAuth2UseCase;
 import com.ureca.picky_be.base.business.auth.OAuth2UseCaseResolver;
 import com.ureca.picky_be.base.business.auth.dto.DeleteUserReq;
-import com.ureca.picky_be.base.business.auth.dto.LoginUrlResp;
-import com.ureca.picky_be.base.business.auth.dto.OAuth2Token;
 import com.ureca.picky_be.global.success.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,7 +28,7 @@ public class OAuth2Controller {
                                    @RequestParam String state
                                             ){
         OAuth2UseCase oAuth2UseCase = oAuth2UseCaseResolver.resolve(platform);
-        return oAuth2UseCase.getUserInfo(state, code);
+        return oAuth2UseCase.sendJwtToken(state, code);
     }
 
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴")

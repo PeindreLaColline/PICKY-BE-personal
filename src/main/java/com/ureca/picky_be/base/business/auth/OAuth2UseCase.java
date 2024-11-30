@@ -6,6 +6,6 @@ import com.ureca.picky_be.global.success.SuccessCode;
 public interface OAuth2UseCase {
 
     //LoginUrlResp getLoginUrl();
-    SuccessCode getUserInfo(String state, String code);
+    SuccessCode sendJwtToken(String state, String code);
     SuccessCode deleteAccount(DeleteUserReq req);
 }

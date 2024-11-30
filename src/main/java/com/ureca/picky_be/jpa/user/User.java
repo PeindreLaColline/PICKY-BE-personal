@@ -22,7 +22,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    //nullable = false)
+    //@Column(nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -58,24 +58,12 @@ public class User extends BaseEntity {
     private Status status;
 
     public void updateUser(UpdateUserReq req) {
-        if (req.name() != null) {
-            this.name = req.name();
-        }
-        if (req.nickname() != null) {
-            this.nickname = req.nickname();
-        }
-        if (req.profile_url() != null) {
-            this.profileUrl = req.profile_url();
-        }
-        if (req.birthdate() != null) {
-            this.birthdate = req.birthdate();
-        }
-        if (req.gender() != null) {
-            this.gender = req.gender();
-        }
-        if (req.nationality() != null) {
-            this.nationality = req.nationality();
-        }
+        this.name = req.name();
+        this.nickname = req.nickname();
+        this.profileUrl = req.profile_url();
+        this.birthdate = req.birthdate();
+        this.gender = req.gender();
+        this.nationality = req.nationality();
         this.status = Status.REGULAR;
         this.isActive = true;
     }

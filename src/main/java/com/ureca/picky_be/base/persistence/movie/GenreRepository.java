@@ -1,4 +1,4 @@
-package com.ureca.picky_be.base.persistence;
+package com.ureca.picky_be.base.persistence.movie;
 
 import com.ureca.picky_be.jpa.genre.Genre;
 import org.springframework.data.jpa.repository.JpaRepository;

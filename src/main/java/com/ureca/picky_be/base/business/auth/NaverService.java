@@ -3,6 +3,7 @@ package com.ureca.picky_be.base.business.auth;
 
 import com.ureca.picky_be.base.business.auth.dto.DeleteUserReq;
 import com.ureca.picky_be.base.business.auth.dto.LoginUrlResp;
+import com.ureca.picky_be.base.business.auth.dto.LoginUserInfo;
 import com.ureca.picky_be.base.business.auth.dto.OAuth2Token;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.auth.NaverManager;
@@ -27,13 +28,14 @@ public class NaverService implements OAuth2UseCase{
     }*/
 
     @Override
-    public SuccessCode getUserInfo(String state, String code) {
+    public SuccessCode sendJwtToken(String state, String code) {
         OAuth2Token oAuth2Token = naverManager.getOAuth2Token(state, code);
         String email = naverManager.getUserInfo(oAuth2Token.accessToken());
-        LocalJwtDto jwt = naverManager.getLocalJwt(email);
-/*        System.out.println(jwt);
-        System.out.println(oAuth2Token);*/
-        return naverManager.sendResponseToFrontend(oAuth2Token, jwt);
+        LoginUserInfo loginUserInfo = naverManager.getLocalJwt(email);
+        System.out.println(loginUserInfo);
+        System.out.println(oAuth2Token);
+
+        return naverManager.sendResponseToFrontend(oAuth2Token, loginUserInfo.jwt(), naverManager.isRegistrationDone(authManager.getUserId()));
     }
 
     @Override
