@@ -32,7 +32,7 @@ public class LineReviewLike extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private com.ureca.picky_be.jpa.lineReview.Preference preference;
+    private Preference preference;
 
 
     private boolean isDeleted;
