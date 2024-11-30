@@ -66,6 +66,9 @@
     │       └── application.yml
 ```
 ---
+### ERD
+![PICKY-ERD (2)](https://github.com/user-attachments/assets/26abb7ab-9565-4bdc-a77a-880acc1e5b70)
+---
 
 ### 설치 및 실행 방법
 
