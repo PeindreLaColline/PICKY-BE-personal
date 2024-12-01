@@ -22,7 +22,6 @@ import java.util.List;
 public class BoardManagingService implements BoardManagingUseCase {
 
     private final BoardManager boardManager;
-    private final MovieManager movieManager;
     private final AuthManager authManager;
 //    private final BoardDtoMapper boardDtoMapper;
 
