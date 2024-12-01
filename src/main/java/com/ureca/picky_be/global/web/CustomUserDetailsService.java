@@ -1,6 +1,6 @@
 package com.ureca.picky_be.global.web;
 
-import com.ureca.picky_be.base.persistence.UserRepository;
+import com.ureca.picky_be.base.persistence.user.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

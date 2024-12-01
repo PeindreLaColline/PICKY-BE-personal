@@ -2,7 +2,7 @@ package com.ureca.picky_be.base.implementation.lineReview;
 
 import com.ureca.picky_be.base.business.lineReview.dto.CreateLineReviewReq;
 import com.ureca.picky_be.base.business.lineReview.dto.UpdateLineReviewReq;
-import com.ureca.picky_be.base.persistence.UserRepository;
+import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.base.persistence.lineReview.LineReviewRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;

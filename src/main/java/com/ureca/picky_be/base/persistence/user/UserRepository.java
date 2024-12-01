@@ -1,4 +1,4 @@
-package com.ureca.picky_be.base.persistence;
+package com.ureca.picky_be.base.persistence.user;
 
 import com.ureca.picky_be.jpa.user.SocialPlatform;
 import com.ureca.picky_be.jpa.user.User;
