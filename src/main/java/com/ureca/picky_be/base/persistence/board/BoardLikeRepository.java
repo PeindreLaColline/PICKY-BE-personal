@@ -11,4 +11,5 @@ public interface BoardLikeRepository extends JpaRepository<BoardLike, Long> {
     @Modifying(clearAutomatically = true)
     @Transactional
     void deleteByUserId(Long userId);
+    int countByBoardId(Long boardId);
 }
