@@ -152,16 +152,12 @@ public class MovieManager {
             if(updateMovieReq.movieInfo().genres() != null){
                 updateMovieGenre(movie, updateMovieReq.movieInfo().genres());
             }
-            System.out.println(1);
             if(updateMovieReq.movieInfo().credits() != null){
-                System.out.println(2);
                 if(updateMovieReq.movieInfo().credits().cast() != null){
-                    System.out.println(3);
                     updateActors(movie, updateMovieReq.movieInfo().credits().cast());
                 }
 
                 if(updateMovieReq.movieInfo().credits().crew() != null){
-                    System.out.println(4);
                     updateDirectors(movie, updateMovieReq.movieInfo().credits().getDirectingCrew());
                 }
             }
