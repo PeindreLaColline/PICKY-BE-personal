@@ -14,6 +14,7 @@ public enum SuccessCode {
     //Movie
     CREATE_MOVIE_SUCCESS(201, "영화 생성 완료"),
     DELETE_MOVIE_SUCCESS(200, "영화 삭제 완료"),
+    UPDATE_MOVIE_SUCCESS(200, "영화 수정 완료"),
     GENERAL_SUCCESS(200, "요청이 성공적으로 처리되었습니다."),
 
     // Board
