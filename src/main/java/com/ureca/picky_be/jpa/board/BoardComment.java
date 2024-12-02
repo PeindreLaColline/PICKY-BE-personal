@@ -25,6 +25,13 @@ public class BoardComment extends BaseEntity {
     private Long userId;
 
     @Column(nullable = false)
-    private String content;
+    private String context;
 
+    public static BoardComment of(Board board, Long userId, String context){
+        return BoardComment.builder()
+                .board(board)
+                .userId(userId)
+                .context(context)
+                .build();
+    }
 }

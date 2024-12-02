@@ -12,14 +12,12 @@ import com.ureca.picky_be.jpa.movie.*;
 import com.ureca.picky_be.jpa.movieworker.MovieWorker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class MovieManager {
-
     private final MovieRepository movieRepository;
     private final MovieGenreRepository movieGenreRepository;
     private final MovieBehindVideoRepository movieBehindVideoRepository;
