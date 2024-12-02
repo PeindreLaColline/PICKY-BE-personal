@@ -11,10 +11,12 @@ import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.jpa.board.Board;
 import com.ureca.picky_be.jpa.board.BoardComment;
+import com.ureca.picky_be.jpa.board.BoardContent;
 import com.ureca.picky_be.jpa.movie.Movie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -22,11 +24,13 @@ public class BoardManager {
     private final BoardRepository boardRepository;
     private final MovieRepository movieRepository;
     private final BoardCommentRepository boardCommentRepository;
+    private final BoardContentRepository boardContentRepository;
 
     @Transactional
     public void addBoard(Long userId, AddBoardReq req) {
         Movie movie = movieRepository.findById(req.movieId())
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
+
         if(req.contents().size() > 5) {
             throw new CustomException(ErrorCode.BOARD_CONTENT_OVER_FIVE);
         }
@@ -36,20 +40,17 @@ public class BoardManager {
     }
 
 
-    public void updateBoard(Long boardId, UpdateBoardReq req) {
-        try {
-            Movie movie = movieRepository.findById(req.movieId())
-                    .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
-            Board board = boardRepository.findById(boardId)
-                    .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
-
-            // TODO : 호출한 board 엔티티 수정
-//            board.updateBoard(movie, req.boardContext(), req.isSpoiler());
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.BOARD_UPDATE_FAILED);
-        }
-
-    }
+//    public void updateBoard(Long boardId, Long userId, UpdateBoardReq req) {
+//        Movie movie = movieRepository.findById(req.movieId())
+//                .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
+//        Board board = checkBoardWriteUser(boardId, userId);
+//        board.getContents();
+//
+//        board.updateBoard(movie, req.boardContext(),req.isSpoiler(), req.contents());
+//        // TODO : 호출한 board 엔티티 수정
+//
+//
+//    }
 
 //    public List<Board> getRecentMovieRelatedBoards(Long movieId, Long currentBoardId) {
 //        // 최신순 기준으로 Board들을 가져온다.
@@ -61,13 +62,14 @@ public class BoardManager {
 //
 //    }
 
-    public void checkBoardWriteUser(Long boardId, Long userId) {
+    public Board checkBoardWriteUser(Long boardId, Long userId) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("Board not found"));
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
 
         if(!board.getUserId().equals(userId)) {
             throw new CustomException(ErrorCode.BOARD_USER_NOT_WRITER);
         }
+        return board;
     }
 
     public BoardComment addBoardComment(String context, Long boardId, Long userId) {

@@ -6,8 +6,8 @@ public record GetBoardInfoResp(
         Long movieId,
         String context,
         List<GetBoardContentsResp> contents,
-        int likes,
-        int comments,
+        Integer likesCount,
+        Integer commentsCount,
         boolean isSpoiler,
         boolean isLike) {
 
