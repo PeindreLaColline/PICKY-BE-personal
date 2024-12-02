@@ -1,7 +1,10 @@
 package com.ureca.picky_be.base.implementation.lineReview;
 
 import com.ureca.picky_be.base.business.lineReview.dto.CreateLineReviewReq;
+import com.ureca.picky_be.base.business.lineReview.dto.LineReviewProjection;
+import com.ureca.picky_be.base.business.lineReview.dto.LineReviewQueryRequest;
 import com.ureca.picky_be.base.business.lineReview.dto.UpdateLineReviewReq;
+import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.base.persistence.lineReview.LineReviewRepository;
 import com.ureca.picky_be.global.exception.CustomException;
@@ -21,6 +24,7 @@ import java.time.LocalDateTime;
 public class LineReviewManager {
 
     private final LineReviewRepository lineReviewRepository;
+    private final MovieRepository movieRepository;
     private final UserRepository userRepository;
 
     public LineReview createLineReview(CreateLineReviewReq req, Long userId) {
@@ -73,6 +77,10 @@ public class LineReviewManager {
 
     public Slice<LineReviewProjection> findLineReviewsByMovie(LineReviewQueryRequest queryReq, PageRequest pageRequest) {
         try {
+            if (!movieRepository.existsById(queryReq.movieId())) {
+                throw new CustomException(ErrorCode.MOVIE_NOT_FOUND);
+            }
+
             validateCursor(queryReq.lastReviewId(), queryReq.lastCreatedAt());
 
             if (queryReq.sortType() == SortType.LIKES) {
@@ -91,10 +99,8 @@ public class LineReviewManager {
                 throw new CustomException(ErrorCode.LINEREVIEW_CREATE_FAILED);
             }
         } catch (CustomException e) {
-            // 요청 매개변수 오류
             throw e;
         } catch (Exception e) {
-            // 일반적인 예외 처리
             throw new CustomException(ErrorCode.LINEREVIEW_GET_FAILED);
         }
     }

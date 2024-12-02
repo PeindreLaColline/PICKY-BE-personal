@@ -31,11 +31,12 @@ public class LineReview extends BaseEntity {
     @Column(nullable = false)
     private String context;
 
-    private boolean isSpoiler;
+    @Column(nullable = false)
+    private Boolean isSpoiler = false;
 
     private boolean isDeleted;
 
-    public void lineReviewContextUpdate(String context, boolean isSpoiler) {
+    public void lineReviewContextUpdate(String context, Boolean isSpoiler) {
         this.context = context;
         this.isSpoiler = isSpoiler;
     }

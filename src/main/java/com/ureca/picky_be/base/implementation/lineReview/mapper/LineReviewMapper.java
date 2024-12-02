@@ -17,7 +17,7 @@ public class LineReviewMapper {
                 lineReview.getMovieId(),
                 lineReview.getRating(),
                 lineReview.getContext(),
-                lineReview.isSpoiler()
+                lineReview.getIsSpoiler()
         );
     }
 
@@ -28,7 +28,7 @@ public class LineReviewMapper {
                 lineReview.getMovieId(),
                 lineReview.getRating(),
                 lineReview.getContext(),
-                lineReview.isSpoiler()
+                lineReview.getIsSpoiler()
         );
     }
 
@@ -39,7 +39,7 @@ public class LineReviewMapper {
                 projection.getMovieId(),
                 projection.getRating(),
                 projection.getContext(),
-                projection.isSpoiler(),
+                projection.getIsSpoiler(),
                 projection.getLikes(),
                 projection.getCreatedAt()
         );

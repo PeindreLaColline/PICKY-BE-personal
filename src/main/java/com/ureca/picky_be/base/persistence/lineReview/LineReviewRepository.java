@@ -19,15 +19,15 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
 
     @Query("""
     SELECT lr.id AS id, lr.userId AS userId, lr.movieId AS movieId, lr.rating AS rating,
-           lr.context AS context, lr.isSpoiler AS isSpoiler, COUNT(lrl.id) AS likes, lr.createdAt AS createdAt
+           lr.context AS context, lr.isSpoiler AS isSpoiler, COUNT(DISTINCT lrl.id) AS likes, lr.createdAt AS createdAt
     FROM LineReview lr
     LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
     WHERE lr.movieId = :movieId
-    GROUP BY lr.id
-    HAVING (:lastReviewId IS NULL OR lr.id < :lastReviewId)
+      AND (:lastReviewId IS NULL OR lr.id < :lastReviewId)
+    GROUP BY lr.id, lr.userId, lr.movieId, lr.rating, lr.context, lr.isSpoiler, lr.createdAt
     ORDER BY likes DESC, lr.id DESC
-""")
-    Page<LineReviewProjection> findByMovieAndLikesCursor(
+    """)
+    Slice<LineReviewProjection> findByMovieAndLikesCursor(
             @Param("movieId") Long movieId,
             @Param("lastReviewId") Long lastReviewId,
             Pageable pageable
@@ -35,20 +35,19 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
 
     @Query("""
     SELECT lr.id AS id, lr.userId AS userId, lr.movieId AS movieId, lr.rating AS rating,
-           lr.context AS context, lr.isSpoiler AS isSpoiler, COUNT(lrl.id) AS likes, lr.createdAt AS createdAt
+           lr.context AS context, lr.isSpoiler AS isSpoiler, COUNT(DISTINCT lrl.id) AS likes, lr.createdAt AS createdAt
     FROM LineReview lr
     LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
     WHERE lr.movieId = :movieId
-    GROUP BY lr.id
-    HAVING (:lastReviewId IS NULL OR lr.id < :lastReviewId)
+      AND (:lastReviewId IS NULL OR lr.id < :lastReviewId)
+    GROUP BY lr.id, lr.userId, lr.movieId, lr.rating, lr.context, lr.isSpoiler, lr.createdAt
     ORDER BY lr.createdAt DESC, lr.id DESC
-""")
-    Page<LineReviewProjection> findByMovieAndLatestCursor(
+    """)
+    Slice<LineReviewProjection> findByMovieAndLatestCursor(
             @Param("movieId") Long movieId,
             @Param("lastReviewId") Long lastReviewId,
             Pageable pageable
     );
-
 
 
     @Modifying(clearAutomatically = true)
