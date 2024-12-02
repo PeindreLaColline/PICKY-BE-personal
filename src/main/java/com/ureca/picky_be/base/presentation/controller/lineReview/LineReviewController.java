@@ -36,7 +36,7 @@ public class LineReviewController {
         UpdateLineReviewResp resp = lineReviewUseCase.updateLineReview(lineReviewId, req);
         return resp;
     }
-
+    @Operation(summary = "한줄평 조회", description = "사이즈 0~10 설정, LATEST - 최신순, LIKES - 좋아요 순, 처음 요청에는 lastReviewId, lastCreatedAt 필요없음, 다음 페이지에 넘어갈때 값 넣어줘야함")
     @GetMapping("/movie/{movieId}")
     public Slice<ReadLineReviewResp> readLineReviewResp(
             @PathVariable Long movieId,
