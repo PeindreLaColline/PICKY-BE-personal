@@ -1,14 +1,13 @@
 package com.ureca.picky_be.base.business.lineReview;
 
-import com.ureca.picky_be.base.business.lineReview.dto.CreateLineReviewReq;
-import com.ureca.picky_be.base.business.lineReview.dto.CreateLineReviewResp;
-import com.ureca.picky_be.base.business.lineReview.dto.UpdateLineReviewReq;
-import com.ureca.picky_be.base.business.lineReview.dto.UpdateLineReviewResp;
+import com.ureca.picky_be.base.business.lineReview.dto.*;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.lineReview.LineReviewManager;
 import com.ureca.picky_be.base.implementation.lineReview.mapper.LineReviewMapper;
 import com.ureca.picky_be.jpa.lineReview.LineReview;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,5 +36,10 @@ public class LineReviewService implements LineReviewUseCase {
         return lineReviewMapper.updateLineReview(updateLineReview);
     }
 
+    @Override
+    public Slice<ReadLineReviewResp> getLineReviewsByMovie(PageRequest pageRequest, LineReviewQueryRequest queryReq) {
+        Slice<LineReviewProjection> lineReviews = lineReviewManager.findLineReviewsByMovie(queryReq, pageRequest);
+        return lineReviews.map(lineReviewMapper::toReadLineReviewResp);
+    }
 
 }

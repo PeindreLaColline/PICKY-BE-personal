@@ -1,6 +1,8 @@
 package com.ureca.picky_be.base.implementation.lineReview.mapper;
 
 import com.ureca.picky_be.base.business.lineReview.dto.CreateLineReviewResp;
+import com.ureca.picky_be.base.business.lineReview.dto.LineReviewProjection;
+import com.ureca.picky_be.base.business.lineReview.dto.ReadLineReviewResp;
 import com.ureca.picky_be.base.business.lineReview.dto.UpdateLineReviewResp;
 import com.ureca.picky_be.jpa.lineReview.LineReview;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,19 @@ public class LineReviewMapper {
                 lineReview.getRating(),
                 lineReview.getContext(),
                 lineReview.isSpoiler()
+        );
+    }
+
+    public ReadLineReviewResp toReadLineReviewResp(LineReviewProjection projection) {
+        return new ReadLineReviewResp(
+                projection.getId(),
+                projection.getUserId(),
+                projection.getMovieId(),
+                projection.getRating(),
+                projection.getContext(),
+                projection.isSpoiler(),
+                projection.getLikes(),
+                projection.getCreatedAt()
         );
     }
 }
