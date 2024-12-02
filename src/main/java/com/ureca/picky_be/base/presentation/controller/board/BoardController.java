@@ -22,7 +22,7 @@ public class BoardController {
     private final BoardManagingUseCase boardManagingUseCase;
 
     @PostMapping("")
-    @Operation(summary = "게시글 생성(Create)", description = "사용자가 입력한 게시글 생성, contentType으로 'PHOTO', 'VIDEO'로 입력해야합니다.")
+    @Operation(summary = "게시글 생성(Create)", description = "사용자가 입력한 게시글 생성, contentType으로 'PHOTO', 'VIDEO'로 입력해야합니다. 또한, 현재 글만 입력 가능합니다!")
     public SuccessCode createBoard(@RequestBody AddBoardReq req) {
         boardManagingUseCase.addBoard(req);
         return SuccessCode.CREATE_BOARD_SUCCESS;
