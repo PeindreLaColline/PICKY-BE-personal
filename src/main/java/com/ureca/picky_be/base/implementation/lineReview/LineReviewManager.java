@@ -1,21 +1,30 @@
 package com.ureca.picky_be.base.implementation.lineReview;
 
 import com.ureca.picky_be.base.business.lineReview.dto.CreateLineReviewReq;
+import com.ureca.picky_be.base.business.lineReview.dto.LineReviewProjection;
+import com.ureca.picky_be.base.business.lineReview.dto.LineReviewQueryRequest;
 import com.ureca.picky_be.base.business.lineReview.dto.UpdateLineReviewReq;
+import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.base.persistence.lineReview.LineReviewRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.jpa.lineReview.LineReview;
+import com.ureca.picky_be.jpa.lineReview.SortType;
 import com.ureca.picky_be.jpa.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
 public class LineReviewManager {
 
     private final LineReviewRepository lineReviewRepository;
+    private final MovieRepository movieRepository;
     private final UserRepository userRepository;
 
     public LineReview createLineReview(CreateLineReviewReq req, Long userId) {
@@ -64,4 +73,60 @@ public class LineReviewManager {
             throw new CustomException(ErrorCode.LINEREVIEW_UPDATE_FAILED);
         }
     }
+
+
+    public Slice<LineReviewProjection> findLineReviewsByMovie(LineReviewQueryRequest queryReq, PageRequest pageRequest) {
+        try {
+            if (!movieRepository.existsById(queryReq.movieId())) {
+                throw new CustomException(ErrorCode.MOVIE_NOT_FOUND);
+            }
+
+            validateCursor(queryReq.lastReviewId(), queryReq.lastCreatedAt());
+
+            if (queryReq.sortType() == SortType.LIKES) {
+                return lineReviewRepository.findByMovieAndLikesCursor(
+                        queryReq.movieId(),
+                        queryReq.lastReviewId(),
+                        pageRequest
+                );
+            } else if (queryReq.sortType() == SortType.LATEST) {
+                return lineReviewRepository.findByMovieAndLatestCursor(
+                        queryReq.movieId(),
+                        queryReq.lastReviewId(),
+                        pageRequest
+                );
+            } else {
+                throw new CustomException(ErrorCode.LINEREVIEW_CREATE_FAILED);
+            }
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.LINEREVIEW_GET_FAILED);
+        }
+    }
+
+
+    private void validateCursor(Long lastReviewId, LocalDateTime lastCreatedAt) {
+        // 커서가 없는 경우 (첫 요청)
+        if (lastReviewId == null && lastCreatedAt == null) {
+            return;
+        }
+
+        // ID 또는 날짜 중 하나만 제공된 경우
+        if (lastReviewId == null || lastCreatedAt == null) {
+            throw new CustomException(ErrorCode. LINEREVIEW_INVALID_CURSOR1);
+        }
+
+        // ID가 유효하지 않은 경우
+        if (lastReviewId <= 0) {
+            throw new CustomException(ErrorCode. LINEREVIEW_INVALID_CURSOR2);
+        }
+
+        // 날짜가 유효하지 않은 경우
+        if (lastCreatedAt.isAfter(LocalDateTime.now())) {
+            throw new CustomException(ErrorCode. LINEREVIEW_INVALID_CURSOR3);
+        }
+    }
 }
+
+

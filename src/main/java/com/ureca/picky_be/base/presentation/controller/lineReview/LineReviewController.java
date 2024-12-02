@@ -2,13 +2,19 @@ package com.ureca.picky_be.base.presentation.controller.lineReview;
 
 
 import com.ureca.picky_be.base.business.lineReview.LineReviewUseCase;
-import com.ureca.picky_be.base.business.lineReview.dto.CreateLineReviewReq;
-import com.ureca.picky_be.base.business.lineReview.dto.CreateLineReviewResp;
-import com.ureca.picky_be.base.business.lineReview.dto.UpdateLineReviewReq;
-import com.ureca.picky_be.base.business.lineReview.dto.UpdateLineReviewResp;
+import com.ureca.picky_be.base.business.lineReview.dto.*;
+import com.ureca.picky_be.jpa.lineReview.LineReview;
+import com.ureca.picky_be.jpa.lineReview.SortType;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +37,17 @@ public class LineReviewController {
         return resp;
     }
 
+    @GetMapping("/movie/{movieId}")
+    public Slice<ReadLineReviewResp> readLineReviewResp(
+            @PathVariable Long movieId,
+            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "정렬 방식: LATEST(최신순), LIKES(좋아요 많은 순)") @RequestParam(defaultValue = "LATEST") SortType sortType ,
+            @RequestParam(required = false)  Long lastReviewId,
+            // 클라이언트가 처음 데이터를 요청할 때는 lastReviewId와 lastCreatedAt이 필요 없음 그래서 required = false
+            @RequestParam(required = false) LocalDateTime lastCreatedAt){
+        LineReviewQueryRequest queryReq = new LineReviewQueryRequest(movieId, lastReviewId, lastCreatedAt, sortType);
+        return lineReviewUseCase.getLineReviewsByMovie(PageRequest.ofSize(size), queryReq);
+    }
 
 
 
