@@ -48,5 +48,4 @@ public class BoardContent extends BaseEntity {
             board.getContents().add(this);
         }
     }
-    
 }
