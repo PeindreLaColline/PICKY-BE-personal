@@ -1,9 +1,11 @@
 package com.ureca.picky_be.jpa.movie;
 
+import com.ureca.picky_be.base.business.movie.dto.UpdateMovieReq;
 import com.ureca.picky_be.jpa.config.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -38,4 +40,16 @@ public class Movie extends BaseEntity {
 
     private String ostUrl;
 
+    @Transactional
+    public Movie updateMovie(UpdateMovieReq updateMovieReq){
+        if(updateMovieReq.movieInfo().title() != null) this.title = updateMovieReq.movieInfo().title();
+        if(updateMovieReq.movieInfo().releaseDate() != null) this.releaseDate = updateMovieReq.movieInfo().releaseDate();
+        if(updateMovieReq.movieInfo().posterUrl() != null) this.posterUrl = updateMovieReq.movieInfo().posterUrl();
+        if(updateMovieReq.movieInfo().plot() != null) this.plot = updateMovieReq.movieInfo().plot();
+        //아래 부분 수정해두기
+        //if(updateMovieReq.movieInfo().runtime() != null) this.runningTime = updateMovieReq.movieInfo().runtime();
+        if(updateMovieReq.trailer() != null) this.trailerUrl = updateMovieReq.trailer();
+        if(updateMovieReq.ost() != null) this.ostUrl = updateMovieReq.ost();
+        return this;
+    }
 }

@@ -40,7 +40,7 @@ public class BoardManagingService implements BoardManagingUseCase {
     public void updateBoard(Long boardId , UpdateBoardReq req) {
         Long userId = authManager.getUserId();
         boardManager.checkBoardWriteUser(boardId, userId);
-        boardManager.updateBoard(boardId, req);
+        //boardManager.updateBoard(boardId, req);
     }
 
 //    @Override
