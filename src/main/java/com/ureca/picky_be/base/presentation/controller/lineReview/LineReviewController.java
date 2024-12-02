@@ -30,7 +30,7 @@ public class LineReviewController {
         CreateLineReviewResp resp = lineReviewUseCase.createLineReview(req);
         return resp;
     }
-    @Operation(summary = "한줄평 없데이트", description = "평점은 수정 불가능")
+    @Operation(summary = "한줄평 업데이트", description = "평점은 수정 불가능")
     @PutMapping("/{lineReviewId}")
     public UpdateLineReviewResp updateLineReviewResp(@PathVariable Long lineReviewId, @RequestBody UpdateLineReviewReq req){
         UpdateLineReviewResp resp = lineReviewUseCase.updateLineReview(lineReviewId, req);

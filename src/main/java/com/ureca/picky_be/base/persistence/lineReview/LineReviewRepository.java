@@ -9,7 +9,11 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Repository
 public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
     boolean existsByMovieIdAndUserId(Long movieId, Long userId);
 
@@ -46,4 +50,8 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
     );
 
 
+
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    void deleteByUserId(Long userId);
 }

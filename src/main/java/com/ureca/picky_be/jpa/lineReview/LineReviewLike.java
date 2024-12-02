@@ -41,6 +41,4 @@ public class LineReviewLike extends BaseEntity {
         this.preference = newPreference;
         return this;
     }
-
-
 }

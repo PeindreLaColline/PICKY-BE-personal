@@ -2,9 +2,7 @@ package com.ureca.picky_be.base.implementation.lineReview;
 
 import com.ureca.picky_be.base.business.lineReview.dto.CountLineReviewLikeResp;
 import com.ureca.picky_be.base.business.lineReview.dto.CreateLineReviewLikeReq;
-import com.ureca.picky_be.base.business.lineReview.dto.CreateLineReviewReq;
-import com.ureca.picky_be.base.business.lineReview.dto.UpdateLineReviewReq;
-import com.ureca.picky_be.base.persistence.UserRepository;
+import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.base.persistence.lineReview.LineReviewLikeRepository;
 import com.ureca.picky_be.base.persistence.lineReview.LineReviewRepository;
 import com.ureca.picky_be.global.exception.CustomException;
@@ -14,7 +12,6 @@ import com.ureca.picky_be.jpa.lineReview.LineReviewLike;
 import com.ureca.picky_be.jpa.lineReview.Preference;
 import com.ureca.picky_be.jpa.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
