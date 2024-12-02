@@ -21,7 +21,7 @@ public class BoardController {
 
     private final BoardManagingUseCase boardManagingUseCase;
 
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(summary = "게시글 생성(Create)", description = "사용자가 입력한 게시글 생성")
     public SuccessCode createBoard(@RequestBody AddBoardReq req) {
         boardManagingUseCase.addBoard(req);

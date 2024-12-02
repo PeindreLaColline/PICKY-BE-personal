@@ -5,6 +5,8 @@ import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
 import com.ureca.picky_be.base.implementation.movie.MovieManager;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
+import com.ureca.picky_be.global.exception.CustomException;
+import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.jpa.board.Board;
 import com.ureca.picky_be.jpa.board.BoardComment;
 import com.ureca.picky_be.jpa.board.BoardContent;

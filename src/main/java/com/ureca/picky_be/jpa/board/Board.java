@@ -1,12 +1,12 @@
 package com.ureca.picky_be.jpa.board;
 
+import com.ureca.picky_be.base.business.board.dto.AddBoardContentReq;
 import com.ureca.picky_be.jpa.config.BaseEntity;
 import com.ureca.picky_be.jpa.movie.Movie;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
-import java.util.List;
 
 @Getter
 @Entity
@@ -26,7 +26,7 @@ public class Board extends BaseEntity {
     @JoinColumn(name="movie_id", nullable=false)
     private Movie movie;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardContent> contents = new ArrayList<>();
 
     private String context;
@@ -40,17 +40,26 @@ public class Board extends BaseEntity {
         this.isSpoiler = isSpoiler;
     }
 
-    public static Board of(Long userId, Movie movie, List<BoardContent> contents, String context, boolean isSpoiler) {
-        return Board.builder()
+    public static Board of(Long userId, Movie movie, String context, boolean isSpoiler, List<AddBoardContentReq> addBoardContentReqs) {
+
+        Board board = Board.builder()
                 .userId(userId)
                 .movie(movie)
-                .contents(contents)
                 .context(context)
                 .isSpoiler(isSpoiler)
+                .contents(new ArrayList<>())
                 .build();
+
+        for (AddBoardContentReq dto : addBoardContentReqs) {
+            BoardContent boardContent = BoardContent.of(board, dto.contentUrl(), dto.type());
+            board.addBoardContent(boardContent);
+        }
+        return board;
     }
 
-    public void addContent(BoardContent content) {
-        this.contents.add(content);
+    public void addBoardContent(BoardContent boardContent) {
+        this.contents.add(boardContent);
     }
+
+
 }

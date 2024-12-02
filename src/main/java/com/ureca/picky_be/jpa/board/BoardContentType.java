@@ -15,6 +15,4 @@ public enum BoardContentType {
             throw new CustomException(ErrorCode.INVALID_CONTENT_TYPE);
         }
     }
-
-
 }
