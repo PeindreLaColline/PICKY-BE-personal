@@ -49,13 +49,23 @@ public enum ErrorCode {
     LINEREVIEW_UPDATE_UNAUTHORIZED(HttpStatus.BAD_REQUEST, "LR004", "수정 권한이 없습니다." ),
     LINEREVIEW_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "LR005", "한줄평 수정에 실패 했습니다." ),
     LINEREVIEW_CREATE_DUPLICATE(HttpStatus.BAD_REQUEST, "LR006", "한줄평은 계정당 한개만 작성가능합니다." ),
+    LINEREVIEW_INVALID_SORTTYPE(HttpStatus.BAD_REQUEST, "LR007", "정렬은 Likes(좋아요순), Latest(최신순)만 가능합니다."),
+    LINEREVIEW_INVALID_CURSOR1(HttpStatus.BAD_REQUEST, "LR008", "lastReviewId와 lastCreatedAt는 함께 제공되어야 합니다."),
+    LINEREVIEW_INVALID_CURSOR2(HttpStatus.BAD_REQUEST, "LR009", "lastReviewId는 0보다 큰 값이어야 합니다."),
+    LINEREVIEW_INVALID_CURSOR3(HttpStatus.BAD_REQUEST, "LR0010", "lastCreatedAt은 현재 시점 이전이어야 합니다."),
+    LINEREVIEW_INVALID_SORT(HttpStatus.BAD_REQUEST, "LR0011", "유효하지 않은 정렬 방식입니다"),
+    LINEREVIEW_GET_FAILED(HttpStatus.BAD_REQUEST, "LR0012", "한줄평 조회에 실패했습니다."),
+
+
 
     //LineReviewLike
     INVALID_PREFERENCE(HttpStatus.BAD_REQUEST, "LRL001","LIKE, DISLIKE값만 가능합니다"),
     LINEREVIEWLIKE_CREATE_FAILED(HttpStatus.BAD_REQUEST, "LRL002","한줄평 좋아요에 실패했습니다."),
     LINEREVIEWLIKE_CREATE_DUPLICATE(HttpStatus.BAD_REQUEST,"LRL003","좋아요나 싫어요는 한번만 가능합니다."),
     LINEREVIEW_COUNT_FAILED(HttpStatus.BAD_REQUEST, "LRL004", "좋아요 수 찾기 실패 했습니다."),
-    LINEREVIEWLIKE_SELF_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "LRL005", "자신의 한줄평에는 좋아요가 안됩니다." );
+    LINEREVIEWLIKE_SELF_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "LRL005", "자신의 한줄평에는 좋아요가 안됩니다." ),
+
+    ;
 
     private final HttpStatus httpStatus; // HTTP 상태 코드
     private final String code;          // 에러 코드
