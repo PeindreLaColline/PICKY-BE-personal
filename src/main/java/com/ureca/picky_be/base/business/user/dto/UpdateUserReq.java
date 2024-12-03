@@ -12,5 +12,6 @@ public record UpdateUserReq(String name,
                             LocalDate birthdate,
                             Gender gender,
                             Nationality nationality,
-                            List<Long> movieId){
+                            List<Long> movieId,
+                            List<Long> genreId){
 }

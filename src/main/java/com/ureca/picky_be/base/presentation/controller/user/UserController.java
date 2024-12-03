@@ -1,6 +1,7 @@
 package com.ureca.picky_be.base.presentation.controller.user;
 
 import com.ureca.picky_be.base.business.movie.MovieUseCase;
+import com.ureca.picky_be.base.business.movie.dto.GetGenres;
 import com.ureca.picky_be.base.business.movie.dto.MoviePreferenceResp;
 import com.ureca.picky_be.base.business.user.UserUseCase;
 import com.ureca.picky_be.base.business.user.dto.GetUserResp;
@@ -19,7 +20,7 @@ public class UserController {
     private final UserUseCase userUseCase;
     private final MovieUseCase movieUseCase;
 
-    @Operation(summary = "첫 화면에서 유저 개인정보 기입, 및 마이페이지에서 개인정보 수정", description = "처음에 회원가입할 때 개인정보 넣을 때, 마이페이지에서 개인정보 수정할 때 둘 다 사용가능합니다. 다만 필드는 null불가입니다 다 채워서 보내주세요 (마이페이지에서 개인정보 수정하는 부분이라면 기존 정보 넣어서 전송)")
+    @Operation(summary = "회원가입할 때 개인정보 기입, 마이페이지에서 개인정보 수정", description = "무조건 모든 필드 다 채워서 주세요. movieId, genreId 말고는 null 불가")
     @PatchMapping
     public SuccessCode updateUserInfo(@RequestBody UpdateUserReq req) {
         return userUseCase.updateUserInfo(req);
@@ -36,4 +37,12 @@ public class UserController {
     public List<MoviePreferenceResp> getMovieListForPreference(){
         return movieUseCase.getMovieListForPreference();
     }
+
+    @Operation(summary ="장르 전체 리스트 반환", description = "회원가입 때 쓸 일 있으시면 쓰세요.")
+    @GetMapping("/genres")
+    public List<GetGenres> getGenres() {
+        return movieUseCase.getGenres();
+    }
+
+
 }

@@ -15,4 +15,5 @@ public interface MovieUseCase {
     List<GetSimpleMovieResp> getTop10();
     List<GetSimpleMovieResp> getMoviesByGenre(Long genreId, Long lastMovieId, Integer lastLikeCount);
     boolean movieLike(Long movieId);
+    List<GetGenres> getGenres();
 }
