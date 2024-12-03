@@ -22,7 +22,8 @@ public record AddMovieReq(
             @JsonProperty("overview") String plot,
             @JsonProperty("runtime") int runtime,
             @JsonProperty("genres") List<GenreInfo> genres,
-            @JsonProperty("credits") Credits credits
+            @JsonProperty("credits") Credits credits,
+            @JsonProperty("backdrop_path") String backdropUrl
     ){
         public record GenreInfo(
                 @JsonProperty("id") Long id

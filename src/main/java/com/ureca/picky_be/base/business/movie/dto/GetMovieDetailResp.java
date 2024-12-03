@@ -11,13 +11,15 @@ public record GetMovieDetailResp(
         @JsonProperty("movie_info") MovieInfo movieInfo,
         @JsonProperty("trailer") String trailer,
         @JsonProperty("ost") String ost,
-        @JsonProperty("movie_behind_videos") List<String> movieBehindVideos
+        @JsonProperty("movie_behind_videos") List<String> movieBehindVideos,
+        @JsonProperty("like") boolean like
 ) {
     public record MovieInfo(
             @JsonProperty("id") Long id,
             @JsonProperty("original_title") String title,
             @JsonProperty("release_date") Date releaseDate,
             @JsonProperty("poster_path") String posterUrl,
+            @JsonProperty("backdrop_path") String backdropUrl,
             @JsonProperty("overview") String plot,
             @JsonProperty("runtime") int runtime,
             @JsonProperty("genres") List<GenreInfo> genres,
