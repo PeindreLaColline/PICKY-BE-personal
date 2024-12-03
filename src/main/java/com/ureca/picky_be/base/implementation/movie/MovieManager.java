@@ -1,17 +1,25 @@
 package com.ureca.picky_be.base.implementation.movie;
 
 import com.ureca.picky_be.base.business.movie.dto.AddMovieReq;
+import com.ureca.picky_be.base.business.movie.dto.GetMovieByGenreReq;
+import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
 import com.ureca.picky_be.base.business.movie.dto.UpdateMovieReq;
 import com.ureca.picky_be.base.persistence.movie.*;
 import com.ureca.picky_be.base.persistence.movieworker.MovieWorkerRepository;
+import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.genre.Genre;
 import com.ureca.picky_be.jpa.movie.*;
 import com.ureca.picky_be.jpa.movieworker.MovieWorker;
+import com.ureca.picky_be.jpa.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Component
@@ -23,6 +31,8 @@ public class MovieManager {
     private final MovieWorkerRepository movieWorkerRepository;
     private final FilmCrewRepository filmCrewRepository;
     private final GenreRepository genreRepository;
+    private final MovieLikeRepository movieLikeRepository;
+    private final UserRepository userRepository;
 
     public List<Movie> getMovieListForPreference(){
         return movieRepository.findTop45ByOrderByTotalRatingDesc();
@@ -44,6 +54,7 @@ public class MovieManager {
                 .title(addMovieReq.movieInfo().title())
                 .releaseDate(addMovieReq.movieInfo().releaseDate())
                 .posterUrl(addMovieReq.movieInfo().posterUrl())
+                .backdropUrl(addMovieReq.movieInfo().backdropUrl())
                 .totalRating(2.5)
                 .plot(addMovieReq.movieInfo().plot())
                 .runningTime(addMovieReq.movieInfo().runtime())
@@ -121,6 +132,7 @@ public class MovieManager {
         return filmCrewRepository.saveAll(filmCrews);
     }
 
+    /* 영화 상세 정보 get */
     public Movie getMovie(Long movieId) {
         return movieRepository.findById(movieId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
@@ -141,6 +153,10 @@ public class MovieManager {
 
     public List<FilmCrew> getDirectors(Movie movie) {
         return filmCrewRepository.findByMovieIdAndFilmCrewPosition(movie, FilmCrewPosition.DIRECTOR);
+    }
+
+    public boolean getMovieLike(Long movieId, Long userId){
+        return movieLikeRepository.existsByMovieIdAndUserId(movieId, userId);
     }
 
     /* 영화 수정 */
@@ -231,4 +247,48 @@ public class MovieManager {
         return filmCrewRepository.saveAll(filmCrews);
     }
 
+    /* 기준에 따른 영화 리스트 get */
+    public List<GetSimpleMovieResp> getRecommends(){
+        Pageable pageable = PageRequest.of(0, 30);
+        return movieRepository.findTop30MoviesWithLikes(pageable);
+    }
+
+    public List<GetSimpleMovieResp> getTop10(){
+        Pageable pageable = PageRequest.of(0, 10);
+        return movieRepository.findTop10MoviesWithLikes(pageable);
+    }
+
+    public List<GetSimpleMovieResp> getMoviesByGenre(GetMovieByGenreReq getMovieByGenreReq){
+        Pageable pageable = PageRequest.of(0, 12);
+        return movieRepository.findMoviesByGenreIdWithLikes(getMovieByGenreReq.genreId(), getMovieByGenreReq.lastMovieId(), pageable);
+    }
+
+    @Transactional
+    public boolean movieLike(Long movieId, Long userId) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return movieLikeRepository.findByMovieIdAndUserId(movieId, userId)
+                .map(movieLike -> {
+                    movieLikeRepository.delete(movieLike);
+                    return false;
+                })
+                .orElseGet(() -> {
+                    createNewMovieLike(movie, user);
+                    return true;
+                });
+    }
+
+    private void createNewMovieLike(Movie movie, User user){
+        try{
+            MovieLike newMovieLike = MovieLike.builder()
+                    .movie(movie)
+                    .user(user)
+                    .build();
+            movieLikeRepository.save(newMovieLike);
+        } catch (Exception e){
+            throw new CustomException(ErrorCode.MOVIE_LIKE_FAILED);
+        }
+    }
 }
