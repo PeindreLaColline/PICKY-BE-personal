@@ -25,7 +25,7 @@ public class BoardController {
     }
 
     @PostMapping("/{boardId}")
-    @Operation(summary = "게시글 수정(Update)", description = "사용자가 작성한 게시글 수정")
+    @Operation(summary = "게시글 수정(Update)", description = "사용자가 작성한 게시글 수정(글 내용(Context), 스포일러 여부(isSpoiler)만 수정 가능합니다!")
     public SuccessCode updateBoard(@PathVariable Long boardId, @RequestBody UpdateBoardReq req) {
         boardUseCase.updateBoard(boardId, req);
         return SuccessCode.UPDATE_BOARD_SUCCESS;
