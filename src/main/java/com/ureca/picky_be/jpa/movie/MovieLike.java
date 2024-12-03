@@ -26,6 +26,5 @@ public class MovieLike extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
-    private boolean isDeleted;
-
+    //private boolean isDeleted;
 }
