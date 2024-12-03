@@ -1,11 +1,13 @@
 package com.ureca.picky_be.base.presentation.controller.movie;
 
 import com.ureca.picky_be.base.business.movie.MovieService;
-import com.ureca.picky_be.base.business.movie.dto.*;
+import com.ureca.picky_be.base.business.movie.dto.AddMovieReq;
+import com.ureca.picky_be.base.business.movie.dto.GetMovieDetailResp;
+import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
+import com.ureca.picky_be.base.business.movie.dto.UpdateMovieReq;
 import com.ureca.picky_be.global.success.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,8 +50,13 @@ public class MovieController {
 
     @Operation(summary = "영화 장르별 조회", description = "영화 장르별 조회")
     @GetMapping("/genre")
-    public List<GetSimpleMovieResp> getMoviesByGenre(@RequestBody GetMovieByGenreReq getMovieByGenreReq) {
-        return movieService.getMoviesByGenre(getMovieByGenreReq);
+    public List<GetSimpleMovieResp> getMoviesByGenre(@RequestParam Long genreId,
+                                                     @RequestParam(required = false) Long lastMovieId,
+                                                     @RequestParam(required = false) Integer lastLikeCount) {
+        System.out.println(genreId);
+        System.out.println(lastMovieId);
+        System.out.println(lastLikeCount);
+        return movieService.getMoviesByGenre(genreId, lastMovieId, lastLikeCount);
     }
 
     @Operation(summary = "영화 좋아요", description = "영화 좋아요 혹은 좋아요 취소. return true일 시 좋아요 눌린 상태, false일 시 좋아요 안 눌린 상태")

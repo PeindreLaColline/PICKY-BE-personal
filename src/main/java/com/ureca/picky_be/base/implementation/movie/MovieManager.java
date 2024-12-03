@@ -11,6 +11,7 @@ import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.genre.Genre;
+import com.ureca.picky_be.jpa.lineReview.SortType;
 import com.ureca.picky_be.jpa.movie.*;
 import com.ureca.picky_be.jpa.movieworker.MovieWorker;
 import com.ureca.picky_be.jpa.user.User;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -258,9 +260,26 @@ public class MovieManager {
         return movieRepository.findTop10MoviesWithLikes(pageable);
     }
 
-    public List<GetSimpleMovieResp> getMoviesByGenre(GetMovieByGenreReq getMovieByGenreReq){
-        Pageable pageable = PageRequest.of(0, 12);
-        return movieRepository.findMoviesByGenreIdWithLikes(getMovieByGenreReq.genreId(), getMovieByGenreReq.lastMovieId(), pageable);
+    public List<GetSimpleMovieResp> getMoviesByGenre(Long genreId, Long lastMovieId, Integer lastLikeCount){
+/*        // 영화 존재 여부 확인
+        if (lastMovieId != null && !movieRepository.existsById(lastMovieId)) {
+            throw new CustomException(ErrorCode.MOVIE_NOT_FOUND);
+        }*/
+
+        //validateCursor(genreId, lastMovieId);
+        System.out.println(23947923);
+        System.out.println(movieRepository.findMoviesByGenreIdWithLikesUsingCursor(genreId, lastLikeCount, lastMovieId, PageRequest.ofSize(12)));
+        System.out.println("sefefwefw");
+        return movieRepository.findMoviesByGenreIdWithLikesUsingCursor(genreId, lastLikeCount, lastMovieId, PageRequest.ofSize(12));
+    }
+
+    private void validateCursor(Long genreId, Long movieId) {
+        // 첫 요청일 경우
+        if (movieId == null) return;
+
+        // genreId 유효성 검사
+        Genre genre = genreRepository.findById(genreId)
+                .orElseThrow(() -> new CustomException(ErrorCode.GENRE_NOT_FOUND));
     }
 
     @Transactional

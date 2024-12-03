@@ -68,8 +68,8 @@ public class MovieService implements MovieUseCase{
     }
 
     @Override
-    public List<GetSimpleMovieResp> getMoviesByGenre(GetMovieByGenreReq getMovieByGenreReq){
-        return movieManager.getMoviesByGenre(getMovieByGenreReq);
+    public List<GetSimpleMovieResp> getMoviesByGenre(Long genreId, Long lastMovieId, Integer lastLikeCount) {
+        return movieManager.getMoviesByGenre(genreId, lastMovieId, lastLikeCount);
     }
 
     @Override

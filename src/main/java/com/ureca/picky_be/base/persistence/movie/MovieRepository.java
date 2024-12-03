@@ -61,12 +61,17 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     JOIN MovieGenre mg ON mg.movieId = m
     LEFT JOIN MovieLike ml ON ml.movie.id = m.id
     WHERE mg.genreId = :genreId
-      AND (:lastMovieId IS NULL OR m.id < :lastMovieId)
     GROUP BY m.id, m.title, m.totalRating, m.posterUrl, m.backdropUrl
-    ORDER BY m.totalRating DESC, m.createdAt DESC
+    HAVING (
+        :lastMovieId IS NULL AND :lastLikeCount IS NULL
+        OR (CAST(COUNT(ml) AS int) < :lastLikeCount)
+        OR (CAST(COUNT(ml) AS int) = :lastLikeCount)
+    )
+    ORDER BY COUNT(ml) DESC, m.totalRating DESC
 """)
-    List<GetSimpleMovieResp> findMoviesByGenreIdWithLikes(
+    List<GetSimpleMovieResp> findMoviesByGenreIdWithLikesUsingCursor(
             @Param("genreId") Long genreId,
+            @Param("lastLikeCount") Integer lastLikeCount,
             @Param("lastMovieId") Long lastMovieId,
             Pageable pageable
     );

@@ -13,6 +13,6 @@ public interface MovieUseCase {
     SuccessCode updateMovie(Long movieId, UpdateMovieReq updateMovieReq);
     List<GetSimpleMovieResp> getRecommends();
     List<GetSimpleMovieResp> getTop10();
-    List<GetSimpleMovieResp> getMoviesByGenre(GetMovieByGenreReq getMovieByGenreReq);
+    List<GetSimpleMovieResp> getMoviesByGenre(Long genreId, Long lastMovieId, Integer lastLikeCount);
     boolean movieLike(Long movieId);
 }
