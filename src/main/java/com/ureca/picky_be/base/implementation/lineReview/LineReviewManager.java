@@ -101,7 +101,7 @@ public class LineReviewManager {
                     throw new CustomException(ErrorCode.LINEREVIEW_INVALID_SORTTYPE);
             }
         } catch (CustomException e) {
-            throw e; // CustomException 재발생
+            throw e;
         } catch (Exception e) {
             // 일반 예외 처리
             throw new CustomException(ErrorCode.LINEREVIEW_GET_FAILED);

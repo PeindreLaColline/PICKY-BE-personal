@@ -32,7 +32,7 @@ public class LineReviewController {
         return resp;
     }
     @Operation(summary = "한줄평 업데이트", description = "평점은 수정 불가능")
-    @PutMapping("/{lineReviewId}")
+    @PatchMapping("/{lineReviewId}")
     public UpdateLineReviewResp updateLineReviewResp(@PathVariable Long lineReviewId, @RequestBody UpdateLineReviewReq req){
         UpdateLineReviewResp resp = lineReviewUseCase.updateLineReview(lineReviewId, req);
         return resp;
