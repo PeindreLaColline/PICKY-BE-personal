@@ -1,5 +1,6 @@
 package com.ureca.picky_be.base.implementation.mapper;
 
+import com.ureca.picky_be.base.business.movie.dto.GetGenres;
 import com.ureca.picky_be.base.business.movie.dto.GetMovieDetailResp;
 import com.ureca.picky_be.base.business.movie.dto.MoviePreferenceResp;
 import com.ureca.picky_be.jpa.genre.Genre;
@@ -70,6 +71,12 @@ public class MovieDtoMapper {
     public List<MoviePreferenceResp> toMoviePreferenceResp(List<Movie> movies) {
         return movies.stream()
                 .map(movie -> new MoviePreferenceResp(movie.getId(), movie.getPosterUrl()))
+                .toList();
+    }
+
+    public List<GetGenres> toGetGenres(List<Genre> genres) {
+        return genres.stream()
+                .map(genre -> new GetGenres(genre.getId(), genre.getName()))
                 .toList();
     }
 

@@ -310,4 +310,8 @@ public class MovieManager {
             throw new CustomException(ErrorCode.MOVIE_LIKE_FAILED);
         }
     }
+
+    public List<Genre> getGenres(){
+        return genreRepository.findAll();
+    }
 }

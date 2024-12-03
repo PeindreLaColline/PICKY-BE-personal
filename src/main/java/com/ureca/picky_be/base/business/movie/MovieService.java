@@ -10,7 +10,6 @@ import com.ureca.picky_be.jpa.movie.FilmCrew;
 import com.ureca.picky_be.jpa.movie.Movie;
 import com.ureca.picky_be.jpa.movie.MovieBehindVideo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -75,5 +74,11 @@ public class MovieService implements MovieUseCase{
     @Override
     public boolean movieLike(Long movieId){
         return movieManager.movieLike(movieId, authManager.getUserId());
+    }
+
+    @Override
+    public List<GetGenres> getGenres(){
+        List<Genre> genres = movieManager.getGenres();
+        return movieDtoMapper.toGetGenres(genres);
     }
 }
