@@ -1,6 +1,7 @@
 package com.ureca.picky_be.base.business.auth;
 
 import com.ureca.picky_be.base.business.auth.dto.DeleteUserReq;
+import com.ureca.picky_be.base.business.auth.dto.LoginUrlResp;
 import com.ureca.picky_be.base.business.auth.dto.LoginUserInfo;
 import com.ureca.picky_be.base.business.auth.dto.OAuth2Token;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
@@ -19,10 +20,10 @@ public class GoogleService implements OAuth2UseCase{
     //TODO: state 랜덤 생성 및 유효성 검사
     private String state="1234";
 
-/*    @Override
+    @Override
     public LoginUrlResp getLoginUrl() {
         return googleManager.buildCodeUrl(state);
-    }*/
+    }
 
     @Override
     public SuccessCode sendJwtToken(String state, String code) {

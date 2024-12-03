@@ -3,6 +3,7 @@ package com.ureca.picky_be.base.presentation.controller.auth;
 import com.ureca.picky_be.base.business.auth.OAuth2UseCase;
 import com.ureca.picky_be.base.business.auth.OAuth2UseCaseResolver;
 import com.ureca.picky_be.base.business.auth.dto.DeleteUserReq;
+import com.ureca.picky_be.base.business.auth.dto.LoginUrlResp;
 import com.ureca.picky_be.global.success.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +15,14 @@ import org.springframework.web.bind.annotation.*;
 public class OAuth2Controller {
     private final OAuth2UseCaseResolver oAuth2UseCaseResolver;
 
-/*    @Operation(summary = "로그인 및 회원가입 url 발급", description = "로그인 및 회원가입에 사용되는 url 반환")
+    @Operation(summary = "로그인 및 회원가입 url 발급", description = "로그인 및 회원가입에 사용되는 url 반환")
     @GetMapping("/{platform}/login")
     public LoginUrlResp getOAuth2LoginUrl (@PathVariable String platform) {
         OAuth2UseCase oAuth2UseCase = oAuth2UseCaseResolver.resolve(platform);
         return oAuth2UseCase.getLoginUrl();
-    }*/
+    }
 
+    //TODO: 수정필요
     @Operation(summary = "플랫폼에서 요청 수신 (우리 프론트 사용X)", description = "내부에 프론트로 post요청 보내는 로직 있음(oAuth2Token, jwt, isRegisterationDone) 개발시 백엔드 김00에게 문의 바람- 협의 필요")
     @GetMapping("/{platform}/user")
     public SuccessCode getUserInfo(@PathVariable String platform,

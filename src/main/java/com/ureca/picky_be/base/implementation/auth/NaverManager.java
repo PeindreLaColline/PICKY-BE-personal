@@ -1,9 +1,6 @@
 package com.ureca.picky_be.base.implementation.auth;
 
-import com.ureca.picky_be.base.business.auth.dto.DeleteUserReq;
-import com.ureca.picky_be.base.business.auth.dto.LoginUserInfo;
-import com.ureca.picky_be.base.business.auth.dto.LoginUserResp;
-import com.ureca.picky_be.base.business.auth.dto.OAuth2Token;
+import com.ureca.picky_be.base.business.auth.dto.*;
 import com.ureca.picky_be.base.persistence.board.BoardCommentRepository;
 import com.ureca.picky_be.base.persistence.board.BoardLikeRepository;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
@@ -52,7 +49,7 @@ public class NaverManager {
 
     private final RestClient restClient = RestClient.create();
 
-/*    public LoginUrlResp buildCodeUrl(String state){
+    public LoginUrlResp buildCodeUrl(String state){
         return new LoginUrlResp(UriComponentsBuilder
                 .fromHttpUrl(naverConfig.getCodeUrl())
                 .queryParam("client_id", naverConfig.getClientId())
@@ -62,7 +59,7 @@ public class NaverManager {
                 .queryParam("state", state)
                 .build()
                 .toUriString());
-    }*/
+    }
 
     public OAuth2Token getOAuth2Token(String state, String code){
         try {

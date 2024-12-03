@@ -31,6 +31,7 @@ public enum ErrorCode {
 
     // MOVIE
     MOVIE_NOT_FOUND(HttpStatus.NOT_FOUND, "MOV001", "해당 영화가 존재하지 않습니다."),
+    MOVIE_LIKE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "MOV002", "영화 좋아요/취소에 실패했습니다."),
 
     // BOARD
     BOARD_USER_NOT_WRITER(HttpStatus.UNAUTHORIZED, "BOD001", "해당 게시물 작성자와 일치하지 않습니다."),

@@ -1,21 +1,16 @@
 package com.ureca.picky_be.base.business.movie;
 
-import com.ureca.picky_be.base.business.movie.dto.AddMovieReq;
-import com.ureca.picky_be.base.business.movie.dto.GetMovieDetailResp;
-import com.ureca.picky_be.base.business.movie.dto.MoviePreferenceResp;
-import com.ureca.picky_be.base.business.movie.dto.UpdateMovieReq;
+import com.ureca.picky_be.base.business.movie.dto.*;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.mapper.MovieDtoMapper;
 import com.ureca.picky_be.base.implementation.movie.MovieManager;
-import com.ureca.picky_be.global.exception.CustomException;
-import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.genre.Genre;
 import com.ureca.picky_be.jpa.movie.FilmCrew;
 import com.ureca.picky_be.jpa.movie.Movie;
 import com.ureca.picky_be.jpa.movie.MovieBehindVideo;
-import com.ureca.picky_be.jpa.user.Role;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,7 +44,8 @@ public class MovieService implements MovieUseCase{
         List<Genre> genres = movieManager.getGenre(movieId);
         List<FilmCrew> actors = movieManager.getActors(movie);
         List<FilmCrew> directors = movieManager.getDirectors(movie);
-        return movieDtoMapper.toGetMovieDetailResp(movie, movieBehindVideos, genres, actors, directors);
+        boolean like = movieManager.getMovieLike(movieId, authManager.getUserId());
+        return movieDtoMapper.toGetMovieDetailResp(movie, movieBehindVideos, genres, actors, directors, like);
     }
 
     @Override
@@ -59,5 +55,25 @@ public class MovieService implements MovieUseCase{
             throw new CustomException(ErrorCode.UNAUTHORIZED);
         }*/
         return movieManager.updateMovie(movieId, updateMovieReq);
+    }
+
+    @Override
+    public List<GetSimpleMovieResp> getRecommends() {
+        return movieManager.getRecommends();
+    }
+
+    @Override
+    public List<GetSimpleMovieResp> getTop10() {
+        return movieManager.getTop10();
+    }
+
+    @Override
+    public List<GetSimpleMovieResp> getMoviesByGenre(Long genreId, Long lastMovieId, Integer lastLikeCount) {
+        return movieManager.getMoviesByGenre(genreId, lastMovieId, lastLikeCount);
+    }
+
+    @Override
+    public boolean movieLike(Long movieId){
+        return movieManager.movieLike(movieId, authManager.getUserId());
     }
 }
