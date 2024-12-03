@@ -4,6 +4,7 @@ import com.ureca.picky_be.base.business.auth.OAuth2UseCase;
 import com.ureca.picky_be.base.business.auth.OAuth2UseCaseResolver;
 import com.ureca.picky_be.base.business.auth.dto.DeleteUserReq;
 import com.ureca.picky_be.base.business.auth.dto.LoginUrlResp;
+import com.ureca.picky_be.base.business.auth.dto.TokenResp;
 import com.ureca.picky_be.global.success.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +23,11 @@ public class OAuth2Controller {
         return oAuth2UseCase.getLoginUrl();
     }
 
-    //TODO: 수정필요
-    @Operation(summary = "플랫폼에서 요청 수신 (우리 프론트 사용X)", description = "내부에 프론트로 post요청 보내는 로직 있음(oAuth2Token, jwt, isRegisterationDone) 개발시 백엔드 김00에게 문의 바람- 협의 필요")
+    @Operation(summary = "프론트에서 code 받아서 토큰 반환", description = "localToken, socialToken, isRegistrationDone return 됨 확인 필!")
     @GetMapping("/{platform}/user")
-    public SuccessCode getUserInfo(@PathVariable String platform,
-                                   @RequestParam String code,
-                                   @RequestParam String state
+    public TokenResp getToken(@PathVariable String platform,
+                              @RequestParam String code,
+                              @RequestParam String state
                                             ){
         OAuth2UseCase oAuth2UseCase = oAuth2UseCaseResolver.resolve(platform);
         return oAuth2UseCase.sendJwtToken(state, code);

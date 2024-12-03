@@ -147,31 +147,6 @@ public class GoogleManager {
         }
     }
 
-    public SuccessCode sendResponseToFrontend(OAuth2Token oAuth2Token, LocalJwtDto jwt, boolean isRegistrationDone) {
-        LoginUserResp resp = new LoginUserResp(oAuth2Token, jwt, isRegistrationDone);
-        try {
-            restClient
-                    .post()
-                    .uri(buildFrontendUrl())
-                    .header("Content-Type", "application/json")
-                    .body(resp)
-                    .retrieve()
-                    .toBodilessEntity();
-            return SuccessCode.REQUEST_FRONT_SUCCESS;
-        } catch (RestClientResponseException e) {
-            throw new CustomException(ErrorCode.BAD_REQUEST);
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    private String buildFrontendUrl(){
-        return UriComponentsBuilder
-                .fromHttpUrl(googleConfig.getFrontendServer())
-                .build()
-                .toUriString();
-    }
-
     @Transactional
     public SuccessCode deleteAccount(Long userId, DeleteUserReq req) {
         restClient
