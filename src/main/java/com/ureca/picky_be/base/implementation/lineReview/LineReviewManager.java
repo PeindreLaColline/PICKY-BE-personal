@@ -50,15 +50,15 @@ public class LineReviewManager {
                     .build();
             return lineReviewRepository.save(lineReview);
         } catch (CustomException e) {
-            throw e;}
-        catch (Exception e){
+            throw e;
+        } catch (Exception e) {
             throw new CustomException(ErrorCode.LINEREVIEW_CREATE_FAILED);
         }
 
     }
 
     public LineReview updateLineReview(Long lineReviewId, UpdateLineReviewReq req, Long userId) {
-        try{
+        try {
             LineReview existLineReview = lineReviewRepository.findById(lineReviewId)
                     .orElseThrow(() -> new CustomException(ErrorCode.LINEREVIEW_NOT_FOUND));
             User user = userRepository.findById(userId)
@@ -69,7 +69,7 @@ public class LineReviewManager {
             }
             existLineReview.lineReviewContextUpdate(req.context(), req.isSpoiler());
             return lineReviewRepository.save(existLineReview);
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new CustomException(ErrorCode.LINEREVIEW_UPDATE_FAILED);
         }
     }
@@ -77,54 +77,59 @@ public class LineReviewManager {
 
     public Slice<LineReviewProjection> findLineReviewsByMovie(LineReviewQueryRequest queryReq, PageRequest pageRequest) {
         try {
-            if (!movieRepository.existsById(queryReq.movieId())) {
+            // 요청 데이터 변수로 저장 (가독성 향상)
+            Long movieId = queryReq.movieId();
+            Long lastReviewId = queryReq.lastReviewId();
+            LocalDateTime lastCreatedAt = queryReq.lastCreatedAt();
+            SortType sortType = queryReq.sortType();
+
+            // 영화 존재 여부 확인
+            if (!movieRepository.existsById(movieId)) {
                 throw new CustomException(ErrorCode.MOVIE_NOT_FOUND);
             }
 
-            validateCursor(queryReq.lastReviewId(), queryReq.lastCreatedAt());
+            // 커서 유효성 검사
+            validateCursor(lastReviewId, lastCreatedAt, sortType);
 
-            if (queryReq.sortType() == SortType.LIKES) {
-                return lineReviewRepository.findByMovieAndLikesCursor(
-                        queryReq.movieId(),
-                        queryReq.lastReviewId(),
-                        pageRequest
-                );
-            } else if (queryReq.sortType() == SortType.LATEST) {
-                return lineReviewRepository.findByMovieAndLatestCursor(
-                        queryReq.movieId(),
-                        queryReq.lastReviewId(),
-                        pageRequest
-                );
-            } else {
-                throw new CustomException(ErrorCode.LINEREVIEW_CREATE_FAILED);
+            // 정렬 타입에 따라 쿼리 호출
+            switch (sortType) {
+                case LIKES:
+                    return lineReviewRepository.findByMovieAndLikesCursor(movieId, lastReviewId, pageRequest);
+                case LATEST:
+                    return lineReviewRepository.findByMovieAndLatestCursor(movieId, lastReviewId, lastCreatedAt, pageRequest);
+                default:
+                    throw new CustomException(ErrorCode.LINEREVIEW_INVALID_SORTTYPE);
             }
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {
+            // 일반 예외 처리
             throw new CustomException(ErrorCode.LINEREVIEW_GET_FAILED);
         }
     }
 
 
-    private void validateCursor(Long lastReviewId, LocalDateTime lastCreatedAt) {
-        // 커서가 없는 경우 (첫 요청)
+    private void validateCursor(Long lastReviewId, LocalDateTime lastCreatedAt, SortType sortType) {
+        // 첫 요청일 경우
         if (lastReviewId == null && lastCreatedAt == null) {
             return;
         }
 
-        // ID 또는 날짜 중 하나만 제공된 경우
-        if (lastReviewId == null || lastCreatedAt == null) {
-            throw new CustomException(ErrorCode. LINEREVIEW_INVALID_CURSOR1);
+        // LATEST 정렬에서는 두 값이 모두 필요
+        if (sortType == SortType.LATEST) {
+            if (lastReviewId == null || lastCreatedAt == null) {
+                throw new CustomException(ErrorCode.LINEREVIEW_INVALID_CURSOR1);
+            }
         }
 
-        // ID가 유효하지 않은 경우
-        if (lastReviewId <= 0) {
-            throw new CustomException(ErrorCode. LINEREVIEW_INVALID_CURSOR2);
+        // ID 검증
+        if (lastReviewId != null && lastReviewId <= 0) {
+            throw new CustomException(ErrorCode.LINEREVIEW_INVALID_CURSOR2);
         }
 
-        // 날짜가 유효하지 않은 경우
-        if (lastCreatedAt.isAfter(LocalDateTime.now())) {
-            throw new CustomException(ErrorCode. LINEREVIEW_INVALID_CURSOR3);
+        // 날짜 검증
+        if (lastCreatedAt != null && lastCreatedAt.isAfter(LocalDateTime.now())) {
+            throw new CustomException(ErrorCode.LINEREVIEW_INVALID_CURSOR3);
         }
     }
 }

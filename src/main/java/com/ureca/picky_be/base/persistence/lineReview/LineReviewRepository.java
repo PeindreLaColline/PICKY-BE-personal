@@ -13,6 +13,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Repository
 public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
     boolean existsByMovieIdAndUserId(Long movieId, Long userId);
@@ -39,13 +41,15 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
     FROM LineReview lr
     LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
     WHERE lr.movieId = :movieId
-      AND (:lastReviewId IS NULL OR lr.id < :lastReviewId)
+      AND (:lastCreatedAt IS NULL OR lr.createdAt < :lastCreatedAt 
+           OR (lr.createdAt = :lastCreatedAt AND lr.id < :lastReviewId))
     GROUP BY lr.id, lr.userId, lr.movieId, lr.rating, lr.context, lr.isSpoiler, lr.createdAt
     ORDER BY lr.createdAt DESC, lr.id DESC
     """)
     Slice<LineReviewProjection> findByMovieAndLatestCursor(
             @Param("movieId") Long movieId,
             @Param("lastReviewId") Long lastReviewId,
+            @Param("lastCreatedAt") LocalDateTime lastCreatedAt,
             Pageable pageable
     );
 
