@@ -32,19 +32,22 @@ public class Board extends BaseEntity {
 
     private boolean isSpoiler;
 
+    @Column(nullable=false)
+    private String writerNickname;
 
     public void updateBoard(String context, boolean isSpoiler) {
         this.context = context;
         this.isSpoiler = isSpoiler;
     }
 
-    public static Board of(Long userId, Movie movie, String context, boolean isSpoiler, List<AddBoardContentReq> addBoardContentReqs) {
+    public static Board of(Long userId, Movie movie, String context, boolean isSpoiler, List<AddBoardContentReq> addBoardContentReqs, String writerNickname) {
 
         Board board = Board.builder()
                 .userId(userId)
                 .movie(movie)
                 .context(context)
                 .isSpoiler(isSpoiler)
+                .writerNickname(writerNickname)
                 .contents(new ArrayList<>())
                 .build();
 
