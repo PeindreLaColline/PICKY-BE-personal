@@ -38,6 +38,7 @@ public class LineReviewService implements LineReviewUseCase {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Slice<ReadLineReviewResp> getLineReviewsByMovie(PageRequest pageRequest, LineReviewQueryRequest queryReq) {
         Slice<LineReviewProjection> lineReviews = lineReviewManager.findLineReviewsByMovie(queryReq, pageRequest);
         return lineReviews.map(lineReviewMapper::toReadLineReviewResp);
