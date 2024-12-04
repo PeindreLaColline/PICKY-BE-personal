@@ -38,7 +38,7 @@ public enum ErrorCode {
     BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "BOD002", "해당 게시물이 존재하지 않습니다."),
     BOARD_CREATE_FAILED(HttpStatus.BAD_REQUEST, "BOD003", "게시물 작성에 실패했습니다."),
     BOARD_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "BOD004", "게시물 수정에 실패했습니다."),
-
+    BOARD_MOVIE_RELATED_GET_FAILED(HttpStatus.BAD_REQUEST, "BOD005", "특정 영화에 대한 게시물들을 가져오는데에 실패했습니다."),
     // BOARDCONTENT
     INVALID_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "BDC001","PHOTO, VIDEO값만 가능합니다"),
     BOARD_CONTENT_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "BDC002","게시글 콘텐츠 업로드에 실패했습니다."),
