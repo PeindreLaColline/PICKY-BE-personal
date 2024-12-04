@@ -20,14 +20,17 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
     boolean existsByMovieIdAndUserId(Long movieId, Long userId);
 
     @Query("""
-    SELECT lr.id AS id, lr.userId AS userId, lr.movieId AS movieId, lr.rating AS rating,
-           lr.context AS context, lr.isSpoiler AS isSpoiler, COUNT(DISTINCT lrl.id) AS likes, lr.createdAt AS createdAt
-    FROM LineReview lr
-    LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
-    WHERE lr.movieId = :movieId
-      AND (:lastReviewId IS NULL OR lr.id < :lastReviewId)
-    GROUP BY lr.id, lr.userId, lr.movieId, lr.rating, lr.context, lr.isSpoiler, lr.createdAt
-    ORDER BY likes DESC, lr.id DESC
+        SELECT lr.id AS id, lr.userId AS userId, lr.writerNickname AS writerNickname, lr.movieId AS movieId, lr.rating AS rating,
+               lr.context AS context, lr.isSpoiler AS isSpoiler,
+               COUNT(CASE WHEN lrl.preference = 'LIKE' AND lrl.isDeleted = false THEN lrl.id END) AS likes,
+               COUNT(CASE WHEN lrl.preference = 'DISLIKE' AND lrl.isDeleted = false THEN lrl.id END) AS dislikes,
+               lr.createdAt AS createdAt
+        FROM LineReview lr
+        LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
+        WHERE lr.movieId = :movieId
+          AND (:lastReviewId IS NULL OR lr.id < :lastReviewId)
+        GROUP BY lr.id, lr.userId, lr.movieId, lr.rating, lr.context, lr.isSpoiler, lr.createdAt
+        ORDER BY likes DESC, lr.id DESC
     """)
     Slice<LineReviewProjection> findByMovieAndLikesCursor(
             @Param("movieId") Long movieId,
@@ -36,16 +39,19 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
     );
 
     @Query("""
-    SELECT lr.id AS id, lr.userId AS userId, lr.movieId AS movieId, lr.rating AS rating,
-           lr.context AS context, lr.isSpoiler AS isSpoiler, COUNT(DISTINCT lrl.id) AS likes, lr.createdAt AS createdAt
-    FROM LineReview lr
-    LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
-    WHERE lr.movieId = :movieId
-      AND (:lastCreatedAt IS NULL OR lr.createdAt < :lastCreatedAt 
-           OR (lr.createdAt = :lastCreatedAt AND lr.id < :lastReviewId))
-    GROUP BY lr.id, lr.userId, lr.movieId, lr.rating, lr.context, lr.isSpoiler, lr.createdAt
-    ORDER BY lr.createdAt DESC, lr.id DESC
-    """)
+        SELECT lr.id AS id, lr.userId AS userId,  lr.writerNickname AS writerNickname,lr.movieId AS movieId, lr.rating AS rating,
+               lr.context AS context, lr.isSpoiler AS isSpoiler,
+               COUNT(CASE WHEN lrl.preference = 'LIKE' AND lrl.isDeleted = false THEN lrl.id END) AS likes,
+               COUNT(CASE WHEN lrl.preference = 'DISLIKE' AND lrl.isDeleted = false THEN lrl.id END) AS dislikes,
+               lr.createdAt AS createdAt
+        FROM LineReview lr
+        LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
+        WHERE lr.movieId = :movieId
+          AND (:lastCreatedAt IS NULL OR lr.createdAt < :lastCreatedAt 
+               OR (lr.createdAt = :lastCreatedAt AND lr.id < :lastReviewId))
+        GROUP BY lr.id, lr.userId, lr.movieId, lr.rating, lr.context, lr.isSpoiler, lr.createdAt
+        ORDER BY lr.createdAt DESC, lr.id DESC
+""")
     Slice<LineReviewProjection> findByMovieAndLatestCursor(
             @Param("movieId") Long movieId,
             @Param("lastReviewId") Long lastReviewId,
