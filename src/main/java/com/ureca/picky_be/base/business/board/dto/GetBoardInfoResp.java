@@ -13,7 +13,7 @@ public record GetBoardInfoResp(
         LocalDateTime updatedDate,
         Integer likesCount,
         Integer commentsCount,
-//        List<GetBoardContentsResp> contents,
+        List<BoardContentPOJO> contents,
         String movieTitle,
         Boolean isLike) {
 

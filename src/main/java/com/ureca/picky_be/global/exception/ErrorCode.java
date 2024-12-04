@@ -39,10 +39,13 @@ public enum ErrorCode {
     BOARD_CREATE_FAILED(HttpStatus.BAD_REQUEST, "BOD003", "게시물 작성에 실패했습니다."),
     BOARD_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "BOD004", "게시물 수정에 실패했습니다."),
     BOARD_MOVIE_RELATED_GET_FAILED(HttpStatus.BAD_REQUEST, "BOD005", "특정 영화에 대한 게시물들을 가져오는데에 실패했습니다."),
+
     // BOARDCONTENT
     INVALID_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "BDC001","PHOTO, VIDEO값만 가능합니다"),
     BOARD_CONTENT_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "BDC002","게시글 콘텐츠 업로드에 실패했습니다."),
     BOARD_CONTENT_OVER_FIVE(HttpStatus.BAD_REQUEST, "BDC003","게시글 콘텐츠 최대 갯수인 5개를 초과했습니다."),
+    BOARD_CONTENT_JSON_TRANSFERING_FAILED(HttpStatus.BAD_REQUEST, "BDC004","게시글 콘텐츠 타입 변환이 실패했습니다."),
+
     //LineReview
     LINEREVIEW_CREATE_FAILED(HttpStatus.BAD_REQUEST, "LR001", "한줄평 작성에 실패했습니다."),
     LINEREVIEW_INVALID_RATING(HttpStatus.BAD_REQUEST, "LR002", "평점 값은 0에서 5 사이입니다" ),

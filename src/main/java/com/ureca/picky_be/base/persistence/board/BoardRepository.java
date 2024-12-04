@@ -22,14 +22,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 //    Slice<Board> findByMovieId(@Param("movid_id") Long movieId, Pageable pageable);
 
-//(SELECT COALESCE(JSON_ARRAYAGG(
-//            JSON_OBJECT(
-//            'contentUrl', bc.contentUrl,
-//                    'boardContentType', bc.boardContentType
-//                 )
-//            ), '[]')
-//    FROM BoardContent bc
-//    WHERE bc.board.id = b.id) AS contents,
+
 
 
     @Query("""
@@ -38,6 +31,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         (SELECT COUNT(l) FROM BoardLike l WHERE l.board.id = b.id) AS likeCount,
         (SELECT COUNT(c) FROM BoardComment c WHERE c.board.id = b.id) AS commentCount,
         (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.user.id = :userId) THEN true ELSE false END) AS isLike,
+        (SELECT COALESCE(JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'contentUrl', bc.contentUrl,
+                        'boardContentType', bc.boardContentType
+                         )
+                    ), '[]')
+            FROM BoardContent bc
+            WHERE bc.board.id = b.id) AS contents,
         m.title AS movieName
     FROM Board b
     JOIN User u ON b.userId = u.id

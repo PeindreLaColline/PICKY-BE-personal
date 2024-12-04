@@ -16,6 +16,5 @@ public interface BoardProjection {
     Integer getCommentCount();  // Board 댓글 갯수
     String getMovieName(); // Board 영화 이름
     Boolean getIsLike();    // Board 사용자가 좋아요 눌렀는지 여부
-//    List<BoardContentProjection> getContents();   // Board 컨텐츠들
-//    String getContents();   // Board 컨텐츠들
+    String getContents();   // Board 컨텐츠들
 }
