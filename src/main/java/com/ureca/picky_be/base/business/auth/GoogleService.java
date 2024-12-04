@@ -31,7 +31,7 @@ public class GoogleService implements OAuth2UseCase{
         LoginUserInfo loginUserInfo = googleManager.getLocalJwt(email, oAuth2Token.accessToken());
         System.out.println(loginUserInfo);
         System.out.println(oAuth2Token);
-        return oAuth2DtoMapper.toTokenResp(oAuth2Token, loginUserInfo.jwt(), googleManager.isRegistrationDone(authManager.getUserId()));
+        return oAuth2DtoMapper.toTokenResp(oAuth2Token, loginUserInfo.jwt(), googleManager.isRegistrationDone(loginUserInfo.userId()));
     }
 
     @Override

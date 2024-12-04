@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/oauth/*/user").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/oauth/*/user").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
