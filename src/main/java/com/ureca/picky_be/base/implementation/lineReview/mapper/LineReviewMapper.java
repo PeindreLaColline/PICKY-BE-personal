@@ -41,6 +41,7 @@ public class LineReviewMapper {
                 projection.getContext(),
                 projection.getIsSpoiler(),
                 projection.getLikes(),
+                projection.getDislikes(),
                 projection.getCreatedAt()
         );
     }

@@ -9,6 +9,7 @@ public interface LineReviewProjection {
     double getRating();      // 평점
     String getContext();     // 한줄평 내용
     Boolean getIsSpoiler();     // 스포일러 여부
-    Integer getLikes();          // 좋아요 수
+    Integer getLikes();
+    Integer getDislikes();// 좋아요 수
     LocalDateTime getCreatedAt(); // 생성 시간
 }
