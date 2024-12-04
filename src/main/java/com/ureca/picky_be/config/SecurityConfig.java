@@ -25,6 +25,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private static final String[] AUTH_WHITELIST = {
+            "/health",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v3/api-docs/**",

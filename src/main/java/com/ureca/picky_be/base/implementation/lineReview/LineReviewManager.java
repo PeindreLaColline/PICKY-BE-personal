@@ -41,10 +41,14 @@ public class LineReviewManager {
                 throw new CustomException(ErrorCode.LINEREVIEW_CREATE_DUPLICATE);
             }
 
+            // Todo : userId로 등록한 시큐리티에서 user 닉네임 가져오기 -> builder .writerNickname에 넣기
+            String writerNickname = "temp";         // 임시 닉네임
+
             LineReview lineReview = LineReview.builder()
                     .userId(userId)
                     .movieId(req.movieId())
                     .rating(req.rating())
+                    .writerNickname(writerNickname)
                     .context(req.context())
                     .isSpoiler(req.isSpoiler())
                     .build();
