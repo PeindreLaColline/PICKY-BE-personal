@@ -31,7 +31,7 @@ public class KakaoService implements OAuth2UseCase {
         LoginUserInfo loginUserInfo = kakaoManager.getLocalJwt(email, oAuth2Token.accessToken());
         System.out.println(loginUserInfo);
         System.out.println(oAuth2Token);
-        return oAuth2DtoMapper.toTokenResp(oAuth2Token, loginUserInfo.jwt(), kakaoManager.isRegistrationDone(authManager.getUserId()));
+        return oAuth2DtoMapper.toTokenResp(oAuth2Token, loginUserInfo.jwt(), kakaoManager.isRegistrationDone(loginUserInfo.userId()));
     }
 
     @Override

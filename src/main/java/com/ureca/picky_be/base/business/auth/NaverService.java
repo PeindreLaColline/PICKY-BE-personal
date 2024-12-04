@@ -32,7 +32,7 @@ public class NaverService implements OAuth2UseCase{
         LoginUserInfo loginUserInfo = naverManager.getLocalJwt(email);
         System.out.println(loginUserInfo);
         System.out.println(oAuth2Token);
-        return oAuth2DtoMapper.toTokenResp(oAuth2Token, loginUserInfo.jwt(), naverManager.isRegistrationDone(authManager.getUserId()));
+        return oAuth2DtoMapper.toTokenResp(oAuth2Token, loginUserInfo.jwt(), naverManager.isRegistrationDone(loginUserInfo.userId()));
     }
 
     @Override
