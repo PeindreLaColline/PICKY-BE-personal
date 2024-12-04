@@ -58,9 +58,9 @@ public class BoardService implements BoardUseCase {
          * 특정 영화 상세페이지에서 무비 로그 누르면 나오는 데이터들(특정 영화에 대한 무비 로그들 최신순 기반으로 가져오기)
          * 1. movieId 기반으로 최신 무비로그들 GET
          */
+
         Long userId = authManager.getUserId();
         Slice<BoardProjection> recentMovieRelatedBoards = boardManager.getRecentMovieRelatedBoards(userId, movieId, pageable);
-
         return recentMovieRelatedBoards.map(boardDtoMapper::toGetBoardInfoResp);
     }
 
