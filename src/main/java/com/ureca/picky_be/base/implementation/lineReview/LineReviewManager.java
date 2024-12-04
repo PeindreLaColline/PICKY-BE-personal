@@ -27,7 +27,7 @@ public class LineReviewManager {
     private final MovieRepository movieRepository;
     private final UserRepository userRepository;
 
-    public LineReview createLineReview(CreateLineReviewReq req, Long userId) {
+    public LineReview createLineReview(CreateLineReviewReq req, Long userId, String userNickname) {
         try {
             if (req.rating() < 0 || req.rating() > 5) {
                 throw new CustomException(ErrorCode.LINEREVIEW_INVALID_RATING);
@@ -41,14 +41,11 @@ public class LineReviewManager {
                 throw new CustomException(ErrorCode.LINEREVIEW_CREATE_DUPLICATE);
             }
 
-            // Todo : userId로 등록한 시큐리티에서 user 닉네임 가져오기 -> builder .writerNickname에 넣기
-            String writerNickname = "temp";         // 임시 닉네임
-
             LineReview lineReview = LineReview.builder()
                     .userId(userId)
                     .movieId(req.movieId())
                     .rating(req.rating())
-                    .writerNickname(writerNickname)
+                    .writerNickname(userNickname)
                     .context(req.context())
                     .isSpoiler(req.isSpoiler())
                     .build();
