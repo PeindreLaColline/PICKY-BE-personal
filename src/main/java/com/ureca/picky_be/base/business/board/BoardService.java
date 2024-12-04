@@ -60,6 +60,7 @@ public class BoardService implements BoardUseCase {
          */
         Long userId = authManager.getUserId();
         Slice<BoardProjection> recentMovieRelatedBoards = boardManager.getRecentMovieRelatedBoards(userId, movieId, pageable);
+
         return recentMovieRelatedBoards.map(boardDtoMapper::toGetBoardInfoResp);
     }
 

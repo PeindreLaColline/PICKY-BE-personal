@@ -69,6 +69,7 @@ public class BoardManager {
     public Slice<BoardProjection> getRecentMovieRelatedBoards(Long userId, Long movieId, Pageable pageable) {
         // 특정 영화 무비로그들 최신순 기준으로 Board들을 가져온다
         if(!movieRepository.existsById(movieId)) throw new CustomException(ErrorCode.MOVIE_NOT_FOUND);
+
         Slice<BoardProjection> boards = boardRepository.getRecentMovieRelatedBoards(userId, movieId, pageable);
 
         return boards;

@@ -8,12 +8,12 @@ public record GetBoardInfoResp(
         String writerNickname,
         String writerProfileUrl,
         String context,
-        boolean isSpoiler,
+        Boolean isSpoiler,
         LocalDateTime createdDate,
         LocalDateTime updatedDate,
         Integer likesCount,
         Integer commentsCount,
-        List<GetBoardContentsResp> contents,
+//        List<GetBoardContentsResp> contents,
         String movieTitle,
         Boolean isLike) {
 
