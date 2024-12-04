@@ -20,7 +20,8 @@ public class BoardService implements BoardUseCase {
     public void addBoard(AddBoardReq req) {
         // TODO: boardContent S3 업로드 등 처리 추가 예정
         Long userId = authManager.getUserId();
-        boardManager.addBoard(userId, req);
+        String userNickname = authManager.getUserNickname();
+        boardManager.addBoard(userId, userNickname, req);
     }
 
     @Override
@@ -80,7 +81,8 @@ public class BoardService implements BoardUseCase {
          * 2.
          */
         Long userId = authManager.getUserId();
-        boardManager.addBoardComment(req.content(), boardId, userId);
+        String userNickname = authManager.getUserNickname();
+        boardManager.addBoardComment(req.content(), boardId, userId, userNickname);
     }
 
     @Override

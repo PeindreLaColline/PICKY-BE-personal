@@ -30,19 +30,16 @@ public class BoardManager {
     private final BoardContentRepository boardContentRepository;
 
     @Transactional
-    public void addBoard(Long userId, AddBoardReq req) {
+    public void addBoard(Long userId, String userNickname, AddBoardReq req) {
         Movie movie = movieRepository.findById(req.movieId())
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
-
-        // Todo : userId로 등록한 시큐리티에서 user 닉네임 가져오기 -> Board.of에 매개변수로 추가하기
-        String writerNickname = "temp";         // 임시 닉네임
 
         if(req.contents().size() > 5) {
             throw new CustomException(ErrorCode.BOARD_CONTENT_OVER_FIVE);
         }
 
         // TODO: S3 연동
-        Board board = Board.of(userId, movie, req.boardContext(), req.isSpoiler(), req.contents(), writerNickname);
+        Board board = Board.of(userId, movie, req.boardContext(), req.isSpoiler(), req.contents(), userNickname);
         boardRepository.save(board);
     }
 
@@ -75,14 +72,11 @@ public class BoardManager {
         }
     }
 
-    public void addBoardComment(String context, Long boardId, Long userId) {
+    public void addBoardComment(String context, Long boardId, Long userId, String userNickname) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
 
-        // Todo : userId로 등록한 시큐리티에서 user 닉네임 가져오기 -> Board.of에 매개변수로 추가하기
-        String writerNickname = "temp";         // 임시 닉네임
-
-        BoardComment comment = BoardComment.of(board, userId, context, writerNickname);
+        BoardComment comment = BoardComment.of(board, userId, context, userNickname);
         boardCommentRepository.save(comment);
     }
 }
