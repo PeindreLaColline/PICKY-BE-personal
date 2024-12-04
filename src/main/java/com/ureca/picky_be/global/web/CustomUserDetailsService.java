@@ -23,11 +23,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         Long userId = Long.parseLong(username);
 
         return userRepository.findById(userId)
-                .map(user -> new org.springframework.security.core.userdetails.User(
-                        user.getId().toString(),
-                        user.getRole().toString(),
+                .map(user -> new CustomUserDetails(
+                        user.getId(),
+                        user.getName(),
+                        user.getNickname(),
+                        user.getRole().name(),
                         List.of(new SimpleGrantedAuthority(user.getRole().name()))
                 ))
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + username));
     }
 }
+
