@@ -24,7 +24,7 @@ public class OAuth2Controller {
     }
 
     @Operation(summary = "프론트에서 code 받아서 토큰 반환", description = "localToken, socialToken, isRegistrationDone return 됨 확인 필!")
-    @GetMapping("/{platform}/user")
+    @PostMapping("/{platform}/user")
     public TokenResp getToken(@PathVariable String platform,
                               @RequestParam String code,
                               @RequestParam String state
