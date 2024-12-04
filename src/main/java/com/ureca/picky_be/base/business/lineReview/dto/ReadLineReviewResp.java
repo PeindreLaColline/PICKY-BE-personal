@@ -2,7 +2,8 @@ package com.ureca.picky_be.base.business.lineReview.dto;
 
 import java.time.LocalDateTime;
 
-public record ReadLineReviewResp(Long id,           // 한줄평 ID
+public record ReadLineReviewResp(Long id,
+                                 String writerNickname,
                                  Long userId,        // 작성자 ID
                                  Long movieId,      // 영화 ID
                                  double rating,     // 평점

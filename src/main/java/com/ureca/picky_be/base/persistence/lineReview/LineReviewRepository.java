@@ -20,7 +20,7 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
     boolean existsByMovieIdAndUserId(Long movieId, Long userId);
 
     @Query("""
-        SELECT lr.id AS id, lr.userId AS userId, lr.movieId AS movieId, lr.rating AS rating,
+        SELECT lr.id AS id, lr.userId AS userId, lr.writerNickname AS writerNickname, lr.movieId AS movieId, lr.rating AS rating,
                lr.context AS context, lr.isSpoiler AS isSpoiler,
                COUNT(CASE WHEN lrl.preference = 'LIKE' AND lrl.isDeleted = false THEN lrl.id END) AS likes,
                COUNT(CASE WHEN lrl.preference = 'DISLIKE' AND lrl.isDeleted = false THEN lrl.id END) AS dislikes,
@@ -39,7 +39,7 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
     );
 
     @Query("""
-        SELECT lr.id AS id, lr.userId AS userId, lr.movieId AS movieId, lr.rating AS rating,
+        SELECT lr.id AS id, lr.userId AS userId,  lr.writerNickname AS writerNickname,lr.movieId AS movieId, lr.rating AS rating,
                lr.context AS context, lr.isSpoiler AS isSpoiler,
                COUNT(CASE WHEN lrl.preference = 'LIKE' AND lrl.isDeleted = false THEN lrl.id END) AS likes,
                COUNT(CASE WHEN lrl.preference = 'DISLIKE' AND lrl.isDeleted = false THEN lrl.id END) AS dislikes,

@@ -3,7 +3,8 @@ package com.ureca.picky_be.base.business.lineReview.dto;
 import java.time.LocalDateTime;
 
 public interface LineReviewProjection {
-    Long getId();            // 한줄평 ID
+    Long getId();
+    String getWriterNickname(); // 한줄평 ID
     Long getUserId();        // 작성자 ID
     Long getMovieId();       // 영화 ID
     double getRating();      // 평점

@@ -14,6 +14,7 @@ public class LineReviewMapper {
     public CreateLineReviewResp createLineReviewResp(LineReview lineReview) {
         return new CreateLineReviewResp(
                 lineReview.getUserId(),
+                lineReview.getWriterNickname(),
                 lineReview.getMovieId(),
                 lineReview.getRating(),
                 lineReview.getContext(),
@@ -24,6 +25,7 @@ public class LineReviewMapper {
     public UpdateLineReviewResp updateLineReview(LineReview lineReview) {
         return new UpdateLineReviewResp(
                 lineReview.getId(),
+                lineReview.getWriterNickname(),
                 lineReview.getUserId(),
                 lineReview.getMovieId(),
                 lineReview.getRating(),
@@ -35,6 +37,7 @@ public class LineReviewMapper {
     public ReadLineReviewResp toReadLineReviewResp(LineReviewProjection projection) {
         return new ReadLineReviewResp(
                 projection.getId(),
+                projection.getWriterNickname(),
                 projection.getUserId(),
                 projection.getMovieId(),
                 projection.getRating(),
