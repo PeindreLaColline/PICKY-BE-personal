@@ -36,6 +36,9 @@ public class LineReview extends BaseEntity {
 
     private boolean isDeleted;
 
+    @Column(nullable=false)
+    private String writerName;
+
     public void lineReviewContextUpdate(String context, Boolean isSpoiler) {
         this.context = context;
         this.isSpoiler = isSpoiler;

@@ -32,6 +32,8 @@ public class Board extends BaseEntity {
 
     private boolean isSpoiler;
 
+    @Column(nullable=false)
+    private String writerName;
 
     public void updateBoard(String context, boolean isSpoiler) {
         this.context = context;
