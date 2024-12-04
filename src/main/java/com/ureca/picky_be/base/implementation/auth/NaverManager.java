@@ -1,9 +1,6 @@
 package com.ureca.picky_be.base.implementation.auth;
 
-import com.ureca.picky_be.base.business.auth.dto.DeleteUserReq;
-import com.ureca.picky_be.base.business.auth.dto.LoginUserInfo;
-import com.ureca.picky_be.base.business.auth.dto.LoginUserResp;
-import com.ureca.picky_be.base.business.auth.dto.OAuth2Token;
+import com.ureca.picky_be.base.business.auth.dto.*;
 import com.ureca.picky_be.base.persistence.board.BoardCommentRepository;
 import com.ureca.picky_be.base.persistence.board.BoardLikeRepository;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
@@ -52,7 +49,7 @@ public class NaverManager {
 
     private final RestClient restClient = RestClient.create();
 
-/*    public LoginUrlResp buildCodeUrl(String state){
+    public LoginUrlResp buildCodeUrl(String state){
         return new LoginUrlResp(UriComponentsBuilder
                 .fromHttpUrl(naverConfig.getCodeUrl())
                 .queryParam("client_id", naverConfig.getClientId())
@@ -62,7 +59,7 @@ public class NaverManager {
                 .queryParam("state", state)
                 .build()
                 .toUriString());
-    }*/
+    }
 
     public OAuth2Token getOAuth2Token(String state, String code){
         try {
@@ -147,31 +144,6 @@ public class NaverManager {
         } catch (Exception e){
             throw new CustomException(ErrorCode.USER_SAVE_FAILED);
         }
-    }
-
-    public SuccessCode sendResponseToFrontend(OAuth2Token oAuth2Token, LocalJwtDto jwt, boolean isRegistrationDone) {
-        LoginUserResp resp = new LoginUserResp(oAuth2Token, jwt, isRegistrationDone);
-        try {
-            restClient
-                    .post()
-                    .uri(buildFrontendUrl())
-                    .header("Content-Type", "application/json")
-                    .body(resp)
-                    .retrieve()
-                    .toBodilessEntity();
-            return SuccessCode.REQUEST_FRONT_SUCCESS;
-        } catch (RestClientResponseException e) {
-            throw new CustomException(ErrorCode.BAD_REQUEST);
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    private String buildFrontendUrl(){
-        return UriComponentsBuilder
-                .fromHttpUrl(naverConfig.getFrontendServer())
-                .build()
-                .toUriString();
     }
 
     @Transactional

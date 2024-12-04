@@ -27,7 +27,7 @@ public class LineReviewManager {
     private final MovieRepository movieRepository;
     private final UserRepository userRepository;
 
-    public LineReview createLineReview(CreateLineReviewReq req, Long userId) {
+    public LineReview createLineReview(CreateLineReviewReq req, Long userId, String userNickname) {
         try {
             if (req.rating() < 0 || req.rating() > 5) {
                 throw new CustomException(ErrorCode.LINEREVIEW_INVALID_RATING);
@@ -45,6 +45,7 @@ public class LineReviewManager {
                     .userId(userId)
                     .movieId(req.movieId())
                     .rating(req.rating())
+                    .writerNickname(userNickname)
                     .context(req.context())
                     .isSpoiler(req.isSpoiler())
                     .build();

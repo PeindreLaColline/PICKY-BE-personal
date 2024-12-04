@@ -3,25 +3,13 @@ package com.ureca.picky_be.base.business.board;
 import com.ureca.picky_be.base.business.board.dto.*;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
-import com.ureca.picky_be.base.implementation.movie.MovieManager;
-import com.ureca.picky_be.base.persistence.board.BoardRepository;
-import com.ureca.picky_be.global.exception.CustomException;
-import com.ureca.picky_be.global.exception.ErrorCode;
-import com.ureca.picky_be.jpa.board.Board;
-import com.ureca.picky_be.jpa.board.BoardComment;
-import com.ureca.picky_be.jpa.board.BoardContent;
-import com.ureca.picky_be.jpa.user.Role;
-import com.ureca.picky_be.jpa.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BoardManagingService implements BoardManagingUseCase {
+public class BoardService implements BoardUseCase {
 
     private final BoardManager boardManager;
     private final AuthManager authManager;
@@ -32,13 +20,15 @@ public class BoardManagingService implements BoardManagingUseCase {
     public void addBoard(AddBoardReq req) {
         // TODO: boardContent S3 업로드 등 처리 추가 예정
         Long userId = authManager.getUserId();
-        boardManager.addBoard(userId, req);
+        String userNickname = authManager.getUserNickname();
+        boardManager.addBoard(userId, userNickname, req);
     }
 
     @Override
     @Transactional
     public void updateBoard(Long boardId , UpdateBoardReq req) {
         Long userId = authManager.getUserId();
+        boardManager.checkBoardWriteUser(boardId, userId);
         boardManager.updateBoard(boardId, userId, req);
     }
 
@@ -91,7 +81,8 @@ public class BoardManagingService implements BoardManagingUseCase {
          * 2.
          */
         Long userId = authManager.getUserId();
-        boardManager.addBoardComment(req.content(), boardId, userId);
+        String userNickname = authManager.getUserNickname();
+        boardManager.addBoardComment(req.content(), boardId, userId, userNickname);
     }
 
     @Override

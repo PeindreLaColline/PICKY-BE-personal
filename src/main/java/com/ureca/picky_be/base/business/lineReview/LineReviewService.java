@@ -24,7 +24,8 @@ public class LineReviewService implements LineReviewUseCase {
     @Transactional
     public CreateLineReviewResp createLineReview(CreateLineReviewReq req) {
         Long userId = authManager.getUserId();
-        LineReview newLineReview = lineReviewManager.createLineReview(req, userId);
+        String userNickname = authManager.getUserNickname();
+        LineReview newLineReview = lineReviewManager.createLineReview(req, userId, userNickname);
         return lineReviewMapper.createLineReviewResp(newLineReview);
     }
 

@@ -1,5 +1,6 @@
 package com.ureca.picky_be.base.implementation.mapper;
 
+import com.ureca.picky_be.base.business.movie.dto.GetGenres;
 import com.ureca.picky_be.base.business.movie.dto.GetMovieDetailResp;
 import com.ureca.picky_be.base.business.movie.dto.MoviePreferenceResp;
 import com.ureca.picky_be.jpa.genre.Genre;
@@ -19,7 +20,8 @@ public class MovieDtoMapper {
             List<MovieBehindVideo> movieBehindVideos,
             List<Genre> genres,
             List<FilmCrew> actors,
-            List<FilmCrew> directors
+            List<FilmCrew> directors,
+            boolean like
     ) {
         List<GetMovieDetailResp.MovieInfo.GenreInfo> genreInfoList = genres.stream()
                 .map(genre -> new GetMovieDetailResp.MovieInfo.GenreInfo(genre.getId()))
@@ -53,6 +55,7 @@ public class MovieDtoMapper {
                         movie.getTitle(),
                         movie.getReleaseDate(),
                         movie.getPosterUrl(),
+                        movie.getBackdropUrl(),
                         movie.getPlot(),
                         movie.getRunningTime(),
                         genreInfoList,
@@ -60,7 +63,8 @@ public class MovieDtoMapper {
                 ),
                 Optional.ofNullable(movie.getTrailerUrl()).orElse("Trailer not found"),
                 Optional.ofNullable(movie.getOstUrl()).orElse("OST not found"),
-                movieBehindVideoUrls
+                movieBehindVideoUrls,
+                like
         );
     }
 
@@ -69,4 +73,11 @@ public class MovieDtoMapper {
                 .map(movie -> new MoviePreferenceResp(movie.getId(), movie.getPosterUrl()))
                 .toList();
     }
+
+    public List<GetGenres> toGetGenres(List<Genre> genres) {
+        return genres.stream()
+                .map(genre -> new GetGenres(genre.getId(), genre.getName()))
+                .toList();
+    }
+
 }

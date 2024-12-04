@@ -3,12 +3,15 @@ package com.ureca.picky_be.base.implementation.user;
 import com.ureca.picky_be.base.business.user.dto.UpdateUserReq;
 import com.ureca.picky_be.base.persistence.movie.GenreRepository;
 import com.ureca.picky_be.base.persistence.movie.MovieGenreRepository;
+import com.ureca.picky_be.base.persistence.movie.MovieLikeRepository;
+import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.base.persistence.user.UserGenrePreferenceRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.genre.Genre;
+import com.ureca.picky_be.jpa.movie.MovieLike;
 import com.ureca.picky_be.jpa.user.User;
 import com.ureca.picky_be.jpa.user.UserGenrePreference;
 import lombok.RequiredArgsConstructor;
@@ -27,17 +30,22 @@ public class UserManager {
     private final UserGenrePreferenceRepository userGenrePreferenceRepository;
     private final GenreRepository genreRepository;
     private final MovieGenreRepository movieGenreRepository;
+    private final MovieLikeRepository movieLikeRepository;
+    private final MovieRepository movieRepository;
 
     @Transactional
     public SuccessCode updateUserInfo(Long userId, UpdateUserReq req) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         validateUpdateUserReq(req);
-        user.updateUser(req);
-        if (req.movieId() == null || req.movieId().isEmpty()) {
-            throw new CustomException(ErrorCode.USER_UPDATE_BAD_REQUEST);
+        if(!isRegistrationDone(userId)){
+            registerUserGenrePreference(user, req.genreId());
+            registerUserMovieLike(user, req.movieId());
+            if (req.movieId().isEmpty()) {
+                throw new CustomException(ErrorCode.USER_UPDATE_BAD_REQUEST);
+            }
         }
-        updateUserGenrePreference(user, req.movieId());
+        user.updateUser(req);
         return SuccessCode.UPDATE_USER_SUCCESS;
     }
 
@@ -51,7 +59,43 @@ public class UserManager {
         }
     }
 
+    public boolean isRegistrationDone(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return user.getName() != null
+                && user.getNickname() != null
+                && user.getBirthdate() != null
+                && user.getGender() != null
+                && user.getNationality() != null;
+    }
+
+    // 선택한 장르들을 단순히 저장
     @Transactional
+    protected void registerUserGenrePreference(User user, List<Long> genreIds) {
+        List<UserGenrePreference> preferences = genreIds.stream()
+                .map(genreId -> UserGenrePreference.builder()
+                        .user(user)
+                        .genreId(genreId)
+                        .preferenceValue(1.0)
+                        .build())
+                .toList();
+        userGenrePreferenceRepository.saveAll(preferences);
+    }
+
+    // 선택한 영화 좋아요
+    @Transactional
+    protected void registerUserMovieLike(User user, List<Long> movieIds) {
+        List<MovieLike> movieLikes = movieIds.stream()
+                .map(movieId -> MovieLike.builder()
+                        .user(user)
+                        .movie(movieRepository.findById(movieId).get())
+                        .build())
+                .toList();
+        movieLikeRepository.saveAll(movieLikes);
+    }
+
+    // 선택한 영화 기반으로 선호 장르 추출 후 저장
+    /*@Transactional
     protected void updateUserGenrePreference(User user, List<Long> movieIds) {
         Map<Long, Integer> genreCountMap = movieIds.stream()
                 .map(movieGenreRepository::getGenreIdsByMovieId)
@@ -78,7 +122,7 @@ public class UserManager {
 
         userGenrePreferenceRepository.deleteByUserId(user.getId());
         userGenrePreferenceRepository.saveAll(preferences);
-    }
+    }*/
 
     @Transactional(readOnly = true)
     public User getUserInfo(Long userId) {

@@ -26,6 +26,8 @@ public class Movie extends BaseEntity {
 
     private String posterUrl;
 
+    private String backdropUrl;
+
     @Column(nullable = false)
     @ColumnDefault("0.0")
     private double totalRating;
@@ -40,11 +42,13 @@ public class Movie extends BaseEntity {
 
     private String ostUrl;
 
+
     @Transactional
     public Movie updateMovie(UpdateMovieReq updateMovieReq){
         if(updateMovieReq.movieInfo().title() != null) this.title = updateMovieReq.movieInfo().title();
         if(updateMovieReq.movieInfo().releaseDate() != null) this.releaseDate = updateMovieReq.movieInfo().releaseDate();
         if(updateMovieReq.movieInfo().posterUrl() != null) this.posterUrl = updateMovieReq.movieInfo().posterUrl();
+        if(updateMovieReq.movieInfo().backdropUrl() != null) this.posterUrl = updateMovieReq.movieInfo().backdropUrl();
         if(updateMovieReq.movieInfo().plot() != null) this.plot = updateMovieReq.movieInfo().plot();
         //아래 부분 수정해두기
         //if(updateMovieReq.movieInfo().runtime() != null) this.runningTime = updateMovieReq.movieInfo().runtime();

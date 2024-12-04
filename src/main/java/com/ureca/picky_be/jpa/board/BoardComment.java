@@ -27,11 +27,17 @@ public class BoardComment extends BaseEntity {
     @Column(nullable = false)
     private String context;
 
-    public static BoardComment of(Board board, Long userId, String context){
+    @Column(nullable=false)
+    private String writerNickname;
+
+
+
+    public static BoardComment of(Board board, Long userId, String context, String writerNickname){
         return BoardComment.builder()
-                .board(board)
-                .userId(userId)
                 .context(context)
+                .board(board)
+                .writerNickname(writerNickname)
+                .userId(userId)
                 .build();
     }
 }

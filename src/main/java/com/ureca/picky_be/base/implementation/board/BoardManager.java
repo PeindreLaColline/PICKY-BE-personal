@@ -30,37 +30,26 @@ public class BoardManager {
     private final BoardContentRepository boardContentRepository;
 
     @Transactional
-    public void addBoard(Long userId, AddBoardReq req) {
+    public void addBoard(Long userId, String userNickname, AddBoardReq req) {
         Movie movie = movieRepository.findById(req.movieId())
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
 
         if(req.contents().size() > 5) {
             throw new CustomException(ErrorCode.BOARD_CONTENT_OVER_FIVE);
         }
+
         // TODO: S3 연동
-        Board board = Board.of(userId, movie, req.boardContext(), req.isSpoiler(), req.contents());
+        Board board = Board.of(userId, movie, req.boardContext(), req.isSpoiler(), req.contents(), userNickname);
         boardRepository.save(board);
     }
 
     @Transactional
     public void updateBoard(Long boardId, Long userId, UpdateBoardReq req) {
-        Movie movie = movieRepository.findById(req.movieId())
-                .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
-        Board board = checkBoardWriteUser(boardId, userId);
-
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
         // 생성자를 통한 Board Update
-        board.updateBoard(movie, req.boardContext(), req.isSpoiler());
-
-        // TODO : 비효율적인 Update 방식, 차후 개선 예정
-        boardContentRepository.deleteByBoardId(boardId);
-        List<BoardContent> newContents = new ArrayList<>();
-        if(!req.contents().isEmpty()) {
-            req.contents().forEach(dto -> {
-                BoardContent content = BoardContent.of(board, dto.contentUrl(), dto.type());
-                newContents.add(content);
-            });
-        }
-        boardContentRepository.saveAll(newContents);
+        board.updateBoard(req.boardContext(), req.isSpoiler());
+        boardRepository.save(board);
 
     }
 
@@ -74,25 +63,20 @@ public class BoardManager {
 //
 //    }
 
-    public Board checkBoardWriteUser(Long boardId, Long userId) {
+    public void checkBoardWriteUser(Long boardId, Long userId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
 
         if(!board.getUserId().equals(userId)) {
             throw new CustomException(ErrorCode.BOARD_USER_NOT_WRITER);
         }
-        return board;
     }
 
-    public void addBoardComment(String context, Long boardId, Long userId) {
+    public void addBoardComment(String context, Long boardId, Long userId, String userNickname) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
-        BoardComment comment = BoardComment.builder()
-                .context(context)
-                .userId(userId)
-                .board(board)
-                .build();
 
+        BoardComment comment = BoardComment.of(board, userId, context, userNickname);
         boardCommentRepository.save(comment);
     }
 }

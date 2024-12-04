@@ -19,6 +19,7 @@ public record UpdateMovieReq(
             @JsonProperty("original_title") String title,
             @JsonProperty("release_date") Date releaseDate,
             @JsonProperty("poster_path") String posterUrl,
+            @JsonProperty("backdrop_path") String backdropUrl,
             @JsonProperty("overview") String plot,
             @JsonProperty("runtime") int runtime,
             @JsonProperty("genres") List<GenreInfo> genres,
