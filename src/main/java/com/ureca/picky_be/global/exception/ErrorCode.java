@@ -48,7 +48,7 @@ public enum ErrorCode {
 
     // BOARD_COMMENT
     BOARD_COMMENT_CREATE_FAILED(HttpStatus.BAD_REQUEST, "BCM001", "댓글 작성에 실패했습니다."),
-    BOARD_COMMENT_READ_FAILED(HttpStatus.BAD_REQUEST, "BCM001", "댓글 조회에 실패했습니다."),
+    BOARD_COMMENT_READ_FAILED(HttpStatus.BAD_REQUEST, "BCM002", "댓글 조회에 실패했습니다."),
 
     //LineReview
     LINEREVIEW_CREATE_FAILED(HttpStatus.BAD_REQUEST, "LR001", "한줄평 작성에 실패했습니다."),
