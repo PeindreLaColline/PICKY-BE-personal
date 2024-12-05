@@ -4,10 +4,13 @@ package com.ureca.picky_be.base.presentation.controller.board;
 import com.ureca.picky_be.base.business.board.BoardUseCase;
 import com.ureca.picky_be.base.business.board.dto.AddBoardCommentReq;
 import com.ureca.picky_be.base.business.board.dto.AddBoardReq;
+import com.ureca.picky_be.base.business.board.dto.GetBoardInfoResp;
 import com.ureca.picky_be.base.business.board.dto.UpdateBoardReq;
 import com.ureca.picky_be.global.success.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -37,6 +40,22 @@ public class BoardController {
         boardUseCase.addBoardComment(req, boardId);
         return SuccessCode.CREATE_BOARD_COMMENT_SUCCESS;
     }
+
+    @GetMapping("/{movieId}")
+    @Operation(summary = "영화 상세보기 -> 무비로그용 API", description = "특정 영화에 대한 무비 로그들을 최신순 기반으로 가져오는 API입니다.")
+    public Slice<GetBoardInfoResp> getBoardInfo(
+            @PathVariable Long movieId,
+            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page) {
+
+        // TODO : Slice 형태로 return 했을 때, 차후 프론트에서 문제 발생 시 List로 return 해줘야함.
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return boardUseCase.getMovieRelatedBoards(movieId, pageable);
+    }
+
+
+
+
 
 //    @GetMapping("/{boardId}/comments")
 //    @Operation(summary = "게시글 댓글 조회(Read)", description = "사용자가 게시들 댓글들 조회")

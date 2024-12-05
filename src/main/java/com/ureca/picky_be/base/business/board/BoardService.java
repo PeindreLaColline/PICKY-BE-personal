@@ -3,7 +3,13 @@ package com.ureca.picky_be.base.business.board;
 import com.ureca.picky_be.base.business.board.dto.*;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
+import com.ureca.picky_be.base.implementation.mapper.BoardDtoMapper;
+import com.ureca.picky_be.base.persistence.board.BoardRepository;
+import com.ureca.picky_be.jpa.board.Board;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +19,8 @@ public class BoardService implements BoardUseCase {
 
     private final BoardManager boardManager;
     private final AuthManager authManager;
-//    private final BoardDtoMapper boardDtoMapper;
+    private final BoardRepository boardRepository;
+    private final BoardDtoMapper boardDtoMapper;
 
     @Override
     @Transactional
@@ -32,25 +39,30 @@ public class BoardService implements BoardUseCase {
         boardManager.updateBoard(boardId, userId, req);
     }
 
-//    @Override
-//    public GetListBoardResp getMovieLogBoards(Long boardId) {
-//        /**
-//         * 1. movieId 존재하는지 검사
-//         * 2. board들 가져오기
-//         * 3.
-//         */
-//
-//        return null;
-//    }
-//
-//    @Override
-//    public GetListBoardResp getMovieRelatedBoards(Long movieId, Long boardId) {
-//        /**
-//         * 1. movieId 기반으로 최신 무비로그들 GET
-//         */
-//        List<Board> recentMovieRelatedBoards = boardManager.getRecentMovieRelatedBoards(movieId, boardId);
-//        return boardDtoMapper.toGetBoardInfoResp(recentMovieRelatedBoards);
-//    }
+    @Override
+    public Slice<GetBoardInfoResp> getMovieLogBoards(Long boardId) {
+
+        /**
+         * 무비로그 탭을 누르면 그냥 최신 Board들 가져오는 것
+         * 1. movieId 존재하는지 검사
+         * 2. board들 가져오기
+         * 3.
+         */
+
+        return null;
+    }
+
+    @Override
+    public Slice<GetBoardInfoResp> getMovieRelatedBoards(Long movieId, Pageable pageable) {
+        /**
+         * 특정 영화 상세페이지에서 무비 로그 누르면 나오는 데이터들(특정 영화에 대한 무비 로그들 최신순 기반으로 가져오기)
+         * 1. movieId 기반으로 최신 무비로그들 GET
+         */
+
+        Long userId = authManager.getUserId();
+        Slice<BoardProjection> recentMovieRelatedBoards = boardManager.getRecentMovieRelatedBoards(userId, movieId, pageable);
+        return recentMovieRelatedBoards.map(boardDtoMapper::toGetBoardInfoResp);
+    }
 
 
 

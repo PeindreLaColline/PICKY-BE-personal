@@ -1,14 +1,20 @@
 package com.ureca.picky_be.base.business.board.dto;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public record GetBoardInfoResp(
         Long boardId,
-        Long movieId,
+        Long writerId,
+        String writerNickname,
+        String writerProfileUrl,
         String context,
-        List<GetBoardContentsResp> contents,
+        Boolean isSpoiler,
+        LocalDateTime createdDate,
+        LocalDateTime updatedDate,
         Integer likesCount,
         Integer commentsCount,
-        boolean isSpoiler,
-        boolean isLike) {
+        List<BoardContentPOJO> contents,
+        String movieTitle,
+        Boolean isLike) {
 
 }
