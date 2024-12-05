@@ -1,5 +1,6 @@
 package com.ureca.picky_be.base.implementation.mapper;
 
+import com.ureca.picky_be.base.business.user.dto.GetNicknameValidationResp;
 import com.ureca.picky_be.base.business.user.dto.GetUserResp;
 import com.ureca.picky_be.jpa.genre.Genre;
 import com.ureca.picky_be.jpa.user.User;
@@ -19,5 +20,9 @@ public class UserDtoMapper {
                 user.getNationality(),
                 genres
         );
+    }
+
+    public GetNicknameValidationResp toGetNicknameValidationResp(boolean isValid) {
+        return new GetNicknameValidationResp(isValid);
     }
 }

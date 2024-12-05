@@ -1,6 +1,8 @@
 package com.ureca.picky_be.base.business.movie;
 
 import com.ureca.picky_be.base.business.movie.dto.*;
+import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisReq;
+import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.mapper.MovieDtoMapper;
 import com.ureca.picky_be.base.implementation.movie.MovieManager;
@@ -22,9 +24,8 @@ public class MovieService implements MovieUseCase{
     private final AuthManager authManager;
 
     @Override
-    public List<MoviePreferenceResp> getMovieListForPreference() {
-        List<Movie> movies = movieManager.getMovieListForPreference();
-        return movieDtoMapper.toMoviePreferenceResp(movies);
+    public List<GetMoviesForRegisResp> getMoviesByGenre(GetMoviesForRegisReq getMoviesForRegisReq) {
+        return movieManager.getMoviesByGenres(getMoviesForRegisReq);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.ureca.picky_be.base.implementation.user;
 
+import com.ureca.picky_be.base.business.user.dto.GetNicknameValidationResp;
 import com.ureca.picky_be.base.business.user.dto.UpdateUserReq;
 import com.ureca.picky_be.base.persistence.movie.GenreRepository;
 import com.ureca.picky_be.base.persistence.movie.MovieGenreRepository;
@@ -138,5 +139,10 @@ public class UserManager {
                 .map(preference -> genreRepository.findById(preference.getGenreId())
                         .orElseThrow(() -> new CustomException(ErrorCode.GENRE_NOT_FOUND)))
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public boolean getNicknameValidation(String nickname){
+        return userRepository.existsByNickname(nickname);
     }
 }
