@@ -40,7 +40,7 @@ public class BoardService implements BoardUseCase {
     }
 
     @Override
-    public Slice<GetBoardInfoResp> getMovieLogBoards(Pageable pageable) {
+    public Slice<GetBoardInfoResp> getBoards(Pageable pageable) {
 
         /**
          * 무비로그 탭을 누르면 그냥 최신 Board들 가져오는 것

@@ -61,7 +61,7 @@ public class BoardController {
 
         // TODO : Slice 형태로 return 했을 때, 차후 프론트에서 문제 발생 시 List로 return 해줘야함.
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        return boardUseCase.getMovieLogBoards(pageable);
+        return boardUseCase.getBoards(pageable);
     }
 
 
