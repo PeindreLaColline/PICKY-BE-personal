@@ -1,30 +1,25 @@
 package com.ureca.picky_be.base.implementation.board;
 
-import com.ureca.picky_be.base.business.board.dto.AddBoardContentReq;
-import com.ureca.picky_be.base.business.board.dto.AddBoardReq;
+import com.ureca.picky_be.base.business.board.dto.BoardCommentProjection;
+import com.ureca.picky_be.base.business.board.dto.boardDto.AddBoardReq;
 import com.ureca.picky_be.base.business.board.dto.BoardProjection;
-import com.ureca.picky_be.base.business.board.dto.UpdateBoardReq;
+import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
+import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
 import com.ureca.picky_be.base.persistence.board.BoardCommentRepository;
 import com.ureca.picky_be.base.persistence.board.BoardContentRepository;
-import com.ureca.picky_be.base.persistence.board.BoardLikeRepository;
 import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.jpa.board.Board;
 import com.ureca.picky_be.jpa.board.BoardComment;
-import com.ureca.picky_be.jpa.board.BoardContent;
 import com.ureca.picky_be.jpa.movie.Movie;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -57,6 +52,7 @@ public class BoardManager {
     public void updateBoard(Long boardId, Long userId, UpdateBoardReq req) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+
         // 생성자를 통한 Board Update
         try {
             board.updateBoard(req.boardContext(), req.isSpoiler());
@@ -91,6 +87,19 @@ public class BoardManager {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Slice<BoardCommentProjection> getTenBoardCommentsPerReq(Long boardId, Pageable pageable) {
+        // 특정 Board 최신순 기준으로 댓글들을 가져온다
+        if(!boardRepository.existsById(boardId)) throw new CustomException(ErrorCode.BOARD_NOT_FOUND);
+
+        try {
+            Slice<BoardCommentProjection> comments = boardRepository.getBoardComments(boardId, pageable);
+            return comments;
+        } catch(Exception e) {
+            throw new CustomException(ErrorCode.BOARD_COMMENT_READ_FAILED);
+        }
+    }
+
     public void checkBoardWriteUser(Long boardId, Long userId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
@@ -100,11 +109,16 @@ public class BoardManager {
         }
     }
 
+    @Transactional
     public void addBoardComment(String context, Long boardId, Long userId, String userNickname) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
 
-        BoardComment comment = BoardComment.of(board, userId, context, userNickname);
-        boardCommentRepository.save(comment);
+        try {
+            BoardComment comment = BoardComment.of(board, userId, context, userNickname);
+            boardCommentRepository.save(comment);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.BOARD_COMMENT_CREATE_FAILED);
+        }
     }
 }
