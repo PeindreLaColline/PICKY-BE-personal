@@ -41,7 +41,6 @@ public class BoardDtoMapper {
                 projection.getLikeCount(),
                 projection.getCommentCount(),
                 mapContent(projection.getContents()),
-//                mapContent(parseContents(projection.getContents())),
                 projection.getMovieName(),
                 projection.getIsLike()
         );

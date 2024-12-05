@@ -43,7 +43,7 @@ public class BoardController {
 
     @GetMapping("/{movieId}")
     @Operation(summary = "영화 상세보기 -> 무비로그용 API", description = "특정 영화에 대한 무비 로그들을 최신순 기반으로 가져오는 API입니다.")
-    public Slice<GetBoardInfoResp> getBoardInfo(
+    public Slice<GetBoardInfoResp> getBoardMovieBoardsInfo(
             @PathVariable Long movieId,
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "0") int page) {
@@ -51,6 +51,17 @@ public class BoardController {
         // TODO : Slice 형태로 return 했을 때, 차후 프론트에서 문제 발생 시 List로 return 해줘야함.
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return boardUseCase.getMovieRelatedBoards(movieId, pageable);
+    }
+
+    @GetMapping("/all")
+    @Operation(summary = "최신 무비로그용 API", description = "무비 로그들을 최신순 기반으로 가져오는 API입니다.")
+    public Slice<GetBoardInfoResp> getBoardsInfo(
+            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page) {
+
+        // TODO : Slice 형태로 return 했을 때, 차후 프론트에서 문제 발생 시 List로 return 해줘야함.
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return boardUseCase.getMovieLogBoards(pageable);
     }
 
 

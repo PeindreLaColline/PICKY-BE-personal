@@ -40,7 +40,7 @@ public class BoardService implements BoardUseCase {
     }
 
     @Override
-    public Slice<GetBoardInfoResp> getMovieLogBoards(Long boardId) {
+    public Slice<GetBoardInfoResp> getMovieLogBoards(Pageable pageable) {
 
         /**
          * 무비로그 탭을 누르면 그냥 최신 Board들 가져오는 것
@@ -49,7 +49,9 @@ public class BoardService implements BoardUseCase {
          * 3.
          */
 
-        return null;
+        Long userId = authManager.getUserId();
+        Slice<BoardProjection> recentBoards = boardManager.getRecentMovieBoards(userId, pageable);
+        return recentBoards.map(boardDtoMapper::toGetBoardInfoResp);
     }
 
     @Override

@@ -66,13 +66,25 @@ public class BoardManager {
         }
     }
 
+    @Transactional(readOnly = true)
     public Slice<BoardProjection> getRecentMovieRelatedBoards(Long userId, Long movieId, Pageable pageable) {
         // 특정 영화 무비로그들 최신순 기준으로 Board들을 가져온다
-        if(!userRepository.existsById(userId)) throw new CustomException(ErrorCode.USER_NOT_FOUND);
         if(!movieRepository.existsById(movieId)) throw new CustomException(ErrorCode.MOVIE_NOT_FOUND);
 
         try {
             Slice<BoardProjection> boards = boardRepository.getRecentMovieRelatedBoards(userId, movieId, pageable);
+            return boards;
+        } catch(Exception e) {
+            throw new CustomException(ErrorCode.BOARD_MOVIE_RELATED_GET_FAILED);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<BoardProjection> getRecentMovieBoards(Long userId, Pageable pageable) {
+        // 특정 영화 무비로그들 최신순 기준으로 Board들을 가져온다
+
+        try {
+            Slice<BoardProjection> boards = boardRepository.getRecentBoards(userId, pageable);
             return boards;
         } catch(Exception e) {
             throw new CustomException(ErrorCode.BOARD_MOVIE_RELATED_GET_FAILED);
