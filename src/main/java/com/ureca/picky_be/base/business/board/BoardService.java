@@ -84,12 +84,14 @@ public class BoardService implements BoardUseCase {
     }
 
     @Override
-    public DeleteBoardResp deleteBoard(Long boardId) {
+    public void deleteBoard(Long boardId) {
         /**
          * 1. boardId로 해당 보드가 user가 작성한 건지 검증 로직
          * 2. 해당 Board 삭제(Board에 작성된 댓글, 좋아요 전부 삭제한다)
          */
-        return null;
+        Long userId = authManager.getUserId();
+        boardManager.checkBoardWriteUser(boardId, userId);
+        boardManager.deleteBoard(boardId);
     }
 
 

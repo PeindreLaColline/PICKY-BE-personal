@@ -5,6 +5,8 @@ import com.ureca.picky_be.base.business.board.dto.BoardProjection;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.jpa.board.Board;
 import com.ureca.picky_be.jpa.board.BoardContent;
+import com.ureca.picky_be.jpa.config.IsDeleted;
+import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -21,11 +23,13 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Transactional
     void deleteByUserId(Long userId);
 
-
-//    Slice<Board> findByMovieId(@Param("movid_id") Long movieId, Pageable pageable);
-
-
-
+    @ReadOnlyProperty
+    @Query("""
+        SELECT b.isDeleted as isDeleted
+        FROM Board b
+        WHERE b.id = :boardId
+    """)
+    IsDeleted findIsDeleted(@Param("boardId") Long boardId);
 
     @Query("""
     SELECT b.id AS boardId, b.userId AS writerId, b.writerNickname AS writerNickname, u.profileUrl AS writerProfileUrl, b.context AS context, b.isSpoiler AS isSpoiler,
@@ -45,7 +49,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     FROM Board b
     JOIN User u ON b.userId = u.id
     JOIN Movie m ON b.movie.id = m.id
-    WHERE b.movie.id = :movieId
+    WHERE b.movie.id = :movieId AND b.isDeleted = 'FALSE'
     ORDER BY b.createdAt DESC
     """)
     Slice<BoardProjection> getRecentMovieRelatedBoards(@Param("userId") Long userId, @Param("movieId") Long movieId, Pageable pageable);
@@ -69,6 +73,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     FROM Board b
     JOIN User u ON b.userId = u.id
     JOIN Movie m ON b.movie.id = m.id
+    WHERE b.isDeleted = 'FALSE'
     ORDER BY b.createdAt DESC
     """)
     Slice<BoardProjection> getRecentBoards(@Param("userId") Long userId, Pageable pageable);
@@ -78,8 +83,11 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         bc.createdAt AS createdAt, bc.updatedAt AS updatedAt
     FROM BoardComment bc
     JOIN User u ON bc.userId = u.id
-    WHERE bc.board.id = :boardId
+    WHERE bc.board.id = :boardId and bc.board.isDeleted = 'FALSE'
     ORDER BY bc.createdAt DESC
     """)
     Slice<BoardCommentProjection> getBoardComments(@Param("boardId") Long boardId, Pageable pageable);
+
+
+
 }

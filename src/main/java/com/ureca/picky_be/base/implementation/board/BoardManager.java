@@ -14,12 +14,15 @@ import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.jpa.board.Board;
 import com.ureca.picky_be.jpa.board.BoardComment;
+import com.ureca.picky_be.jpa.config.IsDeleted;
 import com.ureca.picky_be.jpa.movie.Movie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.apache.commons.lang3.BooleanUtils.TRUE;
 
 @Component
 @RequiredArgsConstructor
@@ -53,7 +56,7 @@ public class BoardManager {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
 
-        // 생성자를 통한 Board Update
+        if(board.getIsDeleted() == IsDeleted.TRUE) throw new CustomException(ErrorCode.BOARD_IS_DELETED);
         try {
             board.updateBoard(req.boardContext(), req.isSpoiler());
             boardRepository.save(board);
@@ -91,6 +94,7 @@ public class BoardManager {
     public Slice<BoardCommentProjection> getTenBoardCommentsPerReq(Long boardId, Pageable pageable) {
         // 특정 Board 최신순 기준으로 댓글들을 가져온다
         if(!boardRepository.existsById(boardId)) throw new CustomException(ErrorCode.BOARD_NOT_FOUND);
+        if(boardRepository.findIsDeleted(boardId) == IsDeleted.TRUE) throw new CustomException(ErrorCode.BOARD_IS_DELETED);
 
         try {
             Slice<BoardCommentProjection> comments = boardRepository.getBoardComments(boardId, pageable);
@@ -113,7 +117,7 @@ public class BoardManager {
     public void addBoardComment(String context, Long boardId, Long userId, String userNickname) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
-
+        if(board.getIsDeleted() == IsDeleted.TRUE) throw new CustomException(ErrorCode.BOARD_IS_DELETED);
         try {
             BoardComment comment = BoardComment.of(board, userId, context, userNickname);
             boardCommentRepository.save(comment);
@@ -121,4 +125,19 @@ public class BoardManager {
             throw new CustomException(ErrorCode.BOARD_COMMENT_CREATE_FAILED);
         }
     }
+
+    @Transactional
+    public void deleteBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+        if(board.getIsDeleted() == IsDeleted.TRUE) throw new CustomException(ErrorCode.BOARD_IS_DELETED);
+        try {
+            board.deleteBoard(IsDeleted.fromString("TRUE"));
+            boardRepository.save(board);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.BOARD_DELETE_FAILED);
+        }
+    }
+
+
 }

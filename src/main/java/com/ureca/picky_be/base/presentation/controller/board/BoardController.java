@@ -78,15 +78,12 @@ public class BoardController {
     }
 
 
-
-
-
-//    @GetMapping("/{boardId}/comments")
-//    @Operation(summary = "게시글 댓글 조회(Read)", description = "사용자가 게시들 댓글들 조회")
-//    public ResponseEntity<ApiResponse<GetAllBoardComments>> getBoardComments(@PathVariable Long boardId) {
-//
-//
-//    }
+    @DeleteMapping("/{boardId}")
+    @Operation(summary = "게시글 삭제", description = "작성자가 게시글 삭제하는 경우")
+    public SuccessCode deleteBoard(@PathVariable Long boardId) {
+        boardUseCase.deleteBoard(boardId);
+        return SuccessCode.DELETE_BOARD_SUCCESS;
+    }
 
 
 }
