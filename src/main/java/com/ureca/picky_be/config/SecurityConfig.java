@@ -29,7 +29,9 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v3/api-docs/**",
-            "/api/v1/oauth/*/login"
+            "/api/v1/oauth/*/login",
+            "/api/v1/user/nickname-validation",
+            "/api/v1/user/movies-by-genres"
     };
 
     @Bean
