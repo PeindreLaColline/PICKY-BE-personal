@@ -1,4 +1,6 @@
-package com.ureca.picky_be.base.business.board.dto;
+package com.ureca.picky_be.base.business.board.dto.boardDto;
+import com.ureca.picky_be.base.business.board.dto.BoardContentPOJO;
+
 import java.time.LocalDateTime;
 import java.util.*;
 

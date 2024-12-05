@@ -1,13 +1,21 @@
 package com.ureca.picky_be.base.business.board;
 
 import com.ureca.picky_be.base.business.board.dto.*;
+import com.ureca.picky_be.base.business.board.dto.boardDto.AddBoardReq;
+import com.ureca.picky_be.base.business.board.dto.boardDto.DeleteBoardResp;
+import com.ureca.picky_be.base.business.board.dto.boardDto.GetBoardInfoResp;
+import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
+import com.ureca.picky_be.base.business.board.dto.commentDto.AddBoardCommentReq;
+import com.ureca.picky_be.base.business.board.dto.commentDto.DeleteBoardCommentsResp;
+import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
+import com.ureca.picky_be.base.business.board.dto.likeDto.AddOrDeleteBoardLikeResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
 import com.ureca.picky_be.base.implementation.mapper.BoardDtoMapper;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
-import com.ureca.picky_be.jpa.board.Board;
+import com.ureca.picky_be.global.exception.CustomException;
+import com.ureca.picky_be.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -41,14 +49,6 @@ public class BoardService implements BoardUseCase {
 
     @Override
     public Slice<GetBoardInfoResp> getBoards(Pageable pageable) {
-
-        /**
-         * 무비로그 탭을 누르면 그냥 최신 Board들 가져오는 것
-         * 1. movieId 존재하는지 검사
-         * 2. board들 가져오기
-         * 3.
-         */
-
         Long userId = authManager.getUserId();
         Slice<BoardProjection> recentBoards = boardManager.getRecentMovieBoards(userId, pageable);
         return recentBoards.map(boardDtoMapper::toGetBoardInfoResp);
@@ -56,17 +56,32 @@ public class BoardService implements BoardUseCase {
 
     @Override
     public Slice<GetBoardInfoResp> getMovieRelatedBoards(Long movieId, Pageable pageable) {
-        /**
-         * 특정 영화 상세페이지에서 무비 로그 누르면 나오는 데이터들(특정 영화에 대한 무비 로그들 최신순 기반으로 가져오기)
-         * 1. movieId 기반으로 최신 무비로그들 GET
-         */
-
         Long userId = authManager.getUserId();
         Slice<BoardProjection> recentMovieRelatedBoards = boardManager.getRecentMovieRelatedBoards(userId, movieId, pageable);
         return recentMovieRelatedBoards.map(boardDtoMapper::toGetBoardInfoResp);
     }
 
+    @Override
+    public void addBoardComment(AddBoardCommentReq req, Long boardId) {
+        Long userId = authManager.getUserId();
+        String userNickname = authManager.getUserNickname();
+        boardManager.addBoardComment(req.content(), boardId, userId, userNickname);
+    }
 
+    @Override
+    public Slice<GetAllBoardCommentsResp> getAllBoardComments(Long boardId, Pageable pageable) {
+        /**
+         * 1. boardId에 있는 댓글들 싹 가져와
+         */
+
+        Slice<BoardCommentProjection> comments = boardManager.getTenBoardCommentsPerReq(boardId, pageable);
+//        try {
+//
+//        } catch (Exception e){
+//            throw new CustomException(ErrorCode.)
+//        }
+        return comments.map(boardDtoMapper::toGetBoardInfoResp);
+    }
 
     @Override
     public DeleteBoardResp deleteBoard(Long boardId) {
@@ -76,6 +91,8 @@ public class BoardService implements BoardUseCase {
          */
         return null;
     }
+
+
 
     @Override
     public AddOrDeleteBoardLikeResp addBoardLike(Long boardId) {
@@ -88,16 +105,7 @@ public class BoardService implements BoardUseCase {
         return null;
     }
 
-    @Override
-    public void addBoardComment(AddBoardCommentReq req, Long boardId) {
-        /**
-         * 1. boardId에 user 댓글 작성
-         * 2.
-         */
-        Long userId = authManager.getUserId();
-        String userNickname = authManager.getUserNickname();
-        boardManager.addBoardComment(req.content(), boardId, userId, userNickname);
-    }
+
 
     @Override
     public DeleteBoardCommentsResp deleteBoardComment(Long boardId, Long commentId) {
@@ -108,11 +116,5 @@ public class BoardService implements BoardUseCase {
         return null;
     }
 
-    @Override
-    public GetAllBoardComments getAllBoardComments(Long boardId) {
-        /**
-         * 1. boardId에 있는 댓글들 싹 가져오기?
-         */
-        return null;
-    }
+
 }
