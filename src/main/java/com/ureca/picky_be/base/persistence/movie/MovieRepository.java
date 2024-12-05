@@ -1,10 +1,9 @@
 package com.ureca.picky_be.base.persistence.movie;
 
 import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
-import com.ureca.picky_be.jpa.genre.Genre;
+import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
 import com.ureca.picky_be.jpa.movie.Movie;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +13,19 @@ import java.util.List;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
-    List<Movie> findTop45ByOrderByTotalRatingDesc();
+    @Query("""
+    SELECT new com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp(
+        m.id,
+        m.title,
+        m.posterUrl
+    )
+    FROM Movie m
+    JOIN MovieGenre mg ON mg.movieId = m
+    WHERE mg.genreId IN :genreIds
+    GROUP BY m.id, m.posterUrl, m.totalRating, m.createdAt
+    ORDER BY m.totalRating DESC, m.createdAt DESC
+""")
+    List<GetMoviesForRegisResp> findMovieByGenresOrderByTotalRating(@Param("genreIds") List<Long> genreIds, Pageable pageable);
 
     @Query("""
     SELECT new com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp(

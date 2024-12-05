@@ -4,6 +4,8 @@ import com.ureca.picky_be.base.business.movie.dto.AddMovieReq;
 import com.ureca.picky_be.base.business.movie.dto.GetMovieByGenreReq;
 import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
 import com.ureca.picky_be.base.business.movie.dto.UpdateMovieReq;
+import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisReq;
+import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
 import com.ureca.picky_be.base.persistence.movie.*;
 import com.ureca.picky_be.base.persistence.movieworker.MovieWorkerRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
@@ -36,8 +38,22 @@ public class MovieManager {
     private final MovieLikeRepository movieLikeRepository;
     private final UserRepository userRepository;
 
-    public List<Movie> getMovieListForPreference(){
-        return movieRepository.findTop45ByOrderByTotalRatingDesc();
+    /* 회원가입시에 영화 리스트 전송 */
+    @Transactional(readOnly = true)
+    public List<GetMoviesForRegisResp> getMoviesByGenres(GetMoviesForRegisReq getMoviesForRegisReq) {
+        //TODO: 장르 없을 때 예외
+        validateGenreIds(getMoviesForRegisReq.genreIds());
+        Pageable pageable = PageRequest.of(0, 45);
+        return movieRepository.findMovieByGenresOrderByTotalRating(getMoviesForRegisReq.genreIds(), pageable);
+    }
+
+    private void validateGenreIds(List<Long> genreIds) {
+        List<Long> invalidGenreIds = genreIds.stream()
+                .filter(id -> !genreRepository.existsById(id))
+                .toList();
+        if (!invalidGenreIds.isEmpty()) {
+            throw new CustomException(ErrorCode.GENRE_NOT_FOUND);
+        }
     }
 
     /* 영화 추가 */
