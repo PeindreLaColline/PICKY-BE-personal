@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @Operation(summary = "회원가입할 때 선택할 영화 리스트 전송", description = "회원가입할 때 선택할 영화 리스트 전송")
-    @GetMapping("/regis-movie")
+    @GetMapping("/movies-by-genres")
     public List<GetMoviesForRegisResp> getMovieListByGenre(@RequestBody GetMoviesForRegisReq req){
         return movieUseCase.getMoviesByGenre(req);
     }
@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @Operation(summary = "회원가입 시 닉네임 중복 체크", description = "회원가입시 닉네임 중복 체크")
-    @GetMapping("/validate-nickname")
+    @GetMapping("/nickname-validation")
     public GetNicknameValidationResp isValid(String nickname){
         return userUseCase.getNicknameValidation(nickname);
     }
