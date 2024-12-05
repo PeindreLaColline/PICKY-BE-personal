@@ -27,7 +27,6 @@ public class BoardComment extends BaseEntity {
     @Column(nullable = false)
     private String context;
 
-    @Column(nullable=false)
     private String writerNickname;
 
 

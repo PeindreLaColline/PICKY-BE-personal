@@ -2,11 +2,13 @@ package com.ureca.picky_be.jpa.board;
 
 import com.ureca.picky_be.base.business.board.dto.contentDto.AddBoardContentReq;
 import com.ureca.picky_be.jpa.config.BaseEntity;
+import com.ureca.picky_be.jpa.config.IsDeleted;
 import com.ureca.picky_be.jpa.movie.Movie;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Entity
@@ -32,8 +34,11 @@ public class Board extends BaseEntity {
 
     private boolean isSpoiler;
 
-    @Column(nullable=false)
     private String writerNickname;
+
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'FALSE'")
+    private IsDeleted isDeleted;      // 삭제 여부
 
     public void updateBoard(String context, boolean isSpoiler) {
         this.context = context;
@@ -48,6 +53,7 @@ public class Board extends BaseEntity {
                 .context(context)
                 .isSpoiler(isSpoiler)
                 .writerNickname(writerNickname)
+                .isDeleted(IsDeleted.FALSE)
                 .contents(new ArrayList<>())
                 .build();
 
@@ -62,6 +68,7 @@ public class Board extends BaseEntity {
         this.contents.add(boardContent);
     }
 
-
-
+    public void deleteBoard(IsDeleted isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 }

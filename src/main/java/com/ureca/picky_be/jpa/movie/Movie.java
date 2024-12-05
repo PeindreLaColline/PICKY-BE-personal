@@ -2,6 +2,7 @@ package com.ureca.picky_be.jpa.movie;
 
 import com.ureca.picky_be.base.business.movie.dto.UpdateMovieReq;
 import com.ureca.picky_be.jpa.config.BaseEntity;
+import com.ureca.picky_be.jpa.config.IsDeleted;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -42,6 +43,9 @@ public class Movie extends BaseEntity {
 
     private String ostUrl;
 
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'FALSE'")
+    private IsDeleted isDeleted;      // 삭제 여부
 
     @Transactional
     public Movie updateMovie(UpdateMovieReq updateMovieReq){

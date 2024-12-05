@@ -30,9 +30,10 @@ public class User extends BaseEntity {
 
     @Column(name="is_active", nullable = false)
     @ColumnDefault("true")
-    private boolean isActive;
+    private boolean isActive;           // 활성 사용자, 비활성 사용자
 
     //@Column(nullable = false)
+    @Column(unique = true)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
@@ -54,7 +55,7 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     //@Column(nullable = false)
-    private Status status;
+    private Status status;              // 정지된 사용자, 일반 사용자
 
     public void updateUser(UpdateUserReq req) {
         this.name = req.name();

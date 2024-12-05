@@ -18,6 +18,7 @@ public enum ErrorCode {
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "E006", "입력 값이 유효하지 않습니다."),
     VALIDATION_FAILED(HttpStatus.BAD_REQUEST, "E007", "유효성 검사가 실패했습니다."),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "E008", "지원하지 않는 요청 메서드입니다."),
+    INVALID_DELETED_TYPE(HttpStatus.BAD_REQUEST, "E009","지원하지 않는 타입입니다. TRUE와 FALSE만 가능합니다."),
 
     // USER
     USER_SAVE_FAILED(HttpStatus.BAD_REQUEST, "USR001", "유저 저장에 실패했습니다."),
@@ -39,6 +40,8 @@ public enum ErrorCode {
     BOARD_CREATE_FAILED(HttpStatus.BAD_REQUEST, "BOD003", "게시물 작성에 실패했습니다."),
     BOARD_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "BOD004", "게시물 수정에 실패했습니다."),
     BOARD_MOVIE_RELATED_GET_FAILED(HttpStatus.BAD_REQUEST, "BOD005", "특정 영화에 대한 게시물들을 가져오는데에 실패했습니다."),
+    BOARD_DELETE_FAILED(HttpStatus.BAD_REQUEST, "BOD006", "게시물 삭제에 실패했습니다."),
+    BOARD_IS_DELETED(HttpStatus.BAD_REQUEST, "BOD007", "삭제된 게시물입니다."),
 
     // BOARD_CONTENT
     INVALID_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "BDC001","PHOTO, VIDEO값만 가능합니다"),
