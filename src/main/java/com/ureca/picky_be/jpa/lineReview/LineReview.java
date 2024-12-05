@@ -1,6 +1,7 @@
 package com.ureca.picky_be.jpa.lineReview;
 
 import com.ureca.picky_be.jpa.config.BaseEntity;
+import com.ureca.picky_be.jpa.config.IsDeleted;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -34,10 +35,10 @@ public class LineReview extends BaseEntity {
     @Column(nullable = false)
     private Boolean isSpoiler = false;
 
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'FALSE'")
+    private IsDeleted isDeleted;      // 삭제 여부
 
-    private boolean isDeleted;      // 삭제 여부
-
-    @Column(nullable=false)
     private String writerNickname;
 
     public void lineReviewContextUpdate(String context, Boolean isSpoiler) {

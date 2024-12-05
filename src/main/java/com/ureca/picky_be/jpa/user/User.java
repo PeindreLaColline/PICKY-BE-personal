@@ -33,6 +33,7 @@ public class User extends BaseEntity {
     private boolean isActive;           // 활성 사용자, 비활성 사용자
 
     //@Column(nullable = false)
+    @Column(unique = true)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
