@@ -34,7 +34,8 @@ public class LineReview extends BaseEntity {
     @Column(nullable = false)
     private Boolean isSpoiler = false;
 
-    private boolean isDeleted;
+
+    private boolean isDeleted;      // 삭제 여부
 
     @Column(nullable=false)
     private String writerNickname;

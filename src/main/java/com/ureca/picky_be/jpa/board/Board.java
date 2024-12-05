@@ -35,6 +35,8 @@ public class Board extends BaseEntity {
     @Column(nullable=false)
     private String writerNickname;
 
+    private boolean isDeleted;      // 삭제 여부
+
     public void updateBoard(String context, boolean isSpoiler) {
         this.context = context;
         this.isSpoiler = isSpoiler;

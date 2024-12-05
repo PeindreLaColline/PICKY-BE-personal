@@ -42,6 +42,7 @@ public class Movie extends BaseEntity {
 
     private String ostUrl;
 
+    private boolean isDeleted;      // 삭제 여부
 
     @Transactional
     public Movie updateMovie(UpdateMovieReq updateMovieReq){
