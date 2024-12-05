@@ -43,7 +43,7 @@ public class BoardController {
 
     @GetMapping("/{movieId}")
     @Operation(summary = "영화 상세보기 -> 무비로그용 API", description = "특정 영화에 대한 무비 로그들을 최신순 기반으로 가져오는 API입니다.")
-    public Slice<GetBoardInfoResp> getBoardMovieBoardsInfo(
+    public Slice<GetBoardInfoResp> getMovieBoardsInfo(
             @PathVariable Long movieId,
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "0") int page) {
