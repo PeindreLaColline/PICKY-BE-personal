@@ -89,7 +89,7 @@ public class BoardManager {
 
     @Transactional(readOnly = true)
     public Slice<BoardCommentProjection> getTenBoardCommentsPerReq(Long boardId, Pageable pageable) {
-        // 특정 영화 무비로그들 최신순 기준으로 Board들을 가져온다
+        // 특정 Board 최신순 기준으로 댓글들을 가져온다
         if(!boardRepository.existsById(boardId)) throw new CustomException(ErrorCode.BOARD_NOT_FOUND);
 
         try {
