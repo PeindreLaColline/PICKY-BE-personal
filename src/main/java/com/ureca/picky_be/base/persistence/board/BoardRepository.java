@@ -17,11 +17,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
     @Modifying(clearAutomatically = true)
     @Transactional
     void deleteByUserId(Long userId);
+
+    Optional<Board> findById(Long id);
 
     @ReadOnlyProperty
     @Query("""

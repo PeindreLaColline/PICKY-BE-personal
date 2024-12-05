@@ -1,11 +1,9 @@
 package com.ureca.picky_be.base.business.board;
 
 import com.ureca.picky_be.base.business.board.dto.boardDto.AddBoardReq;
-import com.ureca.picky_be.base.business.board.dto.boardDto.DeleteBoardResp;
 import com.ureca.picky_be.base.business.board.dto.boardDto.GetBoardInfoResp;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.AddBoardCommentReq;
-import com.ureca.picky_be.base.business.board.dto.commentDto.DeleteBoardCommentsResp;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.base.business.board.dto.likeDto.AddOrDeleteBoardLikeResp;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +21,7 @@ public interface BoardUseCase {
     AddOrDeleteBoardLikeResp addBoardLike(Long boardId);                        // 게시글 좋아요
 
     void addBoardComment(AddBoardCommentReq req, Long boardId);                  // 댓글 작성
-    DeleteBoardCommentsResp deleteBoardComment(Long boardId, Long commentId);           // 댓글 삭제
+    void deleteBoardComment(Long boardId, Long commentId);           // 댓글 삭제
     Slice<GetAllBoardCommentsResp> getAllBoardComments(Long boardId, Pageable pageable);              // 게시물에 대한 모든 댓글 읽기
 
 }

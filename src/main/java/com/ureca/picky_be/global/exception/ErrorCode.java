@@ -49,9 +49,13 @@ public enum ErrorCode {
     BOARD_CONTENT_OVER_FIVE(HttpStatus.BAD_REQUEST, "BDC003","게시글 콘텐츠 최대 갯수인 5개를 초과했습니다."),
     BOARD_CONTENT_JSON_TRANSFERING_FAILED(HttpStatus.BAD_REQUEST, "BDC004","게시글 콘텐츠 타입 변환이 실패했습니다."),
 
+
     // BOARD_COMMENT
     BOARD_COMMENT_CREATE_FAILED(HttpStatus.BAD_REQUEST, "BCM001", "댓글 작성에 실패했습니다."),
     BOARD_COMMENT_READ_FAILED(HttpStatus.BAD_REQUEST, "BCM002", "댓글 조회에 실패했습니다."),
+    BOARD_COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "BCM003", "댓글이 존재하지 않습니다."),
+    BOARD_COMMENT_USER_NOT_WRITER(HttpStatus.UNAUTHORIZED, "BOD004", "해당 댓글 작성자와 일치하지 않습니다."),
+    BOARD_COMMENT_DELETE_FAILED(HttpStatus.BAD_REQUEST, "BOD005", "댓글 삭제에 실패했습니다."),
 
     //LineReview
     LINEREVIEW_CREATE_FAILED(HttpStatus.BAD_REQUEST, "LR001", "한줄평 작성에 실패했습니다."),
