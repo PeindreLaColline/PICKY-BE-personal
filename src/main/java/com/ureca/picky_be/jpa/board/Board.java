@@ -1,6 +1,6 @@
 package com.ureca.picky_be.jpa.board;
 
-import com.ureca.picky_be.base.business.board.dto.AddBoardContentReq;
+import com.ureca.picky_be.base.business.board.dto.contentDto.AddBoardContentReq;
 import com.ureca.picky_be.jpa.config.BaseEntity;
 import com.ureca.picky_be.jpa.movie.Movie;
 import jakarta.persistence.*;

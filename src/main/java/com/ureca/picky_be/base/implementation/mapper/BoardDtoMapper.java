@@ -3,13 +3,14 @@ package com.ureca.picky_be.base.implementation.mapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ureca.picky_be.base.business.board.dto.*;
+import com.ureca.picky_be.base.business.board.dto.boardDto.GetBoardInfoResp;
+import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class BoardDtoMapper {
@@ -43,6 +44,18 @@ public class BoardDtoMapper {
                 mapContent(projection.getContents()),
                 projection.getMovieName(),
                 projection.getIsLike()
+        );
+    }
+
+    public GetAllBoardCommentsResp toGetBoardInfoResp(BoardCommentProjection projection) {
+        return new GetAllBoardCommentsResp(
+                projection.getCommentId(),
+                projection.getWriterId(),
+                projection.getWriterNickname(),
+                projection.getWriterProfileUrl(),
+                projection.getContext(),
+                projection.getCreatedAt(),
+                projection.getUpdatedAt()
         );
     }
 

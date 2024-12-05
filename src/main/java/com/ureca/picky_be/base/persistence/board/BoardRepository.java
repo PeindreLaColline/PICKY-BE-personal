@@ -1,6 +1,8 @@
 package com.ureca.picky_be.base.persistence.board;
 
+import com.ureca.picky_be.base.business.board.dto.BoardCommentProjection;
 import com.ureca.picky_be.base.business.board.dto.BoardProjection;
+import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.jpa.board.Board;
 import com.ureca.picky_be.jpa.board.BoardContent;
 import org.springframework.data.domain.PageRequest;
@@ -70,4 +72,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     ORDER BY b.createdAt DESC
     """)
     Slice<BoardProjection> getRecentBoards(@Param("userId") Long userId, Pageable pageable);
+
+    @Query("""
+    SELECT bc.id as commentId, bc.userId AS writerId, u.name AS writerNickname, u.profileUrl AS writerProfileUrl, bc.context AS context,
+        bc.createdAt AS createdAt, bc.updatedAt AS updatedAt
+    FROM BoardComment bc
+    JOIN User u ON bc.userId = u.id
+    WHERE bc.board.id = :boardId
+    ORDER BY bc.createdAt DESC
+    """)
+    Slice<BoardCommentProjection> getBoardComments(@Param("boardId") Long boardId, Pageable pageable);
 }
