@@ -112,6 +112,15 @@ public class BoardManager {
             throw new CustomException(ErrorCode.BOARD_USER_NOT_WRITER);
         }
     }
+    @Transactional(readOnly = true)
+    public void checkBoardCommentWriteUser(Long commentId, Long userId) {
+        BoardComment comment = boardCommentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_COMMENT_NOT_FOUND));
+
+        if(!comment.getUserId().equals(userId)) {
+            throw new CustomException(ErrorCode.BOARD_COMMENT_USER_NOT_WRITER);
+        }
+    }
 
     @Transactional
     public void addBoardComment(String context, Long boardId, Long userId, String userNickname) {
@@ -140,4 +149,21 @@ public class BoardManager {
     }
 
 
+    @Transactional
+    public void deleteBoardComment(Long commentId) {
+        BoardComment comment = boardCommentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_COMMENT_NOT_FOUND));
+        try{
+            boardCommentRepository.deleteByBoardCommentId(commentId);
+        }catch (Exception e) {
+            throw new CustomException(ErrorCode.BOARD_COMMENT_DELETE_FAILED);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void checkBoardIsDeleted(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+        if(board.getIsDeleted() == IsDeleted.TRUE) throw new CustomException(ErrorCode.BOARD_IS_DELETED);
+    }
 }

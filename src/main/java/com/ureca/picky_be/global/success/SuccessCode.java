@@ -21,8 +21,9 @@ public enum SuccessCode {
     // Board
     CREATE_BOARD_SUCCESS(201, "게시글 생성 완료"),
     UPDATE_BOARD_SUCCESS(200, "게시글 수정 완료"),
+    DELETE_BOARD_SUCCESS(200, "게시글 삭제 완료"),
     CREATE_BOARD_COMMENT_SUCCESS(201, "게시글 댓글 생성 완료"),
-    DELETE_BOARD_SUCCESS(200, "게시글 삭제 완료");
+    DELETE_BOARD_COMMENT_SUCCESS(201, "게시글 댓글 삭제 완료");
 
     private final int status;    // HTTP 상태 코드
     private final String message; // 성공 메시지

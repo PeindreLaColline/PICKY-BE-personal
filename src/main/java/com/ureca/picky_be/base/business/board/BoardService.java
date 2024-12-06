@@ -2,19 +2,15 @@ package com.ureca.picky_be.base.business.board;
 
 import com.ureca.picky_be.base.business.board.dto.*;
 import com.ureca.picky_be.base.business.board.dto.boardDto.AddBoardReq;
-import com.ureca.picky_be.base.business.board.dto.boardDto.DeleteBoardResp;
 import com.ureca.picky_be.base.business.board.dto.boardDto.GetBoardInfoResp;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.AddBoardCommentReq;
-import com.ureca.picky_be.base.business.board.dto.commentDto.DeleteBoardCommentsResp;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.base.business.board.dto.likeDto.AddOrDeleteBoardLikeResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
 import com.ureca.picky_be.base.implementation.mapper.BoardDtoMapper;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
-import com.ureca.picky_be.global.exception.CustomException;
-import com.ureca.picky_be.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -94,6 +90,20 @@ public class BoardService implements BoardUseCase {
         boardManager.deleteBoard(boardId);
     }
 
+    @Override
+    public void deleteBoardComment(Long boardId, Long commentId) {
+        /**
+         * 1. 삭제하려는 comment가 user것인지 검사
+         * 2. 일치하면 삭제
+         */
+
+        Long userId = authManager.getUserId();
+        boardManager.checkBoardIsDeleted(boardId);
+        boardManager.checkBoardCommentWriteUser(commentId, userId);
+        boardManager.deleteBoardComment(commentId);
+
+    }
+
 
 
     @Override
@@ -108,15 +118,6 @@ public class BoardService implements BoardUseCase {
     }
 
 
-
-    @Override
-    public DeleteBoardCommentsResp deleteBoardComment(Long boardId, Long commentId) {
-        /**
-         * 1. 삭제하려는 comment가 user것인지 검사
-         * 2. 일치하면 삭제
-         */
-        return null;
-    }
 
 
 }

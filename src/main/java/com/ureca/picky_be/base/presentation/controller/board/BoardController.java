@@ -85,5 +85,12 @@ public class BoardController {
         return SuccessCode.DELETE_BOARD_SUCCESS;
     }
 
+    @DeleteMapping("/{boardId}/comments/{commentId}")
+    @Operation(summary = "댓글 삭제", description = "작성자가 댓글 삭제하는 경우")
+    public SuccessCode deleteBoardComment(@PathVariable Long boardId, @PathVariable Long commentId) {
+        boardUseCase.deleteBoardComment(boardId, commentId);
+        return SuccessCode.DELETE_BOARD_COMMENT_SUCCESS;
+    }
+
 
 }
