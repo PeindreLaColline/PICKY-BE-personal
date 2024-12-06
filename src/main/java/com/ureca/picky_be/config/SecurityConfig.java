@@ -43,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/oauth/*/user").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/oauth/*/user/genres").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/movie").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
