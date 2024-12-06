@@ -26,13 +26,47 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private static final String[] AUTH_WHITELIST = {
+            //기본 세팅
             "/health",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v3/api-docs/**",
-            "/api/v1/oauth/*/login",
+
+            //로그인 없이도 접근 가능
+            "/api/v1/oauth/*/login"
+    };
+
+    private static final String[] AUTH_WHITELIST_GET = {
+            //영화
+            "/api/v1/movie/**",
+
+            //user
+            "/api/v1/user",
+    };
+
+    private static final String[] AUTH_USER = {
+            //user
+            "/api/v1/oauth/*/user",
+            "/api/v1/user",
+            "/api/v1/user/genres",
+            "/api/v1/user/movies-by-genres",
             "/api/v1/user/nickname-validation",
-            "/api/v1/user/movies-by-genres"
+
+            //영화
+            "/api/v1/movie/**/like"
+    };
+
+    private static final String[] AUTH_USER_PATCH = {
+            //user
+            "/api/v1/user"
+    };
+
+    private static final String[] AUTH_ADMIN = {
+
+    };
+
+    private static final String[] AUTH_ADMIN_POST = {
+            "/api/v1/movie/**"
     };
 
     @Bean
@@ -42,10 +76,13 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/oauth/*/user").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/oauth/*/user/genres").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/movie").permitAll()
+                        .requestMatchers(HttpMethod.GET, AUTH_WHITELIST_GET).permitAll()
+                        .requestMatchers(AUTH_USER).hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, AUTH_USER_PATCH).hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers(AUTH_ADMIN).hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, AUTH_ADMIN_POST).hasAuthority("ADMIN")
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -60,8 +97,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-        "http://localhost:5173",
-        "https://d3hxz5yj62y98w.cloudfront.net"
+            "http://localhost:5173",
+            "https://d3hxz5yj62y98w.cloudfront.net"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
