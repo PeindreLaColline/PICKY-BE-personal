@@ -16,7 +16,7 @@ public class LineReviewLikeController {
     private final LineReviewLikeUseCase lineReviewlikeUseCase;
 
     @Operation(summary = "한줄평 좋아요/싫어요 생성", description = "중복 불가능, 자기 글 좋아요 불가능, 좋아요 누르고 싫어요 누르면 자동으로 업데이트")
-    @PostMapping("/")
+    @PostMapping
     public CreateLineReviewLikeResp createLineReviewLike(@RequestBody CreateLineReviewLikeReq req) {
         CreateLineReviewLikeResp resp = lineReviewlikeUseCase.createLineReviewLike(req);
         return resp;
