@@ -46,7 +46,7 @@ public class BoardController {
     @Operation(summary = "영화 상세보기 -> 무비로그용 API", description = "특정 영화에 대한 무비 로그들을 최신순 기반으로 가져오는 API입니다.")
     public Slice<GetBoardInfoResp> getMovieBoardsInfo(
             @PathVariable Long movieId,
-            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,
             @RequestParam(defaultValue = "0") int page) {
 
         // TODO : Slice 형태로 return 했을 때, 차후 프론트에서 문제 발생 시 List로 return 해줘야함.
@@ -57,7 +57,7 @@ public class BoardController {
     @GetMapping("/all")
     @Operation(summary = "최신 무비로그용 API", description = "무비 로그들을 최신순 기반으로 가져오는 API입니다.")
     public Slice<GetBoardInfoResp> getBoardsInfo(
-            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,
             @RequestParam(defaultValue = "0") int page) {
 
         // TODO : Slice 형태로 return 했을 때, 차후 프론트에서 문제 발생 시 List로 return 해줘야함.
@@ -69,7 +69,7 @@ public class BoardController {
     @Operation(summary = "댓글 조회용 API", description = "특정 무비 로그에 대한 댓글들을 조회하는 API입니다.")
     public Slice<GetAllBoardCommentsResp> getBoardsComments(
             @PathVariable Long boardId,
-            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,
             @RequestParam(defaultValue = "0") int page) {
 
         // TODO : Slice 형태로 return 했을 때, 차후 프론트에서 문제 발생 시 List로 return 해줘야함.
@@ -85,9 +85,9 @@ public class BoardController {
         return SuccessCode.DELETE_BOARD_SUCCESS;
     }
 
-    @DeleteMapping("/{boardId}/comments/{commentId}")
+    @DeleteMapping("/{boardId}/comments")
     @Operation(summary = "댓글 삭제", description = "작성자가 댓글 삭제하는 경우")
-    public SuccessCode deleteBoardComment(@PathVariable Long boardId, @PathVariable Long commentId) {
+    public SuccessCode deleteBoardComment(@PathVariable Long boardId, @RequestParam Long commentId) {
         boardUseCase.deleteBoardComment(boardId, commentId);
         return SuccessCode.DELETE_BOARD_COMMENT_SUCCESS;
     }
