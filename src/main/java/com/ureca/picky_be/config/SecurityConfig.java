@@ -14,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/oauth/*/user").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/oauth/*/user/genres").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/movie").permitAll()
+                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
