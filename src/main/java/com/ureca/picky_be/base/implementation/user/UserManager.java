@@ -143,6 +143,6 @@ public class UserManager {
 
     @Transactional(readOnly = true)
     public boolean getNicknameValidation(String nickname){
-        return userRepository.existsByNickname(nickname);
+        return !userRepository.existsByNickname(nickname);
     }
 }
