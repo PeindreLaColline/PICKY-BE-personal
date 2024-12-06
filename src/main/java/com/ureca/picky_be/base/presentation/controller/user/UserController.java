@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @Operation(summary = "회원가입할 때 선택할 영화 리스트 전송", description = "회원가입할 때 선택할 영화 리스트 전송")
-    @GetMapping("/movies-by-genres")
+    @PostMapping("/movies-by-genres")
     public List<GetMoviesForRegisResp> getMovieListByGenre(@RequestBody GetMoviesForRegisReq req){
         return movieUseCase.getMoviesByGenre(req);
     }
