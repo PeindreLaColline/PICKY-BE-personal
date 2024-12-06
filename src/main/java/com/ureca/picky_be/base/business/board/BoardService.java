@@ -11,6 +11,7 @@ import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
 import com.ureca.picky_be.base.implementation.mapper.BoardDtoMapper;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
+import com.ureca.picky_be.jpa.board.Board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -23,7 +24,6 @@ public class BoardService implements BoardUseCase {
 
     private final BoardManager boardManager;
     private final AuthManager authManager;
-    private final BoardRepository boardRepository;
     private final BoardDtoMapper boardDtoMapper;
 
     @Override
@@ -107,14 +107,19 @@ public class BoardService implements BoardUseCase {
 
 
     @Override
-    public AddOrDeleteBoardLikeResp addBoardLike(Long boardId) {
-        /**
-         * 1. board에 user가 좋아요 누른 여부 파악
-         * 2. 눌렀으면 삭제, 안눌렀으면 좋아요 생성
-         * 3. 결과에 따라 response
-         */
-
-        return null;
+    public boolean createBoardLike(Long boardId) {
+        Long userId = authManager.getUserId();
+        boardManager.checkBoardIsDeleted(boardId);
+        if(boardManager.checkUserBoardLike(userId,boardId)) {   // 눌려 있다면
+            // 좋아요 delete
+            boardManager.deleteBoardLike(userId,boardId);
+            return false;
+        } else {        // 좋아요 없으면
+            // 좋아요 Create
+            Board board = boardManager.getBoardById(boardId);
+            boardManager.createBoardLike(userId, board);
+            return true;
+        }
     }
 
 

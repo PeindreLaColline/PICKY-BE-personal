@@ -40,7 +40,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         b.createdAt AS createdAt, b.updatedAt AS updatedAt,
         (SELECT COUNT(l) FROM BoardLike l WHERE l.board.id = b.id) AS likeCount,
         (SELECT COUNT(c) FROM BoardComment c WHERE c.board.id = b.id) AS commentCount,
-        (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.user.id = :userId) THEN true ELSE false END) AS isLike,
+        (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.userId = :userId) THEN true ELSE false END) AS isLike,
         (SELECT COALESCE(JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'contentUrl', bc.contentUrl,
@@ -64,7 +64,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         b.createdAt AS createdAt, b.updatedAt AS updatedAt,
         (SELECT COUNT(l) FROM BoardLike l WHERE l.board.id = b.id) AS likeCount,
         (SELECT COUNT(c) FROM BoardComment c WHERE c.board.id = b.id) AS commentCount,
-        (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.user.id = :userId) THEN true ELSE false END) AS isLike,
+        (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.userId = :userId) THEN true ELSE false END) AS isLike,
         (SELECT COALESCE(JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'contentUrl', bc.contentUrl,

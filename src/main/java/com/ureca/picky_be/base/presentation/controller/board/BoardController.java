@@ -93,4 +93,12 @@ public class BoardController {
     }
 
 
+    @PostMapping("/{boardId}/likes")
+    @Operation(summary = "게시글 좋아요", description = "게시글에 좋아요 누르기. 이미 눌러져 있다면 취소된다.")
+    public SuccessCode createBoardLike(@PathVariable Long boardId) {
+        if(boardUseCase.createBoardLike(boardId)) return SuccessCode.CREATE_BOARD_LIKE_SUCCESS;
+        return SuccessCode.DELETE_BOARD_LIKE_SUCCESS;
+
+    }
+
 }
