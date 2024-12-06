@@ -21,6 +21,8 @@ public class UserController {
     @Operation(summary = "회원가입할 때 개인정보 기입, 마이페이지에서 개인정보 수정", description = "무조건 모든 필드 다 채워서 주세요. movieId, genreId 말고는 null 불가")
     @PatchMapping
     public SuccessCode updateUserInfo(@RequestBody UpdateUserReq req) {
+        System.out.println("아악!");
+        System.out.println(req.toString());
         return userUseCase.updateUserInfo(req);
     }
 
