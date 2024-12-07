@@ -34,7 +34,10 @@ public class SecurityConfig {
 
             //로그인 없이도 접근 가능
             "/api/v1/oauth/*/user",
-            "/api/v1/oauth/*/login"
+            "/api/v1/oauth/*/login",
+
+            //장르
+            "/api/v1/user/genres"
     };
 
     private static final String[] AUTH_WHITELIST_GET = {
@@ -48,7 +51,6 @@ public class SecurityConfig {
     private static final String[] AUTH_USER = {
             //user
             "/api/v1/user",
-            "/api/v1/user/genres",
             "/api/v1/user/movies-by-genres",
             "/api/v1/user/nickname-validation",
 
