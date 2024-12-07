@@ -33,6 +33,7 @@ public class SecurityConfig {
             "/v3/api-docs/**",
 
             //로그인 없이도 접근 가능
+            "/api/v1/oauth/*/user",
             "/api/v1/oauth/*/login"
     };
 
@@ -41,19 +42,18 @@ public class SecurityConfig {
             "/api/v1/movie/**",
 
             //user
-            "/api/v1/user",
+            "/api/v1/user"
     };
 
     private static final String[] AUTH_USER = {
             //user
-            "/api/v1/oauth/*/user",
             "/api/v1/user",
             "/api/v1/user/genres",
             "/api/v1/user/movies-by-genres",
             "/api/v1/user/nickname-validation",
 
             //영화
-            "/api/v1/movie/**/like"
+            "/api/v1/movie/*/like"
     };
 
     private static final String[] AUTH_USER_PATCH = {
@@ -82,7 +82,7 @@ public class SecurityConfig {
                         .requestMatchers(AUTH_ADMIN).hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, AUTH_ADMIN_POST).hasAuthority("ADMIN")
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
