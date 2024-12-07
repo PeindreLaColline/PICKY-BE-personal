@@ -86,6 +86,9 @@ public enum ErrorCode {
     LINEREVIEW_COUNT_FAILED(HttpStatus.BAD_REQUEST, "LRL004", "좋아요 수 찾기 실패 했습니다."),
     LINEREVIEWLIKE_SELF_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "LRL005", "자신의 한줄평에는 좋아요가 안됩니다." ),
 
+    // Notification
+    INVALID_NOTIFICATION_TYPE(HttpStatus.BAD_REQUEST, "NTF","MOVIENEWBOARD(좋아요한 영화에 대해 새로운 게시글이 달린 경우), FOLLOWINGNEWBOARD(팔로우한 사용자가 새로운 게시글을 작성한 경우),MYBOARDNEWCOMMENT(내 게시글에 새로운 댓글이 달린 경우)만 가능합니다"),
+
     ;
 
     private final HttpStatus httpStatus; // HTTP 상태 코드
