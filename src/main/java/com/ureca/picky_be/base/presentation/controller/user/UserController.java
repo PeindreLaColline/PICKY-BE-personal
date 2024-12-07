@@ -43,8 +43,8 @@ public class UserController {
     }
 
     @Operation(summary = "회원가입 시 닉네임 중복 체크", description = "회원가입시 닉네임 중복 체크")
-    @GetMapping("/nickname-validation/{nickname}")
-    public GetNicknameValidationResp isValid(@PathVariable String nickname){
+    @GetMapping("/nickname-validation")
+    public GetNicknameValidationResp isValid(@RequestParam String nickname){
         return userUseCase.getNicknameValidation(nickname);
     }
 
