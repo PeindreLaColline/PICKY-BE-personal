@@ -32,16 +32,14 @@ public class SecurityConfig {
             "/swagger-ui.html",
             "/v3/api-docs/**",
 
-            //로그인 없이도 접근 가능
-            "/api/v1/oauth/*/login"
-    };
-
-    private static final String[] AUTH_WHITELIST_GET = {
-            //영화
-            "/api/v1/movie/**",
+            //oauth
+            "/api/v1/oauth/*/login",
 
             //user
             "/api/v1/user",
+
+            //영화
+            "/api/v1/movie/**"
     };
 
     private static final String[] AUTH_USER = {
@@ -53,19 +51,14 @@ public class SecurityConfig {
             "/api/v1/user/nickname-validation/**",
 
             //영화
-            "/api/v1/movie/**/like"
-    };
+            "/api/v1/movie/**/like",
 
-    private static final String[] AUTH_USER_PATCH = {
-            //user
-            "/api/v1/user"
+            //한줄평
+            "/api/v1/linereview/create",
+            "/api/v1/linereview/**"
     };
 
     private static final String[] AUTH_ADMIN = {
-
-    };
-
-    private static final String[] AUTH_ADMIN_POST = {
             "/api/v1/movie/**"
     };
 
@@ -76,11 +69,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                        .requestMatchers(HttpMethod.GET, AUTH_WHITELIST_GET).permitAll()
                         .requestMatchers(AUTH_USER).hasAnyAuthority("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, AUTH_USER_PATCH).hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers(AUTH_ADMIN).hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.POST, AUTH_ADMIN_POST).hasAuthority("ADMIN")
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
                         .anyRequest().authenticated()
