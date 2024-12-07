@@ -47,7 +47,7 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
         FROM LineReview lr
         LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
         WHERE lr.movieId = :movieId
-          AND (:lastCreatedAt IS NULL OR lr.createdAt < :lastCreatedAt 
+          AND (:lastCreatedAt IS NULL OR lr.createdAt < :lastCreatedAt
                OR (lr.createdAt = :lastCreatedAt AND lr.id < :lastReviewId))
         GROUP BY lr.id, lr.userId, lr.movieId, lr.rating, lr.context, lr.isSpoiler, lr.createdAt
         ORDER BY lr.createdAt DESC, lr.id DESC

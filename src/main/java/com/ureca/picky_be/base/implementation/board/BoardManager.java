@@ -5,6 +5,7 @@ import com.ureca.picky_be.base.business.board.dto.boardDto.AddBoardReq;
 import com.ureca.picky_be.base.business.board.dto.BoardProjection;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
+import com.ureca.picky_be.base.persistence.board.BoardLikeRepository;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
 import com.ureca.picky_be.base.persistence.board.BoardCommentRepository;
 import com.ureca.picky_be.base.persistence.board.BoardContentRepository;
@@ -14,6 +15,7 @@ import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.jpa.board.Board;
 import com.ureca.picky_be.jpa.board.BoardComment;
+import com.ureca.picky_be.jpa.board.BoardLike;
 import com.ureca.picky_be.jpa.config.IsDeleted;
 import com.ureca.picky_be.jpa.movie.Movie;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import static org.apache.commons.lang3.BooleanUtils.TRUE;
 
@@ -31,6 +35,7 @@ public class BoardManager {
     private final MovieRepository movieRepository;
     private final BoardCommentRepository boardCommentRepository;
     private final BoardContentRepository boardContentRepository;
+    private final BoardLikeRepository boardLikeRepository;
     private final UserRepository userRepository;
 
     @Transactional
@@ -166,4 +171,43 @@ public class BoardManager {
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
         if(board.getIsDeleted() == IsDeleted.TRUE) throw new CustomException(ErrorCode.BOARD_IS_DELETED);
     }
+
+
+    @Transactional(readOnly = true)
+    public boolean checkUserBoardLike(Long userId, Long boardId) {
+        try {
+            Optional<BoardLike> board = boardLikeRepository.findByBoardIdAndUserId(boardId, userId);
+            return board.isPresent();
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.BOARD_LIKE_FAILED);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Board getBoardById(Long boardId) {
+        Optional<Board> board = boardRepository.findById(boardId);
+        return board.orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+    }
+
+    @Transactional
+    public void deleteBoardLike(Long userId, Long boardId) {
+        try {
+            boardLikeRepository.deleteByBoardIdAndUserId(boardId, userId);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.BOARD_LIKE_DELETE_FAILED);
+        }
+    }
+
+    @Transactional
+    public void createBoardLike(Long userId, Board board) {
+        try{
+            BoardLike like = BoardLike.of(userId, board);
+            boardLikeRepository.save(like);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.BOARD_LIKE_DELETE_FAILED);
+        }
+    }
+
+
+
 }

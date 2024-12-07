@@ -27,12 +27,14 @@ public class LineReviewController {
         CreateLineReviewResp resp = lineReviewUseCase.createLineReview(req);
         return resp;
     }
+
     @Operation(summary = "한줄평 업데이트", description = "평점은 수정 불가능")
     @PatchMapping("/{lineReviewId}")
-    public UpdateLineReviewResp updateLineReviewResp(@PathVariable Long lineReviewId, @RequestBody UpdateLineReviewReq req){
+    public UpdateLineReviewResp updateLineReview(@PathVariable Long lineReviewId, @RequestBody UpdateLineReviewReq req){
         UpdateLineReviewResp resp = lineReviewUseCase.updateLineReview(lineReviewId, req);
         return resp;
     }
+
     @Operation(
             summary = "한줄평 조회",
             description = """
@@ -45,7 +47,7 @@ public class LineReviewController {
         """
     )
     @GetMapping("/movie/{movieId}")
-    public Slice<ReadLineReviewResp> readLineReviewResp(
+    public Slice<ReadLineReviewResp> readLineReview(
             @PathVariable Long movieId,
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
             @Parameter(description = """

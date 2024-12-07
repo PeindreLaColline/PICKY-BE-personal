@@ -57,6 +57,12 @@ public enum ErrorCode {
     BOARD_COMMENT_USER_NOT_WRITER(HttpStatus.UNAUTHORIZED, "BOD004", "해당 댓글 작성자와 일치하지 않습니다."),
     BOARD_COMMENT_DELETE_FAILED(HttpStatus.BAD_REQUEST, "BOD005", "댓글 삭제에 실패했습니다."),
 
+    // BOARD_LIKE
+    BOARD_LIKE_DELETE_FAILED(HttpStatus.BAD_REQUEST, "BOL001", "게시물 좋아요 삭제에 실패했습니다."),
+    BOARD_LIKE_CREATE_FAILED(HttpStatus.BAD_REQUEST, "BOL002", "게시물 좋아요 생성에 실패했습니다."),
+    BOARD_LIKE_FAILED(HttpStatus.BAD_REQUEST, "BOL003", "게시물 좋아요 작업이 실패했습니다."),
+
+
     //LineReview
     LINEREVIEW_CREATE_FAILED(HttpStatus.BAD_REQUEST, "LR001", "한줄평 작성에 실패했습니다."),
     LINEREVIEW_INVALID_RATING(HttpStatus.BAD_REQUEST, "LR002", "평점 값은 0에서 5 사이입니다" ),
