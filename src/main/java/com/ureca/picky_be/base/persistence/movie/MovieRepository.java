@@ -22,7 +22,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         m.posterUrl
     )
     FROM Movie m
-    JOIN MovieGenre mg ON mg.movieId = m
+    JOIN MovieGenre mg ON mg.movie = m
     WHERE mg.genreId IN :genreIds
     GROUP BY m.id, m.posterUrl, m.totalRating, m.createdAt
     ORDER BY m.totalRating DESC, m.createdAt DESC
@@ -71,7 +71,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         m.backdropUrl
     )
     FROM Movie m
-    JOIN MovieGenre mg ON mg.movieId = m
+    JOIN MovieGenre mg ON mg.movie = m
     LEFT JOIN MovieLike ml ON ml.movie.id = m.id
     WHERE mg.genreId = :genreId
     GROUP BY m.id, m.title, m.totalRating, m.posterUrl, m.backdropUrl
@@ -99,7 +99,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         m.posterUrl AS posterUrl,
         m.backdropUrl AS backdropUrl
     FROM Movie m
-    JOIN MoviePlayList mpl ON mpl.movieId.id = m.id
+    JOIN MoviePlaylist mpl ON mpl.movie.id = m.id
     LEFT JOIN MovieLike ml ON ml.movie.id = m.id
     WHERE mpl.playlist.id IN :playlistIds
     GROUP BY mpl.playlist.id, m.id, m.title, m.totalRating, m.posterUrl, m.backdropUrl

@@ -42,12 +42,19 @@ public class MovieService implements MovieUseCase{
 
     @Override
     public GetMovieDetailResp getMovieDetail(Long movieId) {
+        System.out.println("1");
         Movie movie = movieManager.getMovie(movieId);
+        System.out.println("2");
         List<MovieBehindVideo> movieBehindVideos = movieManager.getMovieBehindVideos(movieId);
+        System.out.println("3");
         List<Genre> genres = movieManager.getGenre(movieId);
+        System.out.println("4");
         List<FilmCrew> actors = movieManager.getActors(movie);
+        System.out.println("5");
         List<FilmCrew> directors = movieManager.getDirectors(movie);
+        System.out.println("6");
         boolean like = movieManager.getMovieLike(movieId, authManager.getUserId());
+        System.out.println("7");
         return movieDtoMapper.toGetMovieDetailResp(movie, movieBehindVideos, genres, actors, directors, like);
     }
 
