@@ -9,6 +9,7 @@ import com.ureca.picky_be.base.persistence.playlist.MoviePlaylistRepository;
 import com.ureca.picky_be.base.persistence.playlist.PlaylistRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.movie.Movie;
 import com.ureca.picky_be.jpa.movie.MoviePlayList;
 import com.ureca.picky_be.jpa.playlist.Playlist;
@@ -77,5 +78,14 @@ public class PlaylistManager {
                 })
                 .forEach(moviePlaylistRepository::save);
         return playlist;
+    }
+
+    @Transactional
+    public SuccessCode deletePlaylist(Long playlistId) {
+        Playlist playlist = playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PLAYLIST_NOT_FOUND));
+        moviePlaylistRepository.deleteByPlaylist(playlist);
+        playlistRepository.delete(playlist);
+        return SuccessCode.PLAYLIST_DELETE_SUCCESS;
     }
 }

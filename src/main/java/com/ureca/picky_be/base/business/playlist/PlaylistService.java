@@ -7,6 +7,7 @@ import com.ureca.picky_be.base.implementation.mapper.PlaylistDtoMapper;
 import com.ureca.picky_be.base.implementation.playlist.PlaylistManager;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.global.success.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -50,6 +51,11 @@ public class PlaylistService implements PlaylistUseCase{
     public UpdatePlaylistResp updatePlaylist(UpdatePlaylistReq updatePlaylistReq) {
         if(updatePlaylistReq.playlistId() == null || updatePlaylistReq.movieIds().isEmpty() || updatePlaylistReq.title().isEmpty()) throw new CustomException(ErrorCode.PLAYLIST_UPDATE_FAILED);
         return playlistDtoMapper.toUpdatePlaylistResp(playlistManager.updatePlaylist(updatePlaylistReq));
+    }
+
+    @Override
+    public SuccessCode deletePlaylist(Long playlistId) {
+        return playlistManager.deletePlaylist(playlistId);
     }
 }
 

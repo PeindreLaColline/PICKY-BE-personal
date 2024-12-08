@@ -45,4 +45,9 @@ public class AdminPlaylistController {
     public UpdatePlaylistResp updatePlaylist(@RequestBody UpdatePlaylistReq updatePlaylistReq) {
         return playlistUseCase.updatePlaylist(updatePlaylistReq);
     }
+
+    @DeleteMapping
+    public SuccessCode deletePlaylist(@RequestParam Long playlistId) {
+        return playlistUseCase.deletePlaylist(playlistId);
+    }
 }
