@@ -37,7 +37,10 @@ public class SecurityConfig {
             "/api/v1/oauth/*/login",
 
             //장르
-            "/api/v1/user/genres"
+            "/api/v1/user/genres",
+
+            //플레이리스트
+            "/api/v1/playlist/all",
     };
 
     private static final String[] AUTH_WHITELIST_GET = {
@@ -52,7 +55,7 @@ public class SecurityConfig {
             //user
             "/api/v1/user",
             "/api/v1/user/movies-by-genres",
-            "/api/v1/user/nickname-validation/**",
+            "/api/v1/user/nickname-validation",
 
             //영화
             "/api/v1/movie/*/like"

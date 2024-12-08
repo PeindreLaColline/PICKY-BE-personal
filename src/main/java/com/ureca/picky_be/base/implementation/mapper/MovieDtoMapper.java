@@ -2,6 +2,8 @@ package com.ureca.picky_be.base.implementation.mapper;
 
 import com.ureca.picky_be.base.business.movie.dto.GetGenres;
 import com.ureca.picky_be.base.business.movie.dto.GetMovieDetailResp;
+import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieProjection;
+import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisReq;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
 import com.ureca.picky_be.jpa.genre.Genre;
@@ -11,7 +13,9 @@ import com.ureca.picky_be.jpa.movie.MovieBehindVideo;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class MovieDtoMapper {
