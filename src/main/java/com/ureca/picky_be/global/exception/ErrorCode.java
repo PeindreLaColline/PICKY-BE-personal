@@ -49,7 +49,6 @@ public enum ErrorCode {
     BOARD_CONTENT_OVER_FIVE(HttpStatus.BAD_REQUEST, "BDC003","게시글 콘텐츠 최대 갯수인 5개를 초과했습니다."),
     BOARD_CONTENT_JSON_TRANSFERING_FAILED(HttpStatus.BAD_REQUEST, "BDC004","게시글 콘텐츠 타입 변환이 실패했습니다."),
 
-
     // BOARD_COMMENT
     BOARD_COMMENT_CREATE_FAILED(HttpStatus.BAD_REQUEST, "BCM001", "댓글 작성에 실패했습니다."),
     BOARD_COMMENT_READ_FAILED(HttpStatus.BAD_REQUEST, "BCM002", "댓글 조회에 실패했습니다."),
@@ -61,7 +60,6 @@ public enum ErrorCode {
     BOARD_LIKE_DELETE_FAILED(HttpStatus.BAD_REQUEST, "BOL001", "게시물 좋아요 삭제에 실패했습니다."),
     BOARD_LIKE_CREATE_FAILED(HttpStatus.BAD_REQUEST, "BOL002", "게시물 좋아요 생성에 실패했습니다."),
     BOARD_LIKE_FAILED(HttpStatus.BAD_REQUEST, "BOL003", "게시물 좋아요 작업이 실패했습니다."),
-
 
     //LineReview
     LINEREVIEW_CREATE_FAILED(HttpStatus.BAD_REQUEST, "LR001", "한줄평 작성에 실패했습니다."),
@@ -77,14 +75,16 @@ public enum ErrorCode {
     LINEREVIEW_INVALID_SORT(HttpStatus.BAD_REQUEST, "LR0011", "유효하지 않은 정렬 방식입니다"),
     LINEREVIEW_GET_FAILED(HttpStatus.BAD_REQUEST, "LR0012", "한줄평 조회에 실패했습니다."),
 
-
-
     //LineReviewLike
     INVALID_PREFERENCE(HttpStatus.BAD_REQUEST, "LRL001","LIKE, DISLIKE값만 가능합니다"),
     LINEREVIEWLIKE_CREATE_FAILED(HttpStatus.BAD_REQUEST, "LRL002","한줄평 좋아요에 실패했습니다."),
     LINEREVIEWLIKE_CREATE_DUPLICATE(HttpStatus.BAD_REQUEST,"LRL003","좋아요나 싫어요는 한번만 가능합니다."),
     LINEREVIEW_COUNT_FAILED(HttpStatus.BAD_REQUEST, "LRL004", "좋아요 수 찾기 실패 했습니다."),
     LINEREVIEWLIKE_SELF_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "LRL005", "자신의 한줄평에는 좋아요가 안됩니다." ),
+
+    //Playlist
+    PLAYLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "PL001", "플레이리스트 조회에 실패했습니다"),
+    PLAYLIST_MOVIE_NOT_FOUND(HttpStatus.NOT_FOUND, "PL002", "플레이리스트에 포함되어있는 영화 조회에 실패했습니다")
 
     ;
 
