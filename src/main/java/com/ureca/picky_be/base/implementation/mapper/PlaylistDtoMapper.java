@@ -5,6 +5,7 @@ import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
 import com.ureca.picky_be.base.business.playlist.dto.AddPlaylistResp;
 import com.ureca.picky_be.base.business.playlist.dto.GetPlaylistProjection;
 import com.ureca.picky_be.base.business.playlist.dto.GetPlaylistResp;
+import com.ureca.picky_be.base.business.playlist.dto.UpdatePlaylistResp;
 import com.ureca.picky_be.jpa.playlist.Playlist;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
@@ -48,6 +49,13 @@ public class PlaylistDtoMapper {
 
     public AddPlaylistResp toAddPlaylistResp(Playlist playlist) {
         return new AddPlaylistResp(
+                playlist.getId(),
+                playlist.getTitle()
+        );
+    }
+
+    public UpdatePlaylistResp toUpdatePlaylistResp(Playlist playlist) {
+        return new UpdatePlaylistResp(
                 playlist.getId(),
                 playlist.getTitle()
         );

@@ -3,6 +3,7 @@ package com.ureca.picky_be.base.implementation.playlist;
 import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieProjection;
 import com.ureca.picky_be.base.business.playlist.dto.AddPlaylistReq;
 import com.ureca.picky_be.base.business.playlist.dto.GetPlaylistProjection;
+import com.ureca.picky_be.base.business.playlist.dto.UpdatePlaylistReq;
 import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.base.persistence.playlist.MoviePlaylistRepository;
 import com.ureca.picky_be.base.persistence.playlist.PlaylistRepository;
@@ -15,9 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -44,6 +45,27 @@ public class PlaylistManager {
                 .build();
         playlistRepository.save(playlist);
         addPlaylistReq.movieIds().stream()
+                .map(movieId -> {
+                    Movie movie = movieRepository.findById(movieId)
+                            .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
+
+                    return MoviePlayList.builder()
+                            .playlist(playlist)
+                            .movieId(movie)
+                            .build();
+                })
+                .forEach(moviePlaylistRepository::save);
+        return playlist;
+    }
+
+    @Transactional
+    public Playlist updatePlaylist(UpdatePlaylistReq updatePlaylistReq) {
+        Playlist playlist = playlistRepository.findById(updatePlaylistReq.playlistId())
+                .orElseThrow(() -> new CustomException(ErrorCode.PLAYLIST_NOT_FOUND));
+        if(updatePlaylistReq.title() != null) playlist.updatePlaylistTitle(updatePlaylistReq.title());
+
+        moviePlaylistRepository.deleteByPlaylist(playlist);
+        updatePlaylistReq.movieIds().stream()
                 .map(movieId -> {
                     Movie movie = movieRepository.findById(movieId)
                             .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));

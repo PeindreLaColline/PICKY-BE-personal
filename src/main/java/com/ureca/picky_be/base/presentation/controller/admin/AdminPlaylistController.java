@@ -6,6 +6,8 @@ import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
 import com.ureca.picky_be.base.business.playlist.PlaylistUseCase;
 import com.ureca.picky_be.base.business.playlist.dto.AddPlaylistReq;
 import com.ureca.picky_be.base.business.playlist.dto.AddPlaylistResp;
+import com.ureca.picky_be.base.business.playlist.dto.UpdatePlaylistReq;
+import com.ureca.picky_be.base.business.playlist.dto.UpdatePlaylistResp;
 import com.ureca.picky_be.global.success.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +34,15 @@ public class AdminPlaylistController {
         return movieUseCase.getMoviesOrderByCreatedAt(lastMovieId, createdAt, size);
     }
 
-    @Operation(summary = "플레이리스트 추가", description = "플레이리스트 추가 api")
+    @Operation(summary = "플레이리스트 추가", description = "(담당자:김)플레이리스트 추가 api")
     @PostMapping
     public AddPlaylistResp createPlaylist(@RequestBody AddPlaylistReq addPlaylistReq) {
         return playlistUseCase.addPlaylist(addPlaylistReq);
+    }
+
+    @Operation(summary = "플레이리스트 업데이트", description = "(담당자:김)플레이리스트 수정 -> 수정할 플리id, 들어갈 영화ids null불가능. 제목 null가능 (null일 경우 수정 안 함)")
+    @PatchMapping
+    public UpdatePlaylistResp updatePlaylist(@RequestBody UpdatePlaylistReq updatePlaylistReq) {
+        return playlistUseCase.updatePlaylist(updatePlaylistReq);
     }
 }
