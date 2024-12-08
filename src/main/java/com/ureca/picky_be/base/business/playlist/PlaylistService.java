@@ -2,6 +2,8 @@ package com.ureca.picky_be.base.business.playlist;
 
 import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieProjection;
 import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
+import com.ureca.picky_be.base.business.playlist.dto.AddPlaylistReq;
+import com.ureca.picky_be.base.business.playlist.dto.AddPlaylistResp;
 import com.ureca.picky_be.base.business.playlist.dto.GetPlaylistProjection;
 import com.ureca.picky_be.base.business.playlist.dto.GetPlaylistResp;
 import com.ureca.picky_be.base.implementation.mapper.PlaylistDtoMapper;
@@ -36,6 +38,12 @@ public class PlaylistService implements PlaylistUseCase{
         if(playlistRespList.isEmpty()) throw new CustomException(ErrorCode.PLAYLIST_NOT_FOUND);
 
         return new SliceImpl<>(playlistRespList);
+    }
+
+    @Override
+    public AddPlaylistResp addPlaylist(AddPlaylistReq addPlaylistReq) {
+        if(addPlaylistReq.movieIds().isEmpty() || addPlaylistReq.title().isEmpty()) throw new CustomException(ErrorCode.PLAYLIST_CREATE_FAILED);
+        return playlistDtoMapper.toAddPlaylistResp(playlistManager.addPlaylist(addPlaylistReq));
     }
 }
 
