@@ -92,7 +92,7 @@ public class MovieManager {
     private List<MovieGenre> addMovieGenres(List<AddMovieReq.MovieInfo.GenreInfo> genres, Movie movie) {
         List<MovieGenre> movieGenres = genres.stream()
                 .map(genre -> MovieGenre.builder()
-                        .movieId(movie)
+                        .movie(movie)
                         .genreId(genre.id())
                         .build())
                 .toList();
@@ -113,8 +113,8 @@ public class MovieManager {
                             ));
 
                     return FilmCrew.builder()
-                            .movieWorkerId(movieWorker)
-                            .movieId(movie)
+                            .movieWorker(movieWorker)
+                            .movie(movie)
                             .role(cast.role())
                             .filmCrewPosition(FilmCrewPosition.ACTOR)
                             .build();
@@ -137,8 +137,8 @@ public class MovieManager {
                             ));
 
                     return FilmCrew.builder()
-                            .movieWorkerId(movieWorker)
-                            .movieId(movie)
+                            .movieWorker(movieWorker)
+                            .movie(movie)
                             .role("감독감독~!")
                             .filmCrewPosition(FilmCrewPosition.DIRECTOR)
                             .build();
@@ -159,15 +159,27 @@ public class MovieManager {
 
     public List<Genre> getGenre(Long movieId) {
         List<Long> genreIds = movieGenreRepository.getGenreIdsByMovieId(movieId);
-        return genreRepository.findAllByIdIn(genreIds);
+        List<Genre> genres = genreRepository.findAllByIdIn(genreIds);
+        if (genres.isEmpty()) {
+            throw new CustomException(ErrorCode.GENRE_NOT_FOUND);
+        }
+        return genres;
     }
 
     public List<FilmCrew> getActors(Movie movie) {
-        return filmCrewRepository.findByMovieIdAndFilmCrewPosition(movie, FilmCrewPosition.ACTOR);
+        List<FilmCrew> actors = filmCrewRepository.findByMovieAndFilmCrewPosition(movie, FilmCrewPosition.ACTOR);
+        if (actors.isEmpty()) {
+            throw new CustomException(ErrorCode.ACTOR_NOT_FOUND);
+        }
+        return actors;
     }
 
     public List<FilmCrew> getDirectors(Movie movie) {
-        return filmCrewRepository.findByMovieIdAndFilmCrewPosition(movie, FilmCrewPosition.DIRECTOR);
+        List<FilmCrew> directors = filmCrewRepository.findByMovieAndFilmCrewPosition(movie, FilmCrewPosition.DIRECTOR);
+        if(directors.isEmpty()) {
+            throw new CustomException(ErrorCode.DIRECTOR_NOT_FOUND);
+        }
+        return directors;
     }
 
     public boolean getMovieLike(Long movieId, Long userId){
@@ -205,7 +217,7 @@ public class MovieManager {
         movieGenreRepository.deleteMovieGenreByMovieId(movie.getId());
         List<MovieGenre> movieGenres = genres.stream()
                 .map(genre -> MovieGenre.builder()
-                        .movieId(movie)
+                        .movie(movie)
                         .genreId(genre.id())
                         .build())
                 .toList();
@@ -227,8 +239,8 @@ public class MovieManager {
                             ));
 
                     return FilmCrew.builder()
-                            .movieWorkerId(movieWorker)
-                            .movieId(movie)
+                            .movieWorker(movieWorker)
+                            .movie(movie)
                             .role(cast.role())
                             .filmCrewPosition(FilmCrewPosition.ACTOR)
                             .build();
@@ -252,8 +264,8 @@ public class MovieManager {
                             ));
 
                     return FilmCrew.builder()
-                            .movieWorkerId(movieWorker)
-                            .movieId(movie)
+                            .movieWorker(movieWorker)
+                            .movie(movie)
                             .role("감독감독~!")
                             .filmCrewPosition(FilmCrewPosition.DIRECTOR)
                             .build();

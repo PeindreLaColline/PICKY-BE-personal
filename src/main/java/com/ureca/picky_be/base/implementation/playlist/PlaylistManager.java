@@ -11,7 +11,7 @@ import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.movie.Movie;
-import com.ureca.picky_be.jpa.movie.MoviePlayList;
+import com.ureca.picky_be.jpa.movie.MoviePlaylist;
 import com.ureca.picky_be.jpa.playlist.Playlist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +37,7 @@ public class PlaylistManager {
         List<Long> playlistIds = playlistProjections.stream()
                 .map(GetPlaylistProjection::getPlaylistId)
                 .toList();
+        System.out.println(playlistIds);
         return movieRepository.getMoviesByPlaylistIds(playlistIds);
     }
 
@@ -50,9 +51,9 @@ public class PlaylistManager {
                     Movie movie = movieRepository.findById(movieId)
                             .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
 
-                    return MoviePlayList.builder()
+                    return MoviePlaylist.builder()
                             .playlist(playlist)
-                            .movieId(movie)
+                            .movie(movie)
                             .build();
                 })
                 .forEach(moviePlaylistRepository::save);
@@ -71,9 +72,9 @@ public class PlaylistManager {
                     Movie movie = movieRepository.findById(movieId)
                             .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
 
-                    return MoviePlayList.builder()
+                    return MoviePlaylist.builder()
                             .playlist(playlist)
-                            .movieId(movie)
+                            .movie(movie)
                             .build();
                 })
                 .forEach(moviePlaylistRepository::save);
