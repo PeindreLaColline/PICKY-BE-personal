@@ -5,6 +5,8 @@ import com.ureca.picky_be.jpa.config.IsDeleted;
 import com.ureca.picky_be.jpa.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Entity
@@ -16,10 +18,10 @@ public class Notification extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE )
-//    @JoinColumn(name="user_id")
-    @Column(nullable = false)
-    private Long receiverId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User receiver;
 
     @Column(nullable = false)
     private Long movieId;
@@ -32,10 +34,23 @@ public class Notification extends BaseEntity {
     private NotificationType notificationType;
 
     @Column(name = "is_read", nullable = false)   // TRUE, FALSE ENUM 타입인 알림 읽음 여부
-    private IsDeleted isRead;
+    private Boolean isRead;
 
 
+    public static Notification of(User receiver, Long movieId, Long boardId, NotificationType notificationType, Boolean isRead) {
+        Notification noti = Notification.builder()
+                .receiver(receiver)
+                .movieId(movieId)
+                .boardId(boardId)
+                .notificationType(notificationType)
+                .isRead(Boolean.FALSE)
+                .build();
+        return noti;
+    }
 
+    public void read() {
+        this.isRead = Boolean.TRUE;
+    }
 
 
 

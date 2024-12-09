@@ -48,7 +48,10 @@ public class SecurityConfig {
             "/api/v1/movie/**",
 
             //user
-            "/api/v1/user"
+            "/api/v1/user",
+
+
+            "/api/v1/notification/**"
     };
 
     private static final String[] AUTH_USER = {

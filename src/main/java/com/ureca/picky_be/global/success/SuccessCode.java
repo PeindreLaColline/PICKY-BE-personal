@@ -28,8 +28,10 @@ public enum SuccessCode {
     DELETE_BOARD_LIKE_SUCCESS(201, "게시글 좋아요 취소 완료"),
 
     //Playlist
-    PLAYLIST_DELETE_SUCCESS(200, "플레이리스트 삭제 완료");
+    PLAYLIST_DELETE_SUCCESS(200, "플레이리스트 삭제 완료"),
 
+    // Notification
+    SSEEMITTER_CONNECT_SUCCESS(201, "SseEmitter 생성 완료");
 
 
     private final int status;    // HTTP 상태 코드
