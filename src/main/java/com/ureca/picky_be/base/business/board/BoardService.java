@@ -6,13 +6,13 @@ import com.ureca.picky_be.base.business.board.dto.boardDto.GetBoardInfoResp;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.AddBoardCommentReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
-import com.ureca.picky_be.base.business.board.dto.likeDto.AddOrDeleteBoardLikeResp;
+import com.ureca.picky_be.base.business.notification.dto.BoardCreatedEvent;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
 import com.ureca.picky_be.base.implementation.mapper.BoardDtoMapper;
-import com.ureca.picky_be.base.persistence.board.BoardRepository;
 import com.ureca.picky_be.jpa.board.Board;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -25,6 +25,8 @@ public class BoardService implements BoardUseCase {
     private final BoardManager boardManager;
     private final AuthManager authManager;
     private final BoardDtoMapper boardDtoMapper;
+    private final ApplicationEventPublisher eventPublisher;
+
 
     @Override
     @Transactional
@@ -32,7 +34,8 @@ public class BoardService implements BoardUseCase {
         // TODO: boardContent S3 업로드 등 처리 추가 예정
         Long userId = authManager.getUserId();
         String userNickname = authManager.getUserNickname();
-        boardManager.addBoard(userId, userNickname, req);
+        Board board = boardManager.addBoard(userId, userNickname, req);
+        eventPublisher.publishEvent(new BoardCreatedEvent(board.getId(), req.movieId()));
     }
 
     @Override

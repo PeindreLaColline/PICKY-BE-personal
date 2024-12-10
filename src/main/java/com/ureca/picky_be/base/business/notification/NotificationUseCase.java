@@ -11,4 +11,6 @@ public interface NotificationUseCase {
     SseEmitter subscribe(String lastEventId);
     CreateNotificationResp send(Long receiverId);
     void sendAll(NotificationType notificationType, Long movieId, Long boardId);
+
+    void sendTest(Long movieId, Long boardId);
 }

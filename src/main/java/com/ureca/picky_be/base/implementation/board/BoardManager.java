@@ -39,20 +39,21 @@ public class BoardManager {
     private final UserRepository userRepository;
 
     @Transactional
-    public void addBoard(Long userId, String userNickname, AddBoardReq req) {
+    public Board addBoard(Long userId, String userNickname, AddBoardReq req) {
         Movie movie = movieRepository.findById(req.movieId())
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
-
+        Board board;
         if(req.contents().size() > 5) {
             throw new CustomException(ErrorCode.BOARD_CONTENT_OVER_FIVE);
         }
 
         try {
-            Board board = Board.of(userId, movie, req.boardContext(), req.isSpoiler(), req.contents(), userNickname);
+            board = Board.of(userId, movie, req.boardContext(), req.isSpoiler(), req.contents(), userNickname);
             boardRepository.save(board);
         } catch (CustomException e) {
             throw new CustomException(ErrorCode.BOARD_CREATE_FAILED);
         }
+        return board;
 
     }
 
