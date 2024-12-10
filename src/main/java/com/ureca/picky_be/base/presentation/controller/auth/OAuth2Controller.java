@@ -30,6 +30,7 @@ public class OAuth2Controller {
                               @RequestParam String state
                                             ){
         OAuth2UseCase oAuth2UseCase = oAuth2UseCaseResolver.resolve(platform);
+        System.out.println("와 끝났다!");
         return oAuth2UseCase.sendJwtToken(state, code);
     }
 
