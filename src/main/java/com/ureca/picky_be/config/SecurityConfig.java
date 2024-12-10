@@ -40,7 +40,10 @@ public class SecurityConfig {
             "/api/v1/user/genres",
 
             //플레이리스트
-            "/api/v1/playlist/all"
+            "/api/v1/playlist/all",
+
+            //임시 토큰 발급
+            "/tokentokentoken"
     };
 
     private static final String[] AUTH_WHITELIST_GET = {

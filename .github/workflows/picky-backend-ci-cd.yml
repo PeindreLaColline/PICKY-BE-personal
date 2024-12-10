@@ -47,6 +47,8 @@ jobs:
           echo "${{ secrets.FRONTEND }}" >> frontend.yml
           touch jpa.yml
           echo "${{ secrets.JPA }}" >> jpa.yml
+          touch temp-token.yml
+          echo "${{ secrets.TEMP_TOKEN }}" >> temp-token.yml
           
 
       - name: Grant execute permission for gradlew
