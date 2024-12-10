@@ -17,7 +17,7 @@ spring:
       - classpath:properties/frontend.yml
       - classpath:properties/swagger.yml
       - classpath:properties/temp-token.yml
-
+      - classpath:properties/s3.yml
 
 
 ---
