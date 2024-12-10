@@ -36,8 +36,14 @@ public class NotificationController {
     }
 
     @PostMapping("/alert/all")
-    @Operation(summary = "모든 사용자한테 알림 전송", description = "알림 전송하는 API")
-    public SuccessCode sendAll() {
+    @Operation(summary = "미구현!!!  모든 사용자한테 알림 전송(관리자용)", description = "알림 전송하는 API")
+    public SuccessCode sendAll(
+            @RequestParam Long boardId,
+            @RequestParam Long movieId,
+            @RequestParam Long writerId,
+            @RequestParam(defaultValue = "") NotificationType type
+
+    ) {
         notificationUseCase.sendAll(NotificationType.LIKEMOVIENEWBOARD, 1L, 1L);
         return SuccessCode.NOTIFICATION_SENT_SUCCESS;
     }
