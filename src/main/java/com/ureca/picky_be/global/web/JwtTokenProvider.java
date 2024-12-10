@@ -5,6 +5,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -15,6 +16,7 @@ import java.util.Date;
 @Getter
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
@@ -69,7 +71,6 @@ public class JwtTokenProvider {
         return claims.get("role", String.class);
     }
 
-    //TODO: add detailed exception
     public boolean validateToken(String token) {
         try{
             Jwts.parserBuilder()
@@ -77,8 +78,17 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
+        } catch (ExpiredJwtException e) {
+            log.error("Token expired: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.error("Unsupported token: {}", e.getMessage());
+        } catch (MalformedJwtException e) {
+            log.error("Malformed token: {}", e.getMessage());
+        } catch (SignatureException e) {
+            log.error("Invalid signature: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error("Token is invalid: {}", e.getMessage());
         }
+        return false;
     }
 }
