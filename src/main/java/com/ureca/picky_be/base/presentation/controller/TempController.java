@@ -27,7 +27,7 @@ public class TempController {
     private String registeredPassword;
 
 
-    @Operation(summary = "임시 토큰 발급 api 개발할 때만 쓰는 용도!!!!!!!", description = "현재 소셜로그인이 모두 서버에 연결된 상태이므로 여기 pathVarible에 유저 아이디 넣으면 토큰 반환")
+    @Operation(summary = "임시 토큰 발급 api 개발할 때만 쓰는 용도!!!!!!!", description = "현재 소셜로그인이 모두 서버에 연결된 상태이므로 여기 RequestParam에 유저 아이디 넣으면 토큰 반환")
     @GetMapping("/tokentokentoken")
     public LocalJwtDto getTokentokentoken(@RequestParam Long userId, @RequestParam String tempId, @RequestParam String tempPassword) {
         if(registeredId.equals(tempId) && registeredPassword.equals(tempPassword)) {
