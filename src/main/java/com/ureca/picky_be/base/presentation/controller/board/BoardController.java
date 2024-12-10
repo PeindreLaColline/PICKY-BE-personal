@@ -13,6 +13,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,11 +25,12 @@ public class BoardController {
 
     private final BoardUseCase boardUseCase;
 
-    @PostMapping("")
-    @Operation(summary = "게시글 생성(Create)", description = "사용자가 입력한 게시글 생성, contentType으로 'PHOTO', 'VIDEO'로 입력해야합니다. 또한, 현재 글만 입력 가능합니다!")
-    public SuccessCode createBoard(@RequestBody AddBoardReq req) {
-        boardUseCase.addBoard(req);
-        return SuccessCode.CREATE_BOARD_SUCCESS;
+    @PostMapping
+    @Operation(summary = "사진 및 영상을 포함한 무비로그 생성(Create)", description = "헤더 설정 -> content-type : multipart/form-data 이렇게 해서 아래 요구되는대로 보내주시면 됩니다")
+    public SuccessCode createBoard(@RequestPart(value="request") AddBoardReq req,
+                                   @RequestPart(value="image", required = false) List<MultipartFile> images,
+                                   @RequestPart(value="video", required = false) List<MultipartFile> videos) throws IOException {
+        return boardUseCase.addBoard(req, images, videos);
     }
 
     @PostMapping("/{boardId}")
