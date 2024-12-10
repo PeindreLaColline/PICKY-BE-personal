@@ -2,6 +2,7 @@ package com.ureca.picky_be.base.presentation.controller.notification;
 
 
 import com.ureca.picky_be.base.business.notification.NotificationUseCase;
+import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.notification.Notification;
@@ -28,15 +29,17 @@ public class NotificationController {
         return notificationUseCase.subscribe(lastEventId);
     }
 
-
-    // TODO : 모든 시용자한테 알림 보내는 API 1개 구현 예정
-
     @PostMapping("/alert")
     @Operation(summary = "알림 전송", description = "알림 전송하는 API")
-    public SuccessCode send(@RequestParam Long receiverId) {
-        Long userId = authManager.getUserId();
-        notificationUseCase.send(userId, receiverId, NotificationType.LIKEMOVIENEWBOARD, 1L, 1L);
-        return SuccessCode.SSEEMITTER_CONNECT_SUCCESS;
+    public CreateNotificationResp send(@RequestParam Long receiverId) {
+        return notificationUseCase.send(receiverId);
+    }
+
+    @PostMapping("/alert/all")
+    @Operation(summary = "모든 사용자한테 알림 전송", description = "알림 전송하는 API")
+    public SuccessCode sendAll() {
+        notificationUseCase.sendAll(NotificationType.LIKEMOVIENEWBOARD, 1L, 1L);
+        return SuccessCode.NOTIFICATION_SENT_SUCCESS;
     }
 
 

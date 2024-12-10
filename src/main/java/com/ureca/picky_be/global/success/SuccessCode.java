@@ -31,7 +31,9 @@ public enum SuccessCode {
     PLAYLIST_DELETE_SUCCESS(200, "플레이리스트 삭제 완료"),
 
     // Notification
-    SSEEMITTER_CONNECT_SUCCESS(201, "SseEmitter 생성 완료");
+    SSEEMITTER_CONNECT_SUCCESS(201, "SseEmitter 생성 완료"),
+    NOTIFICATION_SENT_SUCCESS(201, "알림 전송 완료")
+    ;
 
 
     private final int status;    // HTTP 상태 코드

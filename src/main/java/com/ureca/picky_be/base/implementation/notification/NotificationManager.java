@@ -1,21 +1,26 @@
 package com.ureca.picky_be.base.implementation.notification;
 
+import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
 import com.ureca.picky_be.base.business.notification.dto.NotificationProjection;
 import com.ureca.picky_be.base.implementation.mapper.NotificationDtoMapper;
+import com.ureca.picky_be.base.persistence.board.BoardRepository;
 import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.base.persistence.notification.EmitterRepository;
 import com.ureca.picky_be.base.persistence.notification.NotificationRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.jpa.board.Board;
 import com.ureca.picky_be.jpa.movie.Movie;
 import com.ureca.picky_be.jpa.notification.Notification;
 import com.ureca.picky_be.jpa.notification.NotificationType;
 import com.ureca.picky_be.jpa.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.yaml.snakeyaml.emitter.Emitter;
+import java.util.List;
 
 import java.io.IOException;
 import java.util.Map;
@@ -27,8 +32,10 @@ public class NotificationManager {
     private final EmitterRepository emitterRepository;
     private final UserRepository userRepository;
     private final NotificationDtoMapper notificationDtoMapper;
-    private final Long timeoutMillis = 10_000L;
+//    private final Long timeoutMillis = 10_000L;
+    private final Long timeoutMillis = 600_000L;
     private final MovieRepository movieRepository;
+    private final BoardRepository boardRepository;
 
 
     public String makeTimeIncludeId(Long id) {
@@ -77,9 +84,12 @@ public class NotificationManager {
         return notificationRepository.getNewBoardNotificationProjection(senderId, boardId, movieId);
     }
 
-    public void send(Long senderId, Long receiverId, NotificationType notificationType, Long boardId, Long movieId) {
+    @Transactional
+    public CreateNotificationResp send(Long senderId, Long receiverId, NotificationType notificationType, Long boardId, Long movieId) {
         User receiver = userRepository.findById(receiverId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
 
@@ -97,14 +107,50 @@ public class NotificationManager {
 
         // 여기에서 사용자 id(User receiver), 게시글 id(BoardId), 영화 Id(movieId)를 활용해 NotificaitonProjection으로 생성해야함.
         NotificationProjection noti = getNewBoardNotificationData(senderId, boardId, movieId);
-
+        CreateNotificationResp data = notificationDtoMapper.toCreateNotificationResp(noti, notificationId);
         emitters.forEach(
                 (id, emitter) -> {
                     emitterRepository.saveEventCache(id, notification);
-                    sendNotification(emitter, eventId, id,
-                            notificationDtoMapper.toCreateNotificationResp(noti, notificationId));
+                    sendNotification(emitter, eventId, id, data);
                 }
         );
+        return data;
+
+    }
+
+    @Transactional
+    public void sendAll(NotificationType notificationType, Long boardId, Long movieId) {
+
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            throw new CustomException(ErrorCode.NO_USER_FOUND);
+        }
+
+        for(User receiver : users) {
+            Notification notification = createNotification(receiver, movieId, boardId, notificationType);
+
+            Long notificationId = notification.getId();
+            String eventId = makeTimeIncludeId(receiver.getId());
+
+            // 특정 사용자에 대한 emitter를 찾아오는 것
+            Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterByUserId(String.valueOf(receiver.getId()));
+
+            // 여기에서 사용자 id(User receiver), 게시글 id(BoardId), 영화 Id(movieId)를 활용해 NotificaitonProjection으로 생성해야함.
+            NotificationProjection noti = getNewBoardNotificationData(null, boardId, movieId);
+
+            CreateNotificationResp data = notificationDtoMapper.toCreateNotificationResp(noti, notificationId);
+            emitters.forEach(
+                    (id, emitter) -> {
+                        emitterRepository.saveEventCache(id, notification);
+                        sendNotification(emitter, eventId, id,
+                                data);
+                    }
+            );
+        }
+
+
     }
 
     public Notification createNotification(User receiver, Long movieId, Long boardId,  NotificationType notificationType) {

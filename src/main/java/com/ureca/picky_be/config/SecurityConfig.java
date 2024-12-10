@@ -64,7 +64,8 @@ public class SecurityConfig {
             "/api/v1/user/nickname-validation",
 
             //영화
-            "/api/v1/movie/*/like"
+            "/api/v1/movie/*/like",
+            "/api/v1/notification/**"
     };
 
     private static final String[] AUTH_USER_PATCH = {

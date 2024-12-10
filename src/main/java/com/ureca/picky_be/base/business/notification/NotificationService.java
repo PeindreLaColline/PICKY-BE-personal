@@ -1,5 +1,6 @@
 package com.ureca.picky_be.base.business.notification;
 
+import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.notification.NotificationManager;
 import com.ureca.picky_be.jpa.notification.NotificationType;
@@ -34,8 +35,17 @@ public class NotificationService implements NotificationUseCase {
     }
 
     @Override
-    public void send(Long writerId, Long receiverId, NotificationType notificationType, Long movieId, Long boardId) {
-
-        notificationManager.send(writerId, receiverId, notificationType, movieId, boardId);
+    public CreateNotificationResp send(Long receiverId) {
+        Long userId = authManager.getUserId();
+        NotificationType type = NotificationType.LIKEMOVIENEWBOARD;
+        Long boardId = 1L;
+        Long movieId = 1L;
+        return notificationManager.send(userId, receiverId, type, movieId, boardId);
     }
+
+    @Override
+    public void sendAll(NotificationType notificationType, Long movieId, Long boardId) {
+        notificationManager.sendAll(notificationType, movieId, boardId);
+    }
+
 }
