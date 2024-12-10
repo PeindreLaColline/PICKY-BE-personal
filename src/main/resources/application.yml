@@ -16,6 +16,8 @@ spring:
       - classpath:properties/kakao.yml
       - classpath:properties/frontend.yml
       - classpath:properties/swagger.yml
+      - classpath:properties/temp-token.yml
+
 
 
 ---
