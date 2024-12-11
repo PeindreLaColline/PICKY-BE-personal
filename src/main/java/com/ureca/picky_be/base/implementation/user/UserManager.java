@@ -1,9 +1,8 @@
 package com.ureca.picky_be.base.implementation.user;
 
-import com.ureca.picky_be.base.business.user.dto.GetNicknameValidationResp;
-import com.ureca.picky_be.base.business.user.dto.UpdateUserReq;
+import com.ureca.picky_be.base.business.user.dto.RegisterUserReq;
+import com.ureca.picky_be.base.implementation.content.ProfileManager;
 import com.ureca.picky_be.base.persistence.movie.GenreRepository;
-import com.ureca.picky_be.base.persistence.movie.MovieGenreRepository;
 import com.ureca.picky_be.base.persistence.movie.MovieLikeRepository;
 import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.base.persistence.user.UserGenrePreferenceRepository;
@@ -18,11 +17,10 @@ import com.ureca.picky_be.jpa.user.UserGenrePreference;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -30,12 +28,31 @@ public class UserManager {
     private final UserRepository userRepository;
     private final UserGenrePreferenceRepository userGenrePreferenceRepository;
     private final GenreRepository genreRepository;
-    private final MovieGenreRepository movieGenreRepository;
     private final MovieLikeRepository movieLikeRepository;
     private final MovieRepository movieRepository;
+    private final ProfileManager profileManager;
 
     @Transactional
-    public SuccessCode updateUserInfo(Long userId, UpdateUserReq req) {
+    public SuccessCode registerProfile(MultipartFile profile, Long userId) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        if(profile == null){
+            try{
+                user.registerProfile(null);
+                userRepository.save(user);
+            } catch(Exception e){
+                throw new CustomException(ErrorCode.USER_UPDATE_FAILED);
+            }
+        }
+        else{
+            user.registerProfile(profileManager.uploadProfile(profile));
+            userRepository.save(user);
+        }
+        return SuccessCode.UPDATE_USER_PROFILE_SUCCESS;
+    }
+
+    @Transactional
+    public SuccessCode registerUserInfo(Long userId, RegisterUserReq req) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         validateUpdateUserReq(req);
@@ -46,11 +63,11 @@ public class UserManager {
                 throw new CustomException(ErrorCode.USER_UPDATE_BAD_REQUEST);
             }
         }
-        user.updateUser(req);
+        user.registerUser(req);
         return SuccessCode.UPDATE_USER_SUCCESS;
     }
 
-    private void validateUpdateUserReq(UpdateUserReq req) {
+    private void validateUpdateUserReq(RegisterUserReq req) {
         if (req.name() == null
                 || req.nickname() == null
                 || req.birthdate() == null

@@ -8,7 +8,9 @@ import com.ureca.picky_be.global.success.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,10 +20,16 @@ public class UserController {
     private final UserUseCase userUseCase;
     private final MovieUseCase movieUseCase;
 
-    @Operation(summary = "회원가입할 때 개인정보 기입, 마이페이지에서 개인정보 수정", description = "무조건 모든 필드 다 채워서 주세요. movieId, genreId 말고는 null 불가")
+    @Operation(summary = "회원가입할 때 개인정보 기입", description = "무조건 모든 필드 다 채워서 주세요 (프로필 설정은 다른 api)")
     @PatchMapping
-    public SuccessCode updateUserInfo(@RequestBody UpdateUserReq req) {
-        return userUseCase.updateUserInfo(req);
+    public SuccessCode registerUserInfo(@RequestBody RegisterUserReq req) {
+        return userUseCase.registerUserInfo(req);
+    }
+
+    @Operation(summary = "회원가입할 때 프로필 사진 입력 api", description = "nullable")
+    @PatchMapping("/sign-up-profile")
+    public SuccessCode registerProfile(@RequestPart(value ="profile", required = false) MultipartFile profile) throws IOException {
+        return userUseCase.registerProfile(profile);
     }
 
     @Operation(summary = "유저 개인정보 조회", description = "유저 개인정보 조회")
