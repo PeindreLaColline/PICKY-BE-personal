@@ -1,5 +1,7 @@
 package com.ureca.picky_be.base.business.board.dto;
 
+import com.ureca.picky_be.base.business.board.dto.contentDto.GetBoardContentResp;
+
 import java.time.LocalDateTime;
 import java.util.List;
 public interface BoardProjection {
@@ -16,5 +18,4 @@ public interface BoardProjection {
     Integer getCommentCount();  // Board 댓글 갯수
     String getMovieName(); // Board 영화 이름
     Boolean getIsLike();    // Board 사용자가 좋아요 눌렀는지 여부
-    String getContents();   // Board 컨텐츠들
 }

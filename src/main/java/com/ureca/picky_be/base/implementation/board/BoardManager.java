@@ -6,6 +6,7 @@ import com.ureca.picky_be.base.business.board.dto.BoardProjection;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.base.business.board.dto.contentDto.AddBoardContentReq;
+import com.ureca.picky_be.base.business.board.dto.contentDto.BoardContentWithBoardId;
 import com.ureca.picky_be.base.persistence.board.BoardLikeRepository;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
 import com.ureca.picky_be.base.persistence.board.BoardCommentRepository;
@@ -38,6 +39,7 @@ public class BoardManager {
     private final MovieRepository movieRepository;
     private final BoardCommentRepository boardCommentRepository;
     private final BoardLikeRepository boardLikeRepository;
+    private final BoardContentRepository boardContentRepository;
 
     @Transactional
     public SuccessCode addBoard(Long userId, String userNickname, AddBoardReq addBoardReq, List<AddBoardContentReq> addBoardContentReqs) {
@@ -91,6 +93,11 @@ public class BoardManager {
         } catch(Exception e) {
             throw new CustomException(ErrorCode.BOARD_MOVIE_RELATED_GET_FAILED);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<BoardContentWithBoardId> getBoardContentWithBoardId(List<Long> boardIds){
+        return boardContentRepository.findByBoardIds(boardIds);
     }
 
     @Transactional(readOnly = true)

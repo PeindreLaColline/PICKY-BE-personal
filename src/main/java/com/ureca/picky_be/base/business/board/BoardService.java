@@ -6,6 +6,7 @@ import com.ureca.picky_be.base.business.board.dto.boardDto.GetBoardInfoResp;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.AddBoardCommentReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
+import com.ureca.picky_be.base.business.board.dto.contentDto.BoardContentWithBoardId;
 import com.ureca.picky_be.base.business.board.dto.likeDto.AddOrDeleteBoardLikeResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
@@ -17,6 +18,7 @@ import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.board.Board;
+import com.ureca.picky_be.jpa.board.BoardContentType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -26,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -62,14 +65,44 @@ public class BoardService implements BoardUseCase {
     public Slice<GetBoardInfoResp> getBoards(Pageable pageable) {
         Long userId = authManager.getUserId();
         Slice<BoardProjection> recentBoards = boardManager.getRecentMovieBoards(userId, pageable);
-        return recentBoards.map(boardDtoMapper::toGetBoardInfoResp);
+        List<Long> boardIds = recentBoards.getContent().stream()
+                .map(BoardProjection::getBoardId)
+                .toList();
+        List<BoardContentWithBoardId> boardContentWithBoardIds = processBoardContents(boardManager.getBoardContentWithBoardId(boardIds));
+        return boardDtoMapper.toGetBoardInfoResps(recentBoards, boardContentWithBoardIds);
     }
 
     @Override
     public Slice<GetBoardInfoResp> getMovieRelatedBoards(Long movieId, Pageable pageable) {
         Long userId = authManager.getUserId();
         Slice<BoardProjection> recentMovieRelatedBoards = boardManager.getRecentMovieRelatedBoards(userId, movieId, pageable);
-        return recentMovieRelatedBoards.map(boardDtoMapper::toGetBoardInfoResp);
+        List<Long> boardIds = recentMovieRelatedBoards.getContent().stream()
+                .map(BoardProjection::getBoardId)
+                .toList();
+        List<BoardContentWithBoardId> boardContentWithBoardIds = processBoardContents(boardManager.getBoardContentWithBoardId(boardIds));
+        return boardDtoMapper.toGetBoardInfoResps(recentMovieRelatedBoards, boardContentWithBoardIds);
+    }
+
+    public List<BoardContentWithBoardId> processBoardContents(List<BoardContentWithBoardId> boardContentWithBoardIds) {
+        return boardContentWithBoardIds.stream()
+                .map(content -> {
+                    String updatedUrl;
+
+                    if (content.boardContentType() == BoardContentType.IMAGE) {
+                        updatedUrl = imageManager.getPresignedUrl(content.contentUrl());
+                    } else if (content.boardContentType() == BoardContentType.VIDEO) {
+                        updatedUrl = videoManager.getPresignedUrl(content.contentUrl());
+                    } else {
+                        throw new CustomException(ErrorCode.INVALID_CONTENT_TYPE);
+                    }
+
+                    return new BoardContentWithBoardId(
+                            content.boardId(),
+                            updatedUrl,
+                            content.boardContentType()
+                    );
+                })
+                .toList();
     }
 
     @Override
