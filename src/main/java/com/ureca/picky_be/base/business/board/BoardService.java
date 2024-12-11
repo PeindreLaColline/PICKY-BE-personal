@@ -45,7 +45,11 @@ public class BoardService implements BoardUseCase {
     public SuccessCode addBoard(AddBoardReq req, List<MultipartFile> images, List<MultipartFile> videos) throws IOException {
         Long userId = authManager.getUserId();
         String userNickname = authManager.getUserNickname();
-        if(images.size() >3 || videos.size() >2) {
+        if ((images == null || images.isEmpty()) && (videos == null || videos.isEmpty())) {
+            throw new CustomException(ErrorCode.MISSING_BOARD_CONTENT);
+        } else if (images != null && images.size() > 3) {
+            throw new CustomException(ErrorCode.BOARD_CONTENT_TOO_MANY);
+        } else if (videos != null && videos.size() > 2) {
             throw new CustomException(ErrorCode.BOARD_CONTENT_TOO_MANY);
         }
         List<String> imageUrls = imageManager.uploadImages(images);
