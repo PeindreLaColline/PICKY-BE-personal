@@ -4,5 +4,6 @@ import com.ureca.picky_be.global.web.LocalJwtDto;
 
 public record TokenResp(OAuth2Token oAuth2Token,
                         LocalJwtDto localJwtDto,
-                        boolean isRegistrationDone) {
+                        boolean isRegistrationDone,
+                        String role ) {
 }
