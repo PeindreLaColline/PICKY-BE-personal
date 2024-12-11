@@ -28,6 +28,13 @@ public class UserController {
         return userUseCase.registerUserInfo(req);
     }
 
+    @Operation(summary = "마이페이지에서 닉네임 및 프로필 수정", description = "회원정보 업데이트 api")
+    @PatchMapping("/mypage")
+    public SuccessCode updateUserInfo(@RequestPart(value="nickname") String nickname,
+                                      @RequestPart(value="profile", required = false) MultipartFile profile ) throws IOException {
+        return userUseCase.updateUserInfo(nickname, profile);
+    }
+
     @Operation(summary = "유저 개인정보 조회", description = "유저 개인정보 조회")
     @GetMapping
     public GetUserResp getUserInfo(){

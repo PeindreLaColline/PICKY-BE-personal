@@ -37,6 +37,12 @@ public class UserService implements UserUseCase {
     }
 
     @Override
+    public SuccessCode updateUserInfo(String nickname, MultipartFile profile) throws IOException {
+        userManager.updateUserNickname(authManager.getUserId(), nickname);
+        return userManager.registerProfile(profile, authManager.getUserId());
+    }
+
+    @Override
     public GetUserResp getUserInfo() {
         User user = userManager.getUserInfo(authManager.getUserId());
         if(user.getProfileUrl() == null) {

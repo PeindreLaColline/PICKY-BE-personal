@@ -76,7 +76,8 @@ public class SecurityConfig {
 
     private static final String[] AUTH_USER_PATCH = {
             //user
-            "/api/v1/user"
+            "/api/v1/user",
+            "/api/v1/user/mypage"
     };
 
     private static final String[] AUTH_ADMIN = {
