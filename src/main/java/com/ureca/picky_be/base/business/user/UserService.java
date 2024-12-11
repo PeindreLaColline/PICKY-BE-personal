@@ -4,6 +4,7 @@ import com.ureca.picky_be.base.business.user.dto.GetNicknameValidationResp;
 import com.ureca.picky_be.base.business.user.dto.GetUserResp;
 import com.ureca.picky_be.base.business.user.dto.RegisterUserReq;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
+import com.ureca.picky_be.base.implementation.content.ImageManager;
 import com.ureca.picky_be.base.implementation.mapper.UserDtoMapper;
 import com.ureca.picky_be.base.implementation.user.UserManager;
 import com.ureca.picky_be.global.success.SuccessCode;
@@ -23,6 +24,7 @@ public class UserService implements UserUseCase {
     private final UserManager userManager;
     private final UserDtoMapper userDtoMapper;
     private final AuthManager authManager;
+    private final ImageManager imageManager;
 
     @Override
     public SuccessCode registerUserInfo(RegisterUserReq req) {
@@ -37,7 +39,11 @@ public class UserService implements UserUseCase {
     @Override
     public GetUserResp getUserInfo() {
         User user = userManager.getUserInfo(authManager.getUserId());
-        return userDtoMapper.toGetUserResp(user);
+        if(user.getProfileUrl() == null) {
+            return userDtoMapper.toGetUserResp(user, null);
+        } else{
+            return userDtoMapper.toGetUserResp(user, imageManager.getPresignedUrl(user.getProfileUrl()));
+        }
     }
 
     @Override

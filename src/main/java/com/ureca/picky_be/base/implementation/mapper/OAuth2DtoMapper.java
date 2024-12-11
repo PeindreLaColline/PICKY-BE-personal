@@ -7,11 +7,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OAuth2DtoMapper {
-    public TokenResp toTokenResp(OAuth2Token oAuth2Token, LocalJwtDto localJwtDto, boolean isRegistrationDone) {
+    public TokenResp toTokenResp(OAuth2Token oAuth2Token, LocalJwtDto localJwtDto, boolean isRegistrationDone, String role) {
         return new TokenResp(
                 oAuth2Token,
                 localJwtDto,
-                isRegistrationDone
+                isRegistrationDone,
+                role
         );
     }
 }
