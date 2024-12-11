@@ -27,8 +27,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationAdapter;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -63,7 +61,7 @@ public class BoardService implements BoardUseCase {
         List<String> videosUrls = videoManager.uploadVideo(videos);
 
         Board board = boardManager.addBoard(userId, userNickname, req, boardDtoMapper.toAddBoardContentReq(imageUrls, videosUrls));
-//        eventPublisher.publishEvent(new BoardCreatedEvent(board.getUserId() ,req.movieId(), board.getId()));
+
         log.info("Event publish start");
         eventPublisher.publishEvent(new BoardCreatedEvent(board.getUserId(), req.movieId(), board.getId()));
         log.info("Event publish end");
@@ -132,25 +130,12 @@ public class BoardService implements BoardUseCase {
 
     @Override
     public Slice<GetAllBoardCommentsResp> getAllBoardComments(Long boardId, Pageable pageable) {
-        /**
-         * 1. boardId에 있는 댓글들 싹 가져와
-         */
-
         Slice<BoardCommentProjection> comments = boardManager.getTenBoardCommentsPerReq(boardId, pageable);
-//        try {
-//
-//        } catch (Exception e){
-//            throw new CustomException(ErrorCode.)
-//        }
         return comments.map(boardDtoMapper::toGetBoardInfoResp);
     }
 
     @Override
     public void deleteBoard(Long boardId) {
-        /**
-         * 1. boardId로 해당 보드가 user가 작성한 건지 검증 로직
-         * 2. 해당 Board 삭제(Board에 작성된 댓글, 좋아요 전부 삭제한다)
-         */
         Long userId = authManager.getUserId();
         boardManager.checkBoardWriteUser(boardId, userId);
         boardManager.deleteBoard(boardId);
@@ -158,11 +143,6 @@ public class BoardService implements BoardUseCase {
 
     @Override
     public void deleteBoardComment(Long boardId, Long commentId) {
-        /**
-         * 1. 삭제하려는 comment가 user것인지 검사
-         * 2. 일치하면 삭제
-         */
-
         Long userId = authManager.getUserId();
         boardManager.checkBoardIsDeleted(boardId);
         boardManager.checkBoardCommentWriteUser(commentId, userId);
@@ -187,8 +167,4 @@ public class BoardService implements BoardUseCase {
             return true;
         }
     }
-
-
-
-
 }

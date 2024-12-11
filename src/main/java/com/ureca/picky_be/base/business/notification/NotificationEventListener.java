@@ -18,10 +18,10 @@ public class NotificationEventListener {
     private final NotificationService notificationService;
 
     @Async
-    @Transactional(propagation = Propagation.REQUIRES_NEW) // 이벤트 리스너가 발행된 트랜잭션과 별도로 실행되도록
+    @Transactional(propagation = Propagation.REQUIRES_NEW)      // 이벤트 리스너가 발행된 트랜잭션과 별도로 실행되도록
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-//    @EventListener
     public void handleBoardCreatedEvent(BoardCreatedEvent event) {
+        // 알림 전송은 비동기 처리로 진행
         try {
             log.info("Event Listener Start");
             notificationService.sendTest(event.getWriterId(), event.getMovieId(), event.getBoardId());
@@ -31,5 +31,5 @@ public class NotificationEventListener {
         }
 
     }
-    // 알림 전송은 비동기 처리로 진행
+
 }
