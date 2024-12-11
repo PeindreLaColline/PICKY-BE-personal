@@ -117,7 +117,8 @@ public class GoogleManager {
                     .orElseGet(() -> createNewUser(email));
             return new LoginUserInfo(
                     jwtTokenProvider.generate(user.getId(), user.getRole().toString()),
-                    user.getId()
+                    user.getId(),
+                    user.getRole().toString()
             );
         } catch (Exception e){
             throw new CustomException(ErrorCode.UNAUTHORIZED);
