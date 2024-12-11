@@ -10,7 +10,7 @@ import java.util.List;
 
 @Component
 public class UserDtoMapper {
-    public GetUserResp toGetUserResp(User user, List<Genre> genres) {
+    public GetUserResp toGetUserResp(User user) {
         return new GetUserResp(
                 user.getName(),
                 user.getNickname(),
@@ -18,7 +18,7 @@ public class UserDtoMapper {
                 user.getBirthdate(),
                 user.getGender(),
                 user.getNationality(),
-                genres
+                user.getEmail()
         );
     }
 

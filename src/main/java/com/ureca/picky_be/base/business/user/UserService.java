@@ -37,8 +37,7 @@ public class UserService implements UserUseCase {
     @Override
     public GetUserResp getUserInfo() {
         User user = userManager.getUserInfo(authManager.getUserId());
-        List<Genre> genres = userManager.getUserGenrePreference(user.getId());
-        return userDtoMapper.toGetUserResp(user, genres);
+        return userDtoMapper.toGetUserResp(user);
     }
 
     @Override
