@@ -25,12 +25,12 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("PICKY SWAGGER API")
-                .description("API documentation for the Picky application.")
+                .title("PICKY")
+                .description("THE BEST MOVIE REVIEW PLATFORM EVER")
                 .version("v1.0")
                 .contact(new Contact()
-                        .name("Picky Team")
+                        .name("")
                         .email("support@picky.com")
-                        .url("https://picky.com"));
+                        .url("https://www.picky-movie.com/"));
     }
 }

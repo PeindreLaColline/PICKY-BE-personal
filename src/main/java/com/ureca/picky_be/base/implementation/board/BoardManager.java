@@ -5,6 +5,7 @@ import com.ureca.picky_be.base.business.board.dto.boardDto.AddBoardReq;
 import com.ureca.picky_be.base.business.board.dto.BoardProjection;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
+import com.ureca.picky_be.base.business.board.dto.contentDto.AddBoardContentReq;
 import com.ureca.picky_be.base.persistence.board.BoardLikeRepository;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
 import com.ureca.picky_be.base.persistence.board.BoardCommentRepository;
@@ -13,6 +14,7 @@ import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.board.Board;
 import com.ureca.picky_be.jpa.board.BoardComment;
 import com.ureca.picky_be.jpa.board.BoardLike;
@@ -24,6 +26,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.apache.commons.lang3.BooleanUtils.TRUE;
@@ -34,22 +37,17 @@ public class BoardManager {
     private final BoardRepository boardRepository;
     private final MovieRepository movieRepository;
     private final BoardCommentRepository boardCommentRepository;
-    private final BoardContentRepository boardContentRepository;
     private final BoardLikeRepository boardLikeRepository;
-    private final UserRepository userRepository;
 
     @Transactional
-    public void addBoard(Long userId, String userNickname, AddBoardReq req) {
-        Movie movie = movieRepository.findById(req.movieId())
+    public SuccessCode addBoard(Long userId, String userNickname, AddBoardReq addBoardReq, List<AddBoardContentReq> addBoardContentReqs) {
+        Movie movie = movieRepository.findById(addBoardReq.movieId())
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
 
-        if(req.contents().size() > 5) {
-            throw new CustomException(ErrorCode.BOARD_CONTENT_OVER_FIVE);
-        }
-
         try {
-            Board board = Board.of(userId, movie, req.boardContext(), req.isSpoiler(), req.contents(), userNickname);
+            Board board = Board.of(userId, movie, addBoardReq.boardContext(), addBoardReq.isSpoiler(), addBoardContentReqs, userNickname);
             boardRepository.save(board);
+            return SuccessCode.CREATE_BOARD_SUCCESS;
         } catch (CustomException e) {
             throw new CustomException(ErrorCode.BOARD_CREATE_FAILED);
         }

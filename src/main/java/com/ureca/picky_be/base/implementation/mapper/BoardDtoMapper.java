@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ureca.picky_be.base.business.board.dto.*;
 import com.ureca.picky_be.base.business.board.dto.boardDto.GetBoardInfoResp;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
+import com.ureca.picky_be.base.business.board.dto.contentDto.AddBoardContentReq;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Component
 public class BoardDtoMapper {
@@ -57,6 +59,19 @@ public class BoardDtoMapper {
                 projection.getCreatedAt(),
                 projection.getUpdatedAt()
         );
+    }
+
+    public List<AddBoardContentReq> toAddBoardContentReq(List<String> images, List<String> videos) {
+        List<AddBoardContentReq> imageContents = images.stream()
+                .map(image -> new AddBoardContentReq(image, "IMAGE"))
+                .toList();
+
+        List<AddBoardContentReq> videoContents = videos.stream()
+                .map(video -> new AddBoardContentReq(video, "VIDEO"))
+                .toList();
+
+        return Stream.concat(imageContents.stream(), videoContents.stream())
+                .toList();
     }
 
 }
