@@ -40,18 +40,17 @@ public class BoardManager {
     private final MovieRepository movieRepository;
     private final BoardCommentRepository boardCommentRepository;
     private final BoardLikeRepository boardLikeRepository;
-    private final ApplicationEventPublisher eventPublisher;
+
 
     @Transactional
-    public SuccessCode addBoard(Long userId, String userNickname, AddBoardReq addBoardReq, List<AddBoardContentReq> addBoardContentReqs) {
+    public Board addBoard(Long userId, String userNickname, AddBoardReq addBoardReq, List<AddBoardContentReq> addBoardContentReqs) {
         Movie movie = movieRepository.findById(addBoardReq.movieId())
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
 
         try {
             Board board = Board.of(userId, movie, addBoardReq.boardContext(), addBoardReq.isSpoiler(), addBoardContentReqs, userNickname);
             boardRepository.save(board);
-            eventPublisher.publishEvent(new BoardCreatedEvent(board.getId(), movie.getId()));
-            return SuccessCode.CREATE_BOARD_SUCCESS;
+            return board;
         } catch (CustomException e) {
             throw new CustomException(ErrorCode.BOARD_CREATE_FAILED);
         }

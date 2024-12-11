@@ -9,8 +9,8 @@ public interface NotificationUseCase {
     
 //    SseEmitter subscribe(Long userId, String lastEventId);
     SseEmitter subscribe(String lastEventId);
-    CreateNotificationResp send(Long receiverId);
+    CreateNotificationResp send(Long receiverId, Long movieId, Long boardId);
     void sendAll(NotificationType notificationType, Long movieId, Long boardId);
 
-    void sendTest(Long movieId, Long boardId);
+    void sendTest(Long writerId, Long movieId, Long boardId);
 }

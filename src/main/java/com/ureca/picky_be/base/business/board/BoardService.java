@@ -7,6 +7,7 @@ import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.AddBoardCommentReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.base.business.board.dto.likeDto.AddOrDeleteBoardLikeResp;
+import com.ureca.picky_be.base.business.notification.dto.BoardCreatedEvent;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
 import com.ureca.picky_be.base.implementation.content.ImageManager;
@@ -18,10 +19,14 @@ import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.board.Board;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,6 +34,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BoardService implements BoardUseCase {
 
     private final BoardManager boardManager;
@@ -36,6 +42,7 @@ public class BoardService implements BoardUseCase {
     private final BoardDtoMapper boardDtoMapper;
     private final ImageManager imageManager;
     private final VideoManager videoManager;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -47,8 +54,15 @@ public class BoardService implements BoardUseCase {
         }
         List<String> imageUrls = imageManager.uploadImages(images);
         List<String> videosUrls = videoManager.uploadVideo(videos);
-        return boardManager.addBoard(userId, userNickname, req, boardDtoMapper.toAddBoardContentReq(imageUrls, videosUrls));
+
+        Board board = boardManager.addBoard(userId, userNickname, req, boardDtoMapper.toAddBoardContentReq(imageUrls, videosUrls));
+//        eventPublisher.publishEvent(new BoardCreatedEvent(board.getUserId() ,req.movieId(), board.getId()));
+        log.info("Event publish start");
+        eventPublisher.publishEvent(new BoardCreatedEvent(board.getUserId(), req.movieId(), board.getId()));
+        log.info("Event publish end");
+        return SuccessCode.CREATE_BOARD_SUCCESS;
     }
+
 
     @Override
     @Transactional

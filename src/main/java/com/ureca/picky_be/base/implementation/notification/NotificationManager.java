@@ -18,6 +18,7 @@ import com.ureca.picky_be.jpa.notification.Notification;
 import com.ureca.picky_be.jpa.notification.NotificationType;
 import com.ureca.picky_be.jpa.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class NotificationManager {
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
@@ -67,6 +69,7 @@ public class NotificationManager {
             emitter.send(SseEmitter.event()
                     .id(eventId)
                     .data(data));
+            System.out.println("Notification sent to " + emitterId);
         } catch (IOException exception) {
             emitterRepository.deleteById(emitterId);
         }
@@ -90,11 +93,12 @@ public class NotificationManager {
     }
 
     @Transactional
-    public CreateNotificationResp send(Long senderId, Long receiverId, NotificationType notificationType, Long boardId, Long movieId) {
-        User receiver = userRepository.findById(receiverId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    public CreateNotificationResp send(Long receiverId, NotificationType notificationType, Long boardId, Long movieId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+        Long senderId = board.getUserId();
+        User receiver = userRepository.findById(senderId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
 
@@ -193,8 +197,10 @@ public class NotificationManager {
                 // 특정 사용자에 대한 emitter를 찾아오는 것
                 Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterByUserId(String.valueOf(receiver.getId()));
 
-                // 여기에서 사용자 id(User receiver), 게시글 id(BoardId), 영화 Id(movieId)를 활용해 NotificaitonProjection으로 생성해야함.
+                // 게시글 작성자 NotificationProjection 생성
                 NotificationProjection noti = getNewBoardNotificationData(senderId, boardId, movieId);
+
+                log.info("특정 게시물에 대한 알림 전송 : " + boardId);
                 CreateNotificationResp data = notificationDtoMapper.toCreateNotificationResp(noti, notificationId);
                 emitters.forEach(
                         (id, emitter) -> {
@@ -209,7 +215,6 @@ public class NotificationManager {
             } catch(Exception e) {
                 System.err.println("알림 전송 실패 사용자 ID " + receiver.getId() + ": " + e.getMessage());
             }
-
         }
     }
 }

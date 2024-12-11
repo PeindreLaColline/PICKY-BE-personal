@@ -24,6 +24,6 @@ public interface MovieLikeRepository extends JpaRepository<MovieLike, Long> {
     boolean existsByMovieIdAndUserId(@Param("movieId") Long movieId, @Param("userId") Long userId);
 
     @Query("SELECT ml.user.id FROM MovieLike ml " +
-            "WHERE ml.movie.id = :movieId AND ml.user.status = 'REGULAR'")
+            "WHERE ml.movie.id = :movieId")
     List<Long> findUserIdsByMovieId(@Param("movieId") Long movieId);
 }

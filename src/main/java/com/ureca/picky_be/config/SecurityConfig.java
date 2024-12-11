@@ -50,6 +50,8 @@ public class SecurityConfig {
             "/api/v1/content/image",
             "/api/v1/content/video",
             "/api/v1/content/profile"
+
+
     };
 
     private static final String[] AUTH_WHITELIST_GET = {
@@ -60,7 +62,7 @@ public class SecurityConfig {
             "/api/v1/user",
 
             // NOTIFICATION
-            "/api/v1/notification/**",
+            "/api/v1/notification/connect",
 
             "/api/v1/board"
     };
@@ -75,7 +77,8 @@ public class SecurityConfig {
             "/api/v1/movie/*/like",
 
             // NOTIFICATION
-            "/api/v1/notification/**"
+            "/api/v1/notification/alert",
+            "/api/v1/notification/test"
     };
 
     private static final String[] AUTH_USER_PATCH = {

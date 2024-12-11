@@ -7,6 +7,7 @@ import com.ureca.picky_be.jpa.notification.NotificationType;
 import com.ureca.picky_be.jpa.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.List;
 
@@ -25,8 +26,9 @@ public class NotificationService implements NotificationUseCase {
         emitter.onCompletion(() -> notificationManager.deleteEmitterDueToComplete(emitterId));
         emitter.onTimeout(() -> notificationManager.deleteEmitterDueToTimeout(emitterId));
 
-        String eventId = notificationManager.makeTimeIncludeId(userId);
 
+        // 503 에러를 방지하기 위한 가짜 데이터 전송
+        String eventId = notificationManager.makeTimeIncludeId(userId);
         notificationManager.sendNotification(emitter, eventId, emitterId, "EventStream Created. [UserId = %d]".formatted(userId));
 
         if(notificationManager.hasLostData(lastEventId)) {
@@ -37,12 +39,9 @@ public class NotificationService implements NotificationUseCase {
     }
 
     @Override
-    public CreateNotificationResp send(Long receiverId) {
-        Long userId = authManager.getUserId();
+    public CreateNotificationResp send(Long receiverId, Long movieId, Long boardId) {
         NotificationType type = NotificationType.LIKEMOVIENEWBOARD;
-        Long boardId = 1L;
-        Long movieId = 1L;
-        return notificationManager.send(userId, receiverId, type, movieId, boardId);
+        return notificationManager.send(receiverId, type, boardId, movieId);
     }
 
     @Override
@@ -51,11 +50,11 @@ public class NotificationService implements NotificationUseCase {
     }
 
     @Override
-    public void sendTest(Long movieId, Long boardId){
-        Long userId = authManager.getUserId();
+    public void sendTest(Long writerId, Long movieId, Long boardId){
         NotificationType type = NotificationType.LIKEMOVIENEWBOARD;
-        List<User> users = notificationManager.sendTest(userId, boardId);
-        notificationManager.sendEmitter(users, userId, movieId, boardId, type);
+        List<User> users = notificationManager.sendTest(writerId, boardId);
+        notificationManager.sendEmitter(users, writerId, movieId, boardId, type);
     }
+
 
 }

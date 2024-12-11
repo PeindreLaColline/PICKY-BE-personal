@@ -31,8 +31,12 @@ public class NotificationController {
 
     @PostMapping("/alert")
     @Operation(summary = "알림 전송", description = "알림 전송하는 API")
-    public CreateNotificationResp send(@RequestParam Long receiverId) {
-        return notificationUseCase.send(receiverId);
+    public CreateNotificationResp send(
+            @RequestParam Long receiverId,
+            @RequestParam Long boardId,
+            @RequestParam Long movieId
+            ) {
+        return notificationUseCase.send(receiverId, movieId, boardId);
     }
 
     @PostMapping("/alert/all")
@@ -45,6 +49,17 @@ public class NotificationController {
 
     ) {
         notificationUseCase.sendAll(NotificationType.LIKEMOVIENEWBOARD, 1L, 1L);
+        return SuccessCode.NOTIFICATION_SENT_SUCCESS;
+    }
+
+    @PostMapping("/alert/test")
+    @Operation(summary = "미구현!!!  모든 사용자한테 알림 전송(관리자용)", description = "알림 전송하는 API")
+    public SuccessCode sendTest(
+            @RequestParam Long boardId,
+            @RequestParam Long movieId,
+            @RequestParam Long writerId
+    ) {
+        notificationUseCase.sendTest(writerId, movieId, boardId);
         return SuccessCode.NOTIFICATION_SENT_SUCCESS;
     }
 
