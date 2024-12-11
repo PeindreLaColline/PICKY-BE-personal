@@ -26,6 +26,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USR003", "해당 유저가 존재하지 않습니다."),
     USER_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "USR004", "유저 정보 업데이트에 실패했습니다."),
     USER_UPDATE_BAD_REQUEST(HttpStatus.BAD_REQUEST, "USR005", "선호 영화 ID를 받지 못했습니다."),
+    NO_USER_FOUND(HttpStatus.BAD_REQUEST, "USR006", "해당 조건을 만족하는 유저가 없습니다."),
 
     // GENRE
     GENRE_NOT_FOUND(HttpStatus.NOT_FOUND, "GEN001", "해당 영화 장르를 찾지 못했습니다."),
@@ -96,6 +97,11 @@ public enum ErrorCode {
     LINEREVIEWLIKE_CREATE_DUPLICATE(HttpStatus.BAD_REQUEST,"LRL003","좋아요나 싫어요는 한번만 가능합니다."),
     LINEREVIEW_COUNT_FAILED(HttpStatus.BAD_REQUEST, "LRL004", "좋아요 수 찾기 실패 했습니다."),
     LINEREVIEWLIKE_SELF_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "LRL005", "자신의 한줄평에는 좋아요가 안됩니다." ),
+
+
+    // Notification
+    INVALID_NOTIFICATION_TYPE(HttpStatus.BAD_REQUEST, "NTF001","MOVIENEWBOARD(좋아요한 영화에 대해 새로운 게시글이 달린 경우), FOLLOWINGNEWBOARD(팔로우한 사용자가 새로운 게시글을 작성한 경우),MYBOARDNEWCOMMENT(내 게시글에 새로운 댓글이 달린 경우)만 가능합니다"),
+    DTO_MAPPING_FAILED(HttpStatus.BAD_REQUEST, "NTF002","DTO 변환 과정에서 실패했습니다."),
 
     //Playlist
     PLAYLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "PL001", "플레이리스트 조회에 실패했습니다."),

@@ -4,7 +4,6 @@ import com.ureca.picky_be.base.business.board.dto.BoardCommentProjection;
 import com.ureca.picky_be.base.business.board.dto.boardDto.AddBoardReq;
 import com.ureca.picky_be.base.business.board.dto.BoardProjection;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
-import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.base.business.board.dto.contentDto.AddBoardContentReq;
 import com.ureca.picky_be.base.business.board.dto.contentDto.BoardContentWithBoardId;
 import com.ureca.picky_be.base.persistence.board.BoardLikeRepository;
@@ -12,10 +11,8 @@ import com.ureca.picky_be.base.persistence.board.BoardRepository;
 import com.ureca.picky_be.base.persistence.board.BoardCommentRepository;
 import com.ureca.picky_be.base.persistence.board.BoardContentRepository;
 import com.ureca.picky_be.base.persistence.movie.MovieRepository;
-import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
-import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.board.Board;
 import com.ureca.picky_be.jpa.board.BoardComment;
 import com.ureca.picky_be.jpa.board.BoardLike;
@@ -30,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static org.apache.commons.lang3.BooleanUtils.TRUE;
 
 @Component
 @RequiredArgsConstructor
@@ -41,19 +37,19 @@ public class BoardManager {
     private final BoardLikeRepository boardLikeRepository;
     private final BoardContentRepository boardContentRepository;
 
+
     @Transactional
-    public SuccessCode addBoard(Long userId, String userNickname, AddBoardReq addBoardReq, List<AddBoardContentReq> addBoardContentReqs) {
+    public Board addBoard(Long userId, String userNickname, AddBoardReq addBoardReq, List<AddBoardContentReq> addBoardContentReqs) {
         Movie movie = movieRepository.findById(addBoardReq.movieId())
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
 
         try {
             Board board = Board.of(userId, movie, addBoardReq.boardContext(), addBoardReq.isSpoiler(), addBoardContentReqs, userNickname);
             boardRepository.save(board);
-            return SuccessCode.CREATE_BOARD_SUCCESS;
+            return board;
         } catch (CustomException e) {
             throw new CustomException(ErrorCode.BOARD_CREATE_FAILED);
         }
-
     }
 
     @Transactional

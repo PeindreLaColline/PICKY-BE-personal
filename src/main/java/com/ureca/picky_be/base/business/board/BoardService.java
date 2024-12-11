@@ -8,6 +8,7 @@ import com.ureca.picky_be.base.business.board.dto.commentDto.AddBoardCommentReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.base.business.board.dto.contentDto.BoardContentWithBoardId;
 import com.ureca.picky_be.base.business.board.dto.likeDto.AddOrDeleteBoardLikeResp;
+import com.ureca.picky_be.base.business.notification.dto.BoardCreatedEvent;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
 import com.ureca.picky_be.base.implementation.content.ImageManager;
@@ -20,6 +21,8 @@ import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.board.Board;
 import com.ureca.picky_be.jpa.board.BoardContentType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BoardService implements BoardUseCase {
 
     private final BoardManager boardManager;
@@ -39,6 +43,7 @@ public class BoardService implements BoardUseCase {
     private final BoardDtoMapper boardDtoMapper;
     private final ImageManager imageManager;
     private final VideoManager videoManager;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -54,8 +59,15 @@ public class BoardService implements BoardUseCase {
         }
         List<String> imageUrls = imageManager.uploadImages(images);
         List<String> videosUrls = videoManager.uploadVideo(videos);
-        return boardManager.addBoard(userId, userNickname, req, boardDtoMapper.toAddBoardContentReq(imageUrls, videosUrls));
+
+        Board board = boardManager.addBoard(userId, userNickname, req, boardDtoMapper.toAddBoardContentReq(imageUrls, videosUrls));
+
+        log.info("Event publish start");
+        eventPublisher.publishEvent(new BoardCreatedEvent(board.getUserId(), req.movieId(), board.getId()));
+        log.info("Event publish end");
+        return SuccessCode.CREATE_BOARD_SUCCESS;
     }
+
 
     @Override
     @Transactional
@@ -118,25 +130,12 @@ public class BoardService implements BoardUseCase {
 
     @Override
     public Slice<GetAllBoardCommentsResp> getAllBoardComments(Long boardId, Pageable pageable) {
-        /**
-         * 1. boardId에 있는 댓글들 싹 가져와
-         */
-
         Slice<BoardCommentProjection> comments = boardManager.getTenBoardCommentsPerReq(boardId, pageable);
-//        try {
-//
-//        } catch (Exception e){
-//            throw new CustomException(ErrorCode.)
-//        }
         return comments.map(boardDtoMapper::toGetBoardInfoResp);
     }
 
     @Override
     public void deleteBoard(Long boardId) {
-        /**
-         * 1. boardId로 해당 보드가 user가 작성한 건지 검증 로직
-         * 2. 해당 Board 삭제(Board에 작성된 댓글, 좋아요 전부 삭제한다)
-         */
         Long userId = authManager.getUserId();
         boardManager.checkBoardWriteUser(boardId, userId);
         boardManager.deleteBoard(boardId);
@@ -144,11 +143,6 @@ public class BoardService implements BoardUseCase {
 
     @Override
     public void deleteBoardComment(Long boardId, Long commentId) {
-        /**
-         * 1. 삭제하려는 comment가 user것인지 검사
-         * 2. 일치하면 삭제
-         */
-
         Long userId = authManager.getUserId();
         boardManager.checkBoardIsDeleted(boardId);
         boardManager.checkBoardCommentWriteUser(commentId, userId);
@@ -173,8 +167,4 @@ public class BoardService implements BoardUseCase {
             return true;
         }
     }
-
-
-
-
 }

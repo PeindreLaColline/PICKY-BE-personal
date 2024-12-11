@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface MovieLikeRepository extends JpaRepository<MovieLike, Long> {
@@ -21,4 +22,8 @@ public interface MovieLikeRepository extends JpaRepository<MovieLike, Long> {
     void deleteByUserId(Long userId);
 
     boolean existsByMovieIdAndUserId(@Param("movieId") Long movieId, @Param("userId") Long userId);
+
+    @Query("SELECT ml.user.id FROM MovieLike ml " +
+            "WHERE ml.movie.id = :movieId")
+    List<Long> findUserIdsByMovieId(@Param("movieId") Long movieId);
 }
