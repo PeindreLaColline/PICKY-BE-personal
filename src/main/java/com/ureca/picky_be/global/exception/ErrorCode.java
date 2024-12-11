@@ -62,6 +62,7 @@ public enum ErrorCode {
     CONTENT_IO_FAILED(HttpStatus.BAD_REQUEST, "BDC012", "파일 IO에서 예외가 발생했습니다"),
     UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "BDC013", "파일 업로드에서 알 수 없는 예외가 발생했습니다."),
     EXTRACT_RUL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "BDC014", "URL추출 중 오류가 발생했습니다."),
+    MISSING_BOARD_CONTENT(HttpStatus.INTERNAL_SERVER_ERROR, "BDC015", "사진 혹은 영상이 적어도 하나는 있어야합니다."),
 
     // BOARD_COMMENT
     BOARD_COMMENT_CREATE_FAILED(HttpStatus.BAD_REQUEST, "BCM001", "댓글 작성에 실패했습니다."),

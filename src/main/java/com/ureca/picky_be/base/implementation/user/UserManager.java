@@ -67,6 +67,21 @@ public class UserManager {
         return SuccessCode.UPDATE_USER_SUCCESS;
     }
 
+    @Transactional
+    public SuccessCode updateUserNickname(Long userId, String nickname) {
+        if(nickname==null || nickname.isEmpty()){
+            throw new CustomException(ErrorCode.USER_UPDATE_BAD_REQUEST);
+        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        if(getNicknameValidation(nickname)){
+            user.updateNickname(nickname);
+            return SuccessCode.UPDATE_USER_SUCCESS;
+        } else {
+            throw new CustomException(ErrorCode.USER_UPDATE_BAD_REQUEST);
+        }
+    }
+
     private void validateUpdateUserReq(RegisterUserReq req) {
         if (req.name() == null
                 || req.nickname() == null

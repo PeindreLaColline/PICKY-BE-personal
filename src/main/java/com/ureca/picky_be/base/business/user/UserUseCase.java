@@ -11,6 +11,7 @@ import java.io.IOException;
 public interface UserUseCase {
     SuccessCode registerUserInfo(RegisterUserReq req);
     SuccessCode registerProfile(MultipartFile profile) throws IOException;
+    SuccessCode updateUserInfo(String nickname, MultipartFile profile) throws IOException;
     GetUserResp getUserInfo();
     GetNicknameValidationResp getNicknameValidation(String nickname);
 }
