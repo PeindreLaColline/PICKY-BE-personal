@@ -1,6 +1,6 @@
 package com.ureca.picky_be.jpa.user;
 
-import com.ureca.picky_be.base.business.user.dto.UpdateUserReq;
+import com.ureca.picky_be.base.business.user.dto.RegisterUserReq;
 import com.ureca.picky_be.jpa.config.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -57,14 +57,17 @@ public class User extends BaseEntity {
     //@Column(nullable = false)
     private Status status;              // 정지된 사용자, 일반 사용자
 
-    public void updateUser(UpdateUserReq req) {
+    public void registerUser(RegisterUserReq req) {
         this.name = req.name();
         this.nickname = req.nickname();
-        this.profileUrl = req.profile_url();
         this.birthdate = req.birthdate();
         this.gender = req.gender();
         this.nationality = req.nationality();
         this.status = Status.REGULAR;
         this.isActive = true;
+    }
+
+    public void registerProfile(String profileUrl) {
+        this.profileUrl = profileUrl;
     }
 }
