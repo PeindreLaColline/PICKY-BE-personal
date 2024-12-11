@@ -18,14 +18,12 @@ public class NotificationService implements NotificationUseCase {
     private final AuthManager authManager;
 
     @Override
-//    public SseEmitter subscribe(Long userId, String lastEventId) {
     public SseEmitter subscribe(String lastEventId) {
         Long userId = authManager.getUserId();
         String emitterId = notificationManager.makeTimeIncludeId(userId);
         SseEmitter emitter = notificationManager.createNewSseEmitter(emitterId);
         emitter.onCompletion(() -> notificationManager.deleteEmitterDueToComplete(emitterId));
         emitter.onTimeout(() -> notificationManager.deleteEmitterDueToTimeout(emitterId));
-
 
         // 503 에러를 방지하기 위한 가짜 데이터 전송
         String eventId = notificationManager.makeTimeIncludeId(userId);
@@ -55,6 +53,4 @@ public class NotificationService implements NotificationUseCase {
         List<User> users = notificationManager.sendTest(writerId, boardId);
         notificationManager.sendEmitter(users, writerId, movieId, boardId, type);
     }
-
-
 }

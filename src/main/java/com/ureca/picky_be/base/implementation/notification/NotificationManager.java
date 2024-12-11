@@ -37,7 +37,6 @@ public class NotificationManager {
     private final EmitterRepository emitterRepository;
     private final UserRepository userRepository;
     private final NotificationDtoMapper notificationDtoMapper;
-//    private final Long timeoutMillis = 10_000L;
     private final Long timeoutMillis = 600_000L;
     private final MovieRepository movieRepository;
     private final BoardRepository boardRepository;
@@ -104,10 +103,6 @@ public class NotificationManager {
 
         Notification notification = createNotification(receiver, movieId, boardId, notificationType);
 
-        // TODO : 이 메소드는 게시글 생성에 대한 알림용 메소드, 타 컨트롤러에서도 호출함
-        // TODO : 전송하려고 하는 User 엔티티 receiver를 받아 해당 사용자한테 알림을 보내는 것임
-        // TODO : 해당 메소드 이외에 팔로우-팔로잉 알림 등 다른 알림들에 대해서도 별도의 메소드로 생성해야함.
-
         Long notificationId = notification.getId();
         String eventId = makeTimeIncludeId(receiver.getId());
 
@@ -159,8 +154,6 @@ public class NotificationManager {
                     }
             );
         }
-
-
     }
 
     public List<Long> getMovieLikeUsers(Long movieId) {

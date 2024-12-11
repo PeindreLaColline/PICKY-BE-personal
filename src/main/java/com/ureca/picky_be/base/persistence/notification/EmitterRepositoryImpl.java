@@ -11,7 +11,6 @@ import java.util.*;
 @Repository
 public class EmitterRepositoryImpl implements EmitterRepository {
     // 동시성을 고려한 ConcurrentHashMap 사용
-
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
     private final Map<String, Object> eventCache = new ConcurrentHashMap<>();
 
