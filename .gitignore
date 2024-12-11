@@ -47,4 +47,5 @@ out/
 **/google.yml
 **/kakao.yml
 **/jpa.yml
+**/s3.yml
 **/temp-token.yml

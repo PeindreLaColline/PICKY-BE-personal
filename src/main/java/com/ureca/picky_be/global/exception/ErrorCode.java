@@ -51,8 +51,18 @@ public enum ErrorCode {
     // BOARD_CONTENT
     INVALID_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "BDC001","PHOTO, VIDEO값만 가능합니다"),
     BOARD_CONTENT_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "BDC002","게시글 콘텐츠 업로드에 실패했습니다."),
-    BOARD_CONTENT_OVER_FIVE(HttpStatus.BAD_REQUEST, "BDC003","게시글 콘텐츠 최대 갯수인 5개를 초과했습니다."),
+    BOARD_CONTENT_TOO_MANY(HttpStatus.BAD_REQUEST, "BDC003","영상 2개 혹은 사진 3개 제한을 초과했습니다"),
     BOARD_CONTENT_JSON_TRANSFERING_FAILED(HttpStatus.BAD_REQUEST, "BDC004","게시글 콘텐츠 타입 변환이 실패했습니다."),
+    CONTENT_CONVERT_FAILED(HttpStatus.BAD_REQUEST, "BDC005","영상 및 사진 변환에 실패했습니다."),
+    CONTENT_TO_CONVERT_NOT_FOUND(HttpStatus.NOT_FOUND, "BDC006","변환할 영상 및 사진이 없습니다."),
+    LOCAL_CONTENT_TO_DELETE_NOT_FOUND(HttpStatus.NOT_FOUND, "BDC007","변환되어 로컬에 저장된 파일을 찾을 수 없어 삭제하지 못했습니다."),
+    CONTENT_TO_UPLOAD_TO_S3_NOT_FOUND(HttpStatus.NOT_FOUND, "BDC008","S3에 업로드할 파일이 없습니다."),
+    UPLOAD_TO_S3_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "BDC009","S3업로드를 실패했습니다."),
+    CONTENT_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "BDC010","업로드할 파일에 접근 권한이 없습니다."),
+    S3_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "BDC011","S3와 관련된 예외 (권한, 네트워크, 버킷 정책 등)이 발생했습니다."),
+    CONTENT_IO_FAILED(HttpStatus.BAD_REQUEST, "BDC012", "파일 IO에서 예외가 발생했습니다"),
+    UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "BDC013", "파일 업로드에서 알 수 없는 예외가 발생했습니다."),
+    EXTRACT_RUL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "BDC014", "URL추출 중 오류가 발생했습니다."),
 
     // BOARD_COMMENT
     BOARD_COMMENT_CREATE_FAILED(HttpStatus.BAD_REQUEST, "BCM001", "댓글 작성에 실패했습니다."),

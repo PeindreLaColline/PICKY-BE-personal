@@ -5,7 +5,7 @@ import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.jpa.lineReview.Preference;
 
 public enum BoardContentType {
-    PHOTO,
+    IMAGE,
     VIDEO;
 
     public static BoardContentType fromString(String value) {

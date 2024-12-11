@@ -46,16 +46,20 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    // 예상치 못한 예외 처리
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Object>> handleException(Exception ex) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> handleException(Exception ex) {
+        // 예외 정보를 담을 Map 생성
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("errorMessage", ex.getMessage()); // 예외 메시지 추가
+        errorDetails.put("errorLocation", ex.getStackTrace()[0].toString()); // 예외 발생 위치 추가 (첫 번째 스택트레이스)
+
         return ResponseEntity
                 .status(ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus())
                 .body(new ApiResponse<>(
                         false,
                         ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus().value(),
                         "예상치 못한 문제가 발생했습니다. 관리자에게 문의하세요.",
-                        null
+                        errorDetails // 상세 정보 반환
                 ));
     }
 

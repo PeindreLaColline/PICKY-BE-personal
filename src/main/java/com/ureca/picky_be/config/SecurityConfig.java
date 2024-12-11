@@ -2,6 +2,7 @@ package com.ureca.picky_be.config;
 
 import com.ureca.picky_be.global.web.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -36,25 +37,32 @@ public class SecurityConfig {
             "/api/v1/oauth/*/user",
             "/api/v1/oauth/*/login",
 
-            //장르
+            //GENRE
             "/api/v1/user/genres",
 
-            //플레이리스트
+            //PLAYLIST
             "/api/v1/playlist/all",
 
-            //임시 토큰 발급
-            "/tokentokentoken"
+            //임시 허용
+            "/tokentokentoken",
+
+            //content 임시로 전체허용 이거 옮겨야함
+            "/api/v1/content/image",
+            "/api/v1/content/video",
+            "/api/v1/content/profile"
     };
 
     private static final String[] AUTH_WHITELIST_GET = {
-            //영화
+            //MOVIE
             "/api/v1/movie/**",
 
             //user
             "/api/v1/user",
 
+            // NOTIFICATION
+            "/api/v1/notification/**",
 
-            "/api/v1/notification/**"
+            "/api/v1/board"
     };
 
     private static final String[] AUTH_USER = {
@@ -63,8 +71,10 @@ public class SecurityConfig {
             "/api/v1/user/movies-by-genres",
             "/api/v1/user/nickname-validation",
 
-            //영화
+            //MOVIE
             "/api/v1/movie/*/like",
+
+            // NOTIFICATION
             "/api/v1/notification/**"
     };
 
@@ -74,7 +84,7 @@ public class SecurityConfig {
     };
 
     private static final String[] AUTH_ADMIN = {
-        "/api/v1/admin/**"
+            "/api/v1/admin/**"
     };
 
     private static final String[] AUTH_ADMIN_POST = {
@@ -105,13 +115,15 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Value("${frontend.root_server}")
+    private String frontRootUrl;
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",
-                "https://d3hxz5yj62y98w.cloudfront.net",
-                "https://www.picky-movie.com"
+                frontRootUrl
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
