@@ -4,6 +4,7 @@ import com.ureca.picky_be.base.business.lineReview.dto.CreateLineReviewReq;
 import com.ureca.picky_be.base.business.lineReview.dto.LineReviewProjection;
 import com.ureca.picky_be.base.business.lineReview.dto.LineReviewQueryRequest;
 import com.ureca.picky_be.base.business.lineReview.dto.UpdateLineReviewReq;
+import com.ureca.picky_be.base.business.user.dto.UserLineReviewsReq;
 import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.base.persistence.lineReview.LineReviewRepository;
@@ -107,6 +108,12 @@ public class LineReviewManager {
             // 일반 예외 처리
             throw new CustomException(ErrorCode.LINEREVIEW_GET_FAILED);
         }
+    }
+
+    public Slice<LineReviewProjection> findLineReviewsByNickname(Long userId, UserLineReviewsReq req, PageRequest pageRequest) {
+        Long lastReviewId = req.lastReviewId();
+        return lineReviewRepository.findByUserIdAndCursor(userId, lastReviewId, pageRequest);
+
     }
 
 

@@ -1,9 +1,6 @@
 package com.ureca.picky_be.global.exception;
 
-import com.ureca.picky_be.base.implementation.lineReview.mapper.LineReviewMapper;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 

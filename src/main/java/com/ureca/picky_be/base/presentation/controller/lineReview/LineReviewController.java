@@ -46,6 +46,7 @@ public class LineReviewController {
         - 다음 페이지 요청 시, 마지막 리뷰 정보를 기반으로 `lastReviewId`를 반드시 포함해야 하며, LATEST 정렬의 경우 `lastCreatedAt`도 포함해야 함.
         """
     )
+
     @GetMapping("/movie/{movieId}")
     public Slice<ReadLineReviewResp> readLineReview(
             @PathVariable Long movieId,

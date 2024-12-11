@@ -59,6 +59,24 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
             Pageable pageable
     );
 
+    @Query("""
+        SELECT lr.id AS id, lr.userId AS userId,  lr.writerNickname AS writerNickname,lr.movieId AS movieId, lr.rating AS rating,
+               lr.context AS context, lr.isSpoiler AS isSpoiler,
+               COUNT(CASE WHEN lrl.preference = 'LIKE' AND lrl.isDeleted = false THEN lrl.id END) AS likes,
+               COUNT(CASE WHEN lrl.preference = 'DISLIKE' AND lrl.isDeleted = false THEN lrl.id END) AS dislikes,
+               lr.createdAt AS createdAt
+        FROM LineReview lr
+        LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
+        WHERE lr.userId = :userId AND lr.id < :lastReviewId
+        GROUP BY lr.id, lr.userId, lr.movieId, lr.rating, lr.context, lr.isSpoiler, lr.createdAt
+        ORDER BY lr.createdAt DESC
+""")
+    Slice<LineReviewProjection> findByUserIdAndCursor(
+            @Param("userId") Long userId,
+            @Param("lastReviewId") Long lastReviewId,
+            Pageable pageable
+    );
+
 
     @Modifying(clearAutomatically = true)
     @Transactional

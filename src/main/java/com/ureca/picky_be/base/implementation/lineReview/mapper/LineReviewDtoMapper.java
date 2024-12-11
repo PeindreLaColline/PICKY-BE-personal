@@ -8,7 +8,7 @@ import com.ureca.picky_be.jpa.lineReview.LineReview;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LineReviewMapper {
+public class LineReviewDtoMapper {
 
 
     public CreateLineReviewResp createLineReviewResp(LineReview lineReview) {
