@@ -9,8 +9,9 @@ import java.util.List;
 
 public record GetUserResp(String name,
                           String nickname,
-                          String profile_url,
                           LocalDate birthdate,
                           Gender gender,
                           Nationality nationality,
-                          String email) {}
+                          String email,
+                          String profileUrl
+                          ) {}
