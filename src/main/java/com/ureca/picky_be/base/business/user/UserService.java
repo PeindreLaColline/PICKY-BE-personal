@@ -39,7 +39,11 @@ public class UserService implements UserUseCase {
     @Override
     public GetUserResp getUserInfo() {
         User user = userManager.getUserInfo(authManager.getUserId());
-        return userDtoMapper.toGetUserResp(user, imageManager.getPresignedUrl(user.getProfileUrl()));
+        if(user.getProfileUrl() == null) {
+            return userDtoMapper.toGetUserResp(user, null);
+        } else{
+            return userDtoMapper.toGetUserResp(user, imageManager.getPresignedUrl(user.getProfileUrl()));
+        }
     }
 
     @Override
