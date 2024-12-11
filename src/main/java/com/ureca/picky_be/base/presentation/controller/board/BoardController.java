@@ -54,7 +54,6 @@ public class BoardController {
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,
             @RequestParam(defaultValue = "0") int page) {
 
-        // TODO : Slice 형태로 return 했을 때, 차후 프론트에서 문제 발생 시 List로 return 해줘야함.
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return boardUseCase.getMovieRelatedBoards(movieId, pageable);
     }
@@ -64,8 +63,6 @@ public class BoardController {
     public Slice<GetBoardInfoResp> getBoardsInfo(
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,
             @RequestParam(defaultValue = "0") int page) {
-
-        // TODO : Slice 형태로 return 했을 때, 차후 프론트에서 문제 발생 시 List로 return 해줘야함.
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return boardUseCase.getBoards(pageable);
     }
@@ -77,7 +74,6 @@ public class BoardController {
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,
             @RequestParam(defaultValue = "0") int page) {
 
-        // TODO : Slice 형태로 return 했을 때, 차후 프론트에서 문제 발생 시 List로 return 해줘야함.
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return boardUseCase.getAllBoardComments(boardId, pageable);
     }
