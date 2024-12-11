@@ -6,6 +6,7 @@ import com.ureca.picky_be.base.business.board.dto.BoardProjection;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.base.business.board.dto.contentDto.AddBoardContentReq;
+import com.ureca.picky_be.base.business.notification.dto.BoardCreatedEvent;
 import com.ureca.picky_be.base.persistence.board.BoardLikeRepository;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
 import com.ureca.picky_be.base.persistence.board.BoardCommentRepository;
@@ -21,6 +22,7 @@ import com.ureca.picky_be.jpa.board.BoardLike;
 import com.ureca.picky_be.jpa.config.IsDeleted;
 import com.ureca.picky_be.jpa.movie.Movie;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
@@ -38,20 +40,9 @@ public class BoardManager {
     private final MovieRepository movieRepository;
     private final BoardCommentRepository boardCommentRepository;
     private final BoardLikeRepository boardLikeRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-//<<<<<<< HEAD
-//    public Board addBoard(Long userId, String userNickname, AddBoardReq req) {
-//        Movie movie = movieRepository.findById(req.movieId())
-//                .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
-//        Board board;
-//        if(req.contents().size() > 5) {
-//            throw new CustomException(ErrorCode.BOARD_CONTENT_OVER_FIVE);
-//        }
-//
-//        try {
-//            board = Board.of(userId, movie, req.boardContext(), req.isSpoiler(), req.contents(), userNickname);
-//=======
     public SuccessCode addBoard(Long userId, String userNickname, AddBoardReq addBoardReq, List<AddBoardContentReq> addBoardContentReqs) {
         Movie movie = movieRepository.findById(addBoardReq.movieId())
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
@@ -59,6 +50,7 @@ public class BoardManager {
         try {
             Board board = Board.of(userId, movie, addBoardReq.boardContext(), addBoardReq.isSpoiler(), addBoardContentReqs, userNickname);
             boardRepository.save(board);
+            eventPublisher.publishEvent(new BoardCreatedEvent(board.getId(), movie.getId()));
             return SuccessCode.CREATE_BOARD_SUCCESS;
         } catch (CustomException e) {
             throw new CustomException(ErrorCode.BOARD_CREATE_FAILED);

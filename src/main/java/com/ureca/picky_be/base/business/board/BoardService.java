@@ -9,14 +9,23 @@ import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardComments
 import com.ureca.picky_be.base.business.board.dto.likeDto.AddOrDeleteBoardLikeResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
+import com.ureca.picky_be.base.implementation.content.ImageManager;
+import com.ureca.picky_be.base.implementation.content.VideoManager;
 import com.ureca.picky_be.base.implementation.mapper.BoardDtoMapper;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
+import com.ureca.picky_be.global.exception.CustomException;
+import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.board.Board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,14 +34,20 @@ public class BoardService implements BoardUseCase {
     private final BoardManager boardManager;
     private final AuthManager authManager;
     private final BoardDtoMapper boardDtoMapper;
+    private final ImageManager imageManager;
+    private final VideoManager videoManager;
 
     @Override
     @Transactional
-    public void addBoard(AddBoardReq req) {
-        // TODO: boardContent S3 업로드 등 처리 추가 예정
+    public SuccessCode addBoard(AddBoardReq req, List<MultipartFile> images, List<MultipartFile> videos) throws IOException {
         Long userId = authManager.getUserId();
         String userNickname = authManager.getUserNickname();
-        boardManager.addBoard(userId, userNickname, req);
+        if(images.size() >3 || videos.size() >2) {
+            throw new CustomException(ErrorCode.BOARD_CONTENT_TOO_MANY);
+        }
+        List<String> imageUrls = imageManager.uploadImages(images);
+        List<String> videosUrls = videoManager.uploadVideo(videos);
+        return boardManager.addBoard(userId, userNickname, req, boardDtoMapper.toAddBoardContentReq(imageUrls, videosUrls));
     }
 
     @Override
