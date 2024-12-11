@@ -36,7 +36,7 @@ public class ProfileManager {
             s3Config.getLocalFileDir();
         }
         else if(s3Config.getEnvironment().equals("aws")){
-            s3Config.getProdFileDir();
+            s3Config.getLocalFileDir();
         }
     }
 
