@@ -32,7 +32,7 @@ public class GoogleService implements OAuth2UseCase{
 
         System.out.println(loginUserInfo);
         System.out.println(oAuth2Token);
-        return oAuth2DtoMapper.toTokenResp(oAuth2Token, loginUserInfo.jwt(), googleManager.isRegistrationDone(loginUserInfo.userId()), authManager.getUserRole().toString());
+        return oAuth2DtoMapper.toTokenResp(oAuth2Token, loginUserInfo.jwt(), googleManager.isRegistrationDone(loginUserInfo.userId()), loginUserInfo.role());
     }
 
     @Override
