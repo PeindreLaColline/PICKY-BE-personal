@@ -57,6 +57,6 @@ public class S3Config {
     }
 
     public void getProdFileDir(){
-        this.fileDir = this.rootDir;
+        this.fileDir = System.getProperty("user.dir") + this.rootDir;
     }
 }
