@@ -2,6 +2,7 @@ package com.ureca.picky_be.config;
 
 import com.ureca.picky_be.global.web.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -110,12 +111,15 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Value("${frontend.root_server}")
+    private String frontRootUrl;
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",
-                "https://d3hxz5yj62y98w.cloudfront.net"
+                frontRootUrl
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
