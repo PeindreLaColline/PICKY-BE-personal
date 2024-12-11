@@ -13,4 +13,4 @@ public record GetUserResp(String name,
                           LocalDate birthdate,
                           Gender gender,
                           Nationality nationality,
-                          List<Genre> genres) {}
+                          String email) {}
