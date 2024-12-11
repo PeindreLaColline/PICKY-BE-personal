@@ -10,15 +10,15 @@ import java.util.List;
 
 @Component
 public class UserDtoMapper {
-    public GetUserResp toGetUserResp(User user) {
+    public GetUserResp toGetUserResp(User user, String profileUrl) {
         return new GetUserResp(
                 user.getName(),
                 user.getNickname(),
-                user.getProfileUrl(),
                 user.getBirthdate(),
                 user.getGender(),
                 user.getNationality(),
-                user.getEmail()
+                user.getEmail(),
+                profileUrl
         );
     }
 

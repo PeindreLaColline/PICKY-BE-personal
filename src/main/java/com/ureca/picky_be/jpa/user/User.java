@@ -70,4 +70,8 @@ public class User extends BaseEntity {
     public void registerProfile(String profileUrl) {
         this.profileUrl = profileUrl;
     }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

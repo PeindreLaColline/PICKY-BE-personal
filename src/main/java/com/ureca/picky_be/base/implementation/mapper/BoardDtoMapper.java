@@ -6,12 +6,17 @@ import com.ureca.picky_be.base.business.board.dto.*;
 import com.ureca.picky_be.base.business.board.dto.boardDto.GetBoardInfoResp;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.base.business.board.dto.contentDto.AddBoardContentReq;
+import com.ureca.picky_be.base.business.board.dto.contentDto.BoardContentWithBoardId;
+import com.ureca.picky_be.base.business.board.dto.contentDto.GetBoardContentResp;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
@@ -19,19 +24,53 @@ public class BoardDtoMapper {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private List<BoardContentPOJO> mapContent(String contentJson) {
+    private List<GetBoardContentResp> mapContent(String contentJson) {
         if(contentJson == null || contentJson.isEmpty()) {
             return Collections.emptyList();
         }
         try {
-            return objectMapper.readValue(contentJson, new TypeReference<List<BoardContentPOJO>>() {});
+            return objectMapper.readValue(contentJson, new TypeReference<List<GetBoardContentResp>>() {});
         } catch (Exception e) {
             throw new CustomException(ErrorCode.BOARD_CONTENT_JSON_TRANSFERING_FAILED);
         }
 
     }
 
-    public GetBoardInfoResp toGetBoardInfoResp(BoardProjection projection) {
+    public Slice<GetBoardInfoResp> toGetBoardInfoResps(
+            Slice<BoardProjection> recentBoards,
+            List<BoardContentWithBoardId> boardContentWithBoardIds
+    ) {
+        Map<Long, List<GetBoardContentResp>> boardContentMap = boardContentWithBoardIds.stream()
+                .collect(Collectors.groupingBy(
+                        BoardContentWithBoardId::boardId,
+                        Collectors.mapping(
+                                content -> new GetBoardContentResp(content.contentUrl(), content.boardContentType().toString()),
+                                Collectors.toList()
+                        )
+                ));
+
+        return recentBoards.map(board -> {
+            List<GetBoardContentResp> contents = boardContentMap.getOrDefault(board.getBoardId(), Collections.emptyList());
+
+            return new GetBoardInfoResp(
+                    board.getBoardId(),
+                    board.getWriterId(),
+                    board.getWriterNickname(),
+                    board.getWriterProfileUrl(),
+                    board.getContext(),
+                    board.getIsSpoiler(),
+                    board.getCreatedAt(),
+                    board.getUpdatedAt(),
+                    board.getLikeCount(),
+                    board.getCommentCount(),
+                    contents, // Attach contents
+                    board.getMovieName(),
+                    board.getIsLike()
+            );
+        });
+    }
+
+/*    public GetBoardInfoResp toGetBoardInfoResp(BoardProjection projection) {
         return new GetBoardInfoResp(
                 projection.getBoardId(),
                 projection.getWriterId(),
@@ -47,7 +86,7 @@ public class BoardDtoMapper {
                 projection.getMovieName(),
                 projection.getIsLike()
         );
-    }
+    }*/
 
     public GetAllBoardCommentsResp toGetBoardInfoResp(BoardCommentProjection projection) {
         return new GetAllBoardCommentsResp(

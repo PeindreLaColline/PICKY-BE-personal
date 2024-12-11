@@ -4,25 +4,21 @@ import com.ureca.picky_be.base.business.board.dto.BoardCommentProjection;
 import com.ureca.picky_be.base.business.board.dto.boardDto.AddBoardReq;
 import com.ureca.picky_be.base.business.board.dto.BoardProjection;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
-import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.base.business.board.dto.contentDto.AddBoardContentReq;
-import com.ureca.picky_be.base.business.notification.dto.BoardCreatedEvent;
+import com.ureca.picky_be.base.business.board.dto.contentDto.BoardContentWithBoardId;
 import com.ureca.picky_be.base.persistence.board.BoardLikeRepository;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
 import com.ureca.picky_be.base.persistence.board.BoardCommentRepository;
 import com.ureca.picky_be.base.persistence.board.BoardContentRepository;
 import com.ureca.picky_be.base.persistence.movie.MovieRepository;
-import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
-import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.board.Board;
 import com.ureca.picky_be.jpa.board.BoardComment;
 import com.ureca.picky_be.jpa.board.BoardLike;
 import com.ureca.picky_be.jpa.config.IsDeleted;
 import com.ureca.picky_be.jpa.movie.Movie;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
@@ -31,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static org.apache.commons.lang3.BooleanUtils.TRUE;
 
 @Component
 @RequiredArgsConstructor
@@ -40,6 +35,7 @@ public class BoardManager {
     private final MovieRepository movieRepository;
     private final BoardCommentRepository boardCommentRepository;
     private final BoardLikeRepository boardLikeRepository;
+    private final BoardContentRepository boardContentRepository;
 
 
     @Transactional
@@ -93,6 +89,11 @@ public class BoardManager {
         } catch(Exception e) {
             throw new CustomException(ErrorCode.BOARD_MOVIE_RELATED_GET_FAILED);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<BoardContentWithBoardId> getBoardContentWithBoardId(List<Long> boardIds){
+        return boardContentRepository.findByBoardIds(boardIds);
     }
 
     @Transactional(readOnly = true)

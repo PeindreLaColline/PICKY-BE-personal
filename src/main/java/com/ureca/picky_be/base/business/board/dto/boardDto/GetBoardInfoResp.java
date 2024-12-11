@@ -1,5 +1,5 @@
 package com.ureca.picky_be.base.business.board.dto.boardDto;
-import com.ureca.picky_be.base.business.board.dto.BoardContentPOJO;
+import com.ureca.picky_be.base.business.board.dto.contentDto.GetBoardContentResp;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -15,7 +15,7 @@ public record GetBoardInfoResp(
         LocalDateTime updatedDate,
         Integer likesCount,
         Integer commentsCount,
-        List<BoardContentPOJO> contents,
+        List<GetBoardContentResp> contents,
         String movieTitle,
         Boolean isLike) {
 
