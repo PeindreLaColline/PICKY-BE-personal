@@ -72,13 +72,11 @@ public class BoardController {
 
     @GetMapping("/{boardId}/comments")
     @Operation(summary = "댓글 조회용 API", description = "특정 무비 로그에 대한 댓글들을 조회하는 API입니다.")
-    public Slice<GetAllBoardCommentsResp> getBoardsComments(
+    public Slice<GetAllBoardCommentsResp> getBoardsComments (
             @PathVariable Long boardId,
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,
-            @RequestParam(defaultValue = "0") int page) {
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        return boardUseCase.getAllBoardComments(boardId, pageable);
+            @RequestParam(required = false) Long lastCommentId) {
+        return boardUseCase.getAllBoardComments(PageRequest.ofSize(size), boardId, lastCommentId);
     }
 
 

@@ -131,13 +131,14 @@ public class BoardManager {
     }
 
     @Transactional(readOnly = true)
-    public Slice<BoardCommentProjection> getTenBoardCommentsPerReq(Long boardId, Pageable pageable) {
+    public Slice<BoardCommentProjection> getTenBoardCommentsPerReq(Long boardId, Long lastCommentId, Pageable pageable) {
         // 특정 Board 최신순 기준으로 댓글들을 가져온다
         if(!boardRepository.existsById(boardId)) throw new CustomException(ErrorCode.BOARD_NOT_FOUND);
         if(boardRepository.findIsDeleted(boardId) == IsDeleted.TRUE) throw new CustomException(ErrorCode.BOARD_IS_DELETED);
+        validateCursor(lastCommentId);
 
         try {
-            Slice<BoardCommentProjection> comments = boardRepository.getBoardComments(boardId, pageable);
+            Slice<BoardCommentProjection> comments = boardRepository.getBoardComments(boardId, lastCommentId, pageable);
             return comments;
         } catch(Exception e) {
             throw new CustomException(ErrorCode.BOARD_COMMENT_READ_FAILED);

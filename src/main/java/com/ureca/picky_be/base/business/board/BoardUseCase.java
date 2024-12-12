@@ -27,7 +27,7 @@ public interface BoardUseCase {
 
     void addBoardComment(AddBoardCommentReq req, Long boardId);                  // 댓글 작성
     void deleteBoardComment(Long boardId, Long commentId);           // 댓글 삭제
-    Slice<GetAllBoardCommentsResp> getAllBoardComments(Long boardId, Pageable pageable);              // 게시물에 대한 모든 댓글 읽기
+    Slice<GetAllBoardCommentsResp> getAllBoardComments(Pageable pageable, Long boardId, Long lastCommentId);              // 게시물에 대한 모든 댓글 읽기
 
     boolean createBoardLike(Long boardId);
     Slice<GetBoardInfoResp> getBoardsByNickName(PageRequest pageRequest, BoardQueryReq req);

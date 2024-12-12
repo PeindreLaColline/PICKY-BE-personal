@@ -29,8 +29,6 @@ public class BoardComment extends BaseEntity {
 
     private String writerNickname;
 
-
-
     public static BoardComment of(Board board, Long userId, String context, String writerNickname){
         return BoardComment.builder()
                 .context(context)

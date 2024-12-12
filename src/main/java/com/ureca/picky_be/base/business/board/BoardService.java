@@ -131,8 +131,8 @@ public class BoardService implements BoardUseCase {
     }
 
     @Override
-    public Slice<GetAllBoardCommentsResp> getAllBoardComments(Long boardId, Pageable pageable) {
-        Slice<BoardCommentProjection> comments = boardManager.getTenBoardCommentsPerReq(boardId, pageable);
+    public Slice<GetAllBoardCommentsResp> getAllBoardComments(Pageable pageable, Long boardId, Long lastCommentId) {
+        Slice<BoardCommentProjection> comments = boardManager.getTenBoardCommentsPerReq(boardId, lastCommentId, pageable);
         return comments.map(boardDtoMapper::toGetBoardCommentsInfoResp);
     }
 
