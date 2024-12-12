@@ -66,16 +66,7 @@ public class UserController {
         return userUseCase.getNicknameValidation(nickname);
     }
 
-    @GetMapping("/{nickname}")
-    public Slice<ReadLineReviewResp> getUserLineReviews(
-            @PathVariable String nickname,
-            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) Long lastReviewId) {
 
-        UserLineReviewsReq req = new UserLineReviewsReq(nickname, lastReviewId);
-
-        return userUseCase.getLineReviewsByNickname(PageRequest.ofSize(size), req);
-    }
 
 
 

@@ -3,6 +3,7 @@ package com.ureca.picky_be.base.presentation.controller.lineReview;
 
 import com.ureca.picky_be.base.business.lineReview.LineReviewUseCase;
 import com.ureca.picky_be.base.business.lineReview.dto.*;
+import com.ureca.picky_be.base.business.user.dto.UserLineReviewsReq;
 import com.ureca.picky_be.jpa.lineReview.SortType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -62,6 +63,18 @@ public class LineReviewController {
         LineReviewQueryRequest queryReq = new LineReviewQueryRequest(movieId, lastReviewId, lastCreatedAt, sortType);
 
         return lineReviewUseCase.getLineReviewsByMovie(PageRequest.ofSize(size), queryReq);
+    }
+
+    @GetMapping("/{nickname}")
+    @Operation(summary = "닉네임으로 해당 사용자가 작성한 한줄평 조회", description = "닉")
+    public Slice<ReadLineReviewResp> getUserLineReviews(
+            @PathVariable String nickname,
+            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0", required = false) Long lastReviewId) {
+
+        UserLineReviewsReq req = new UserLineReviewsReq(nickname, lastReviewId);
+
+        return lineReviewUseCase.getLineReviewsByNickname(PageRequest.ofSize(size), req);
     }
 
 

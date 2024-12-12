@@ -14,6 +14,7 @@ import com.ureca.picky_be.jpa.lineReview.LineReview;
 import com.ureca.picky_be.jpa.lineReview.SortType;
 import com.ureca.picky_be.jpa.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class LineReviewManager {
 
     private final LineReviewRepository lineReviewRepository;
@@ -112,8 +114,14 @@ public class LineReviewManager {
 
     public Slice<LineReviewProjection> findLineReviewsByNickname(Long userId, UserLineReviewsReq req, PageRequest pageRequest) {
         Long lastReviewId = req.lastReviewId();
+        lastReviewIdValication(lastReviewId);
         return lineReviewRepository.findByUserIdAndCursor(userId, lastReviewId, pageRequest);
+    }
 
+    private void lastReviewIdValication(Long lastReviewId) {
+        if(lastReviewId < 0) {
+            throw new CustomException(ErrorCode.LINEREVIEW_INVALID_CURSOR2);
+        }
     }
 
 

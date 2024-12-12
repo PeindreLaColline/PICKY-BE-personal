@@ -18,5 +18,5 @@ public interface UserUseCase {
     SuccessCode updateUserInfo(String nickname, MultipartFile profile) throws IOException;
     GetUserResp getUserInfo();
     GetNicknameValidationResp getNicknameValidation(String nickname);
-    Slice<ReadLineReviewResp> getLineReviewsByNickname(PageRequest pageRequest, UserLineReviewsReq req);
+
 }

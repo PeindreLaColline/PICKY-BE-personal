@@ -1,9 +1,11 @@
 package com.ureca.picky_be.base.business.lineReview;
 
 import com.ureca.picky_be.base.business.lineReview.dto.*;
+import com.ureca.picky_be.base.business.user.dto.UserLineReviewsReq;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.lineReview.LineReviewManager;
 import com.ureca.picky_be.base.implementation.lineReview.mapper.LineReviewDtoMapper;
+import com.ureca.picky_be.base.implementation.user.UserManager;
 import com.ureca.picky_be.jpa.lineReview.LineReview;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +21,7 @@ public class LineReviewService implements LineReviewUseCase {
     private final LineReviewManager lineReviewManager;
     private final LineReviewDtoMapper lineReviewDtoMapper;
     private final AuthManager authManager;
+    private final UserManager userManager;
 
     @Override
     @Transactional
@@ -44,5 +47,12 @@ public class LineReviewService implements LineReviewUseCase {
         return lineReviews.map(lineReviewDtoMapper::toReadLineReviewResp);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Slice<ReadLineReviewResp> getLineReviewsByNickname(PageRequest pageRequest, UserLineReviewsReq req) {
+        Long userId = userManager.getUserIdByNickname(req.nickname());
+        Slice<LineReviewProjection> lineReviews = lineReviewManager.findLineReviewsByNickname(userId, req, pageRequest);
+        return lineReviews.map(lineReviewDtoMapper::toReadLineReviewResp);
+    }
 
 }
