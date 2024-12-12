@@ -30,6 +30,7 @@ public class PlaylistManager {
     private final MoviePlaylistRepository moviePlaylistRepository;
 
     public Slice<GetPlaylistProjection> getPlaylistProjections(Long lastPlaylistId, int size) {
+        validateCursor(lastPlaylistId);
         return playlistRepository.getPlaylistsNative(lastPlaylistId, PageRequest.ofSize(size));
     }
 
@@ -88,5 +89,13 @@ public class PlaylistManager {
         moviePlaylistRepository.deleteByPlaylist(playlist);
         playlistRepository.delete(playlist);
         return SuccessCode.PLAYLIST_DELETE_SUCCESS;
+    }
+
+    private void validateCursor(Long lastId) {
+        // 첫 요청일 경우
+        if(lastId == null) return;
+        if(lastId <= 0) {
+            throw new CustomException(ErrorCode.LAST_ID_INVALID_CURSOR);
+        }
     }
 }
