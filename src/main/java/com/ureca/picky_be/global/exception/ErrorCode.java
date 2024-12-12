@@ -22,7 +22,7 @@ public enum ErrorCode {
     USER_DELETE_FAILED(HttpStatus.BAD_REQUEST, "USR002", "유저 삭제에 실패했습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USR003", "해당 유저가 존재하지 않습니다."),
     USER_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "USR004", "유저 정보 업데이트에 실패했습니다."),
-    USER_UPDATE_BAD_REQUEST(HttpStatus.BAD_REQUEST, "USR005", "선호 영화 ID를 받지 못했습니다."),
+    USER_UPDATE_BAD_REQUEST(HttpStatus.BAD_REQUEST, "USR005", "입력할 정보가 존재하지 않습니다"),
     NO_USER_FOUND(HttpStatus.BAD_REQUEST, "USR006", "해당 조건을 만족하는 유저가 없습니다."),
 
     // GENRE
