@@ -1,11 +1,16 @@
 package com.ureca.picky_be.base.presentation.controller.movie;
 
+import com.ureca.picky_be.base.business.lineReview.dto.GetUserLineReviewResp;
 import com.ureca.picky_be.base.business.movie.MovieUseCase;
 import com.ureca.picky_be.base.business.movie.dto.*;
+import com.ureca.picky_be.base.business.user.dto.UserLineReviewsReq;
 import com.ureca.picky_be.base.implementation.mapper.MovieDtoMapper;
 import com.ureca.picky_be.global.success.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -58,6 +63,19 @@ public class MovieController {
     @PostMapping("/{movieId}/like")
     public boolean movieLike(@PathVariable Long movieId){
         return movieUseCase.movieLike(movieId);
+    }
+
+
+    @GetMapping("likes/{nickname}")
+    @Operation(summary = "닉네임으로 해당 사용자가 좋아요 누른 영화들 조회", description = "마이페이지에서 사용자 닉네임으로 해당 사용자가 좋아요 누른 영화들을 확인하는 API입니다.")
+    public Slice<GetUserLikeMovieResp> getUserLikeMovies(
+            @PathVariable String nickname,
+            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0", required = false) Long lastMovieLikeId) {
+
+        GetUserLikeMovieReq req = new GetUserLikeMovieReq(nickname, lastMovieLikeId);
+
+        return movieUseCase.getUserLikeMoviesByNickname(PageRequest.ofSize(size), req);
     }
 
 }

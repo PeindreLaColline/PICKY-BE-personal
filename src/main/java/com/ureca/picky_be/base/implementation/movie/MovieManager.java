@@ -17,6 +17,7 @@ import com.ureca.picky_be.jpa.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -343,4 +344,17 @@ public class MovieManager {
     public List<GetSimpleMovieProjection> getMoviesOrderByCreatedAt(Long lastMovieId, LocalDateTime createdAt, int size){
         return movieRepository.findMoviesOrderByCreatedAtUsingCursor(lastMovieId, createdAt, PageRequest.ofSize(size));
     }
+
+    public Slice<GetUserLikeMovieResp> findLikeMoviesByNickname(Long userId, GetUserLikeMovieReq req, PageRequest pageRequest) {
+        Long lastMovieLikeId = req.lastMovieLikeId();
+        lastMovieLikeIdValidation(lastMovieLikeId);
+        return movieLikeRepository.findByUserId(userId, lastMovieLikeId, pageRequest);
+    }
+
+    private void lastMovieLikeIdValidation(Long lastMovieLikeId) {
+        if(lastMovieLikeId < 0) {
+            throw new CustomException(ErrorCode.MOVIE_LIKE_INVALID_CURSOR);
+        }
+    }
+
 }
