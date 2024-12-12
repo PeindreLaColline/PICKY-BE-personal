@@ -82,7 +82,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     WHERE bc.board.id = :boardId and bc.board.isDeleted = 'FALSE' AND (:lastCommentId IS NULL OR bc.id < :lastCommentId)
     ORDER BY bc.createdAt DESC
     """)
-    Slice<BoardCommentProjection> getBoardComments(@Param("boardId") Long boardId, @Param("lastBoardId") Long lastCommentId, Pageable pageable);
+    Slice<BoardCommentProjection> getBoardComments(@Param("boardId") Long boardId, @Param("lastCommentId") Long lastCommentId, Pageable pageable);
 
     @Query("""
     SELECT b.id AS boardId, b.userId AS writerId, b.writerNickname AS writerNickname, u.profileUrl AS writerProfileUrl, b.context AS context, b.isSpoiler AS isSpoiler,
