@@ -7,6 +7,7 @@ import com.ureca.picky_be.base.business.board.dto.boardDto.AddBoardReq;
 import com.ureca.picky_be.base.business.board.dto.boardDto.GetBoardInfoResp;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
+import com.ureca.picky_be.base.business.user.dto.BoardQueryReq;
 import com.ureca.picky_be.global.success.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -100,6 +101,17 @@ public class BoardController {
         if(boardUseCase.createBoardLike(boardId)) return SuccessCode.CREATE_BOARD_LIKE_SUCCESS;
         return SuccessCode.DELETE_BOARD_LIKE_SUCCESS;
 
+    }
+
+    @Operation(summary = "닉네임으로 해당 사용자가 작성한 게시글 조회", description = "마이페이지에서 사용자 닉네임으로 해당 사용자가 작성한 게시글들 확인하는 API입니다.")
+    @GetMapping("likes/{nickname}")
+    public Slice<GetBoardInfoResp> getUserBoards(
+            @PathVariable String nickname,
+            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,
+            @RequestParam(required = false) Long lastBoardId
+    ) {
+        BoardQueryReq req = new BoardQueryReq(nickname, lastBoardId);
+        return boardUseCase.getBoardsByNickName(PageRequest.ofSize(size), req);
     }
 
 }

@@ -66,6 +66,7 @@ public class SecurityConfig {
 
             // BOARD
             "/api/v1/board",
+            "/api/v1/board/*",
 
             // LINEREVIEW
             "/api/v1/linereview/*",

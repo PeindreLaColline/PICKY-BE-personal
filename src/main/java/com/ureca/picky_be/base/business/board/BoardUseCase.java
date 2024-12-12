@@ -5,7 +5,9 @@ import com.ureca.picky_be.base.business.board.dto.boardDto.GetBoardInfoResp;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.AddBoardCommentReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
+import com.ureca.picky_be.base.business.user.dto.BoardQueryReq;
 import com.ureca.picky_be.global.success.SuccessCode;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,4 +29,5 @@ public interface BoardUseCase {
     Slice<GetAllBoardCommentsResp> getAllBoardComments(Long boardId, Pageable pageable);              // 게시물에 대한 모든 댓글 읽기
 
     boolean createBoardLike(Long boardId);
+    Slice<GetBoardInfoResp> getBoardsByNickName(PageRequest pageRequest, BoardQueryReq req);
 }
