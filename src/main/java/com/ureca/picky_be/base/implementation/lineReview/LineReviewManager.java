@@ -111,11 +111,11 @@ public class LineReviewManager {
 
     public Slice<MyPageLineReviewProjection> findLineReviewsByNickname(Long userId, UserLineReviewsReq req, PageRequest pageRequest) {
         Long lastReviewId = req.lastReviewId();
-        lastReviewIdValication(lastReviewId);
+        lastReviewIdValidation(lastReviewId);
         return lineReviewRepository.findByUserIdAndCursor(userId, lastReviewId, pageRequest);
     }
 
-    private void lastReviewIdValication(Long lastReviewId) {
+    private void lastReviewIdValidation(Long lastReviewId) {
         if(lastReviewId < 0) {
             throw new CustomException(ErrorCode.LINEREVIEW_INVALID_CURSOR2);
         }

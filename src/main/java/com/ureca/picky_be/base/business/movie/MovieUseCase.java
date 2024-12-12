@@ -3,7 +3,9 @@ package com.ureca.picky_be.base.business.movie;
 import com.ureca.picky_be.base.business.movie.dto.*;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisReq;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
+import com.ureca.picky_be.base.business.user.dto.UserLineReviewsReq;
 import com.ureca.picky_be.global.success.SuccessCode;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 
 import java.time.LocalDateTime;
@@ -20,4 +22,6 @@ public interface MovieUseCase {
     boolean movieLike(Long movieId);
     List<GetGenres> getGenres();
     Slice<GetSimpleMovieResp> getMoviesOrderByCreatedAt(Long lastMovieId, LocalDateTime createdAt, int size);
+
+    Slice<GetUserLikeMovieResp> getUserLikeMoviesByNickname(PageRequest pageRequest, GetUserLikeMovieReq req);
 }

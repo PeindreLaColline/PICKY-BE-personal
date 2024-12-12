@@ -69,7 +69,7 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
         FROM LineReview lr
         LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
         LEFT JOIN Movie m ON lr.movieId = m.id
-        WHERE lr.userId = :userId AND lr.id > :lastReviewId
+        WHERE lr.userId = :userId AND lr.id < :lastReviewId
         GROUP BY lr.id, lr.userId, lr.movieId, lr.rating, lr.context, lr.isSpoiler, lr.createdAt
         ORDER BY lr.createdAt DESC
 """)

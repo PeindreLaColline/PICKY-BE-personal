@@ -1,19 +1,23 @@
 package com.ureca.picky_be.base.business.movie;
 
+import com.ureca.picky_be.base.business.lineReview.dto.MyPageLineReviewProjection;
 import com.ureca.picky_be.base.business.movie.dto.*;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisReq;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.mapper.MovieDtoMapper;
 import com.ureca.picky_be.base.implementation.movie.MovieManager;
+import com.ureca.picky_be.base.implementation.user.UserManager;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.genre.Genre;
 import com.ureca.picky_be.jpa.movie.FilmCrew;
 import com.ureca.picky_be.jpa.movie.Movie;
 import com.ureca.picky_be.jpa.movie.MovieBehindVideo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,6 +29,7 @@ public class MovieService implements MovieUseCase{
     private final MovieManager movieManager;
     private final MovieDtoMapper movieDtoMapper;
     private final AuthManager authManager;
+    private final UserManager userManager;
 
     @Override
     public List<GetMoviesForRegisResp> getMoviesByGenre(GetMoviesForRegisReq getMoviesForRegisReq) {
@@ -90,5 +95,14 @@ public class MovieService implements MovieUseCase{
     public Slice<GetSimpleMovieResp> getMoviesOrderByCreatedAt(Long lastMovieId, LocalDateTime createdAt, int size) {
         List<GetSimpleMovieProjection> simpleMovieProjections = movieManager.getMoviesOrderByCreatedAt(lastMovieId, createdAt, size);
         return movieDtoMapper.toGetSimpleMovies(simpleMovieProjections);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Slice<GetUserLikeMovieResp> getUserLikeMoviesByNickname(PageRequest pageRequest, GetUserLikeMovieReq req) {
+        Long userId = userManager.getUserIdByNickname(req.nickname());
+
+        Slice<GetUserLikeMovieResp> likeMovies = movieManager.findLikeMoviesByNickname(userId, req, pageRequest);
+        return likeMovies;
     }
 }
