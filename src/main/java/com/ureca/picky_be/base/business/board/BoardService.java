@@ -2,6 +2,7 @@ package com.ureca.picky_be.base.business.board;
 
 import com.ureca.picky_be.base.business.board.dto.*;
 import com.ureca.picky_be.base.business.board.dto.boardDto.AddBoardReq;
+import com.ureca.picky_be.base.business.board.dto.boardDto.BoardMovieIdQueryReq;
 import com.ureca.picky_be.base.business.board.dto.boardDto.GetBoardInfoResp;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.AddBoardCommentReq;
@@ -90,9 +91,9 @@ public class BoardService implements BoardUseCase {
     }
 
     @Override
-    public Slice<GetBoardInfoResp> getMovieRelatedBoards(Long movieId, Pageable pageable) {
+    public Slice<GetBoardInfoResp> getMovieRelatedBoards(Pageable pageable, BoardMovieIdQueryReq req) {
         Long userId = authManager.getUserId();
-        Slice<BoardProjection> recentMovieRelatedBoards = boardManager.getRecentMovieRelatedBoards(userId, movieId, pageable);
+        Slice<BoardProjection> recentMovieRelatedBoards = boardManager.getRecentMovieRelatedBoards(userId, req.movieId(), req.lastBoardId(), pageable);
         List<Long> boardIds = recentMovieRelatedBoards.getContent().stream()
                 .map(BoardProjection::getBoardId)
                 .toList();

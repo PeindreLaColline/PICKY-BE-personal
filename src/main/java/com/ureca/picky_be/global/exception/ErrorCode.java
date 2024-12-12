@@ -16,6 +16,7 @@ public enum ErrorCode {
     VALIDATION_FAILED(HttpStatus.BAD_REQUEST, "E007", "유효성 검사가 실패했습니다."),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "E008", "지원하지 않는 요청 메서드입니다."),
     INVALID_DELETED_TYPE(HttpStatus.BAD_REQUEST, "E009","지원하지 않는 타입입니다. TRUE와 FALSE만 가능합니다."),
+    LAST_ID_INVALID_CURSOR(HttpStatus.BAD_REQUEST, "E010", "lastId는 0보다 큰 값이어야 합니다."),
 
     // USER
     USER_SAVE_FAILED(HttpStatus.BAD_REQUEST, "USR001", "유저 저장에 실패했습니다."),
@@ -45,7 +46,6 @@ public enum ErrorCode {
     BOARD_MOVIE_RELATED_GET_FAILED(HttpStatus.BAD_REQUEST, "BOD005", "특정 영화에 대한 게시물들을 가져오는데에 실패했습니다."),
     BOARD_DELETE_FAILED(HttpStatus.BAD_REQUEST, "BOD006", "게시물 삭제에 실패했습니다."),
     BOARD_IS_DELETED(HttpStatus.BAD_REQUEST, "BOD007", "삭제된 게시물입니다."),
-    BOARD_INVALID_CURSOR(HttpStatus.BAD_REQUEST, "BOD008", "lastBoardId는 0보다 큰 값이어야 합니다."),
     BOARD_USER_ID_GET_FAILED(HttpStatus.BAD_REQUEST, "BOD009", "특정 사용자가 작성한 게시물들을 가져오는데에 실패했습니다."),
 
     // BOARD_CONTENT

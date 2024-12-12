@@ -2,6 +2,7 @@ package com.ureca.picky_be.base.presentation.controller.board;
 
 
 import com.ureca.picky_be.base.business.board.BoardUseCase;
+import com.ureca.picky_be.base.business.board.dto.boardDto.BoardMovieIdQueryReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.AddBoardCommentReq;
 import com.ureca.picky_be.base.business.board.dto.boardDto.AddBoardReq;
 import com.ureca.picky_be.base.business.board.dto.boardDto.GetBoardInfoResp;
@@ -53,10 +54,11 @@ public class BoardController {
     public Slice<GetBoardInfoResp> getMovieBoardsInfo(
             @PathVariable Long movieId,
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,
-            @RequestParam(defaultValue = "0") int page) {
+            @RequestParam(required = false) Long lastBoardId) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        return boardUseCase.getMovieRelatedBoards(movieId, pageable);
+        BoardMovieIdQueryReq req = new BoardMovieIdQueryReq(movieId, lastBoardId);
+
+        return boardUseCase.getMovieRelatedBoards(PageRequest.ofSize(size), req);
     }
 
     @GetMapping("/all")
