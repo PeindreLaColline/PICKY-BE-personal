@@ -71,7 +71,7 @@ public class MovieController {
     public Slice<GetUserLikeMovieResp> getUserLikeMovies(
             @PathVariable String nickname,
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "0", required = false) Long lastMovieLikeId) {
+            @RequestParam(required = false) Long lastMovieLikeId) {
 
         GetUserLikeMovieReq req = new GetUserLikeMovieReq(nickname, lastMovieLikeId);
 

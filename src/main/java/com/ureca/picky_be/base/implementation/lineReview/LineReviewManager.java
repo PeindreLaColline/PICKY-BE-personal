@@ -116,7 +116,8 @@ public class LineReviewManager {
     }
 
     private void lastReviewIdValidation(Long lastReviewId) {
-        if(lastReviewId < 0) {
+        if(lastReviewId == null) return;
+        if(lastReviewId <= 0) {
             throw new CustomException(ErrorCode.LINEREVIEW_INVALID_CURSOR2);
         }
     }

@@ -70,7 +70,7 @@ public class LineReviewController {
     public Slice<GetUserLineReviewResp> getUserLineReviews(
             @PathVariable String nickname,
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "0", required = false) Long lastReviewId) {
+            @RequestParam(required = false) Long lastReviewId) {
 
         UserLineReviewsReq req = new UserLineReviewsReq(nickname, lastReviewId);
 

@@ -352,7 +352,8 @@ public class MovieManager {
     }
 
     private void lastMovieLikeIdValidation(Long lastMovieLikeId) {
-        if(lastMovieLikeId < 0) {
+        if(lastMovieLikeId == null) return;
+        if(lastMovieLikeId <= 0) {
             throw new CustomException(ErrorCode.MOVIE_LIKE_INVALID_CURSOR);
         }
     }
