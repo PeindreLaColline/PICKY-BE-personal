@@ -55,16 +55,21 @@ public class SecurityConfig {
     };
 
     private static final String[] AUTH_WHITELIST_GET = {
-            //MOVIE
+            // MOVIE
             "/api/v1/movie/**",
 
-            //user
+            // USER
             "/api/v1/user",
 
             // NOTIFICATION
             "/api/v1/notification/connect",
 
-            "/api/v1/board"
+            // BOARD
+            "/api/v1/board",
+
+            // LINEREVIEW
+            "/api/v1/linereview/*",
+
     };
 
     private static final String[] AUTH_USER = {
@@ -78,7 +83,11 @@ public class SecurityConfig {
 
             // NOTIFICATION
             "/api/v1/notification/alert",
-            "/api/v1/notification/test"
+            "/api/v1/notification/test",
+
+            // LINEREVIEW
+            "/api/v1/linereview/create",
+            "/api/v1/linereview/*",
     };
 
     private static final String[] AUTH_USER_PATCH = {

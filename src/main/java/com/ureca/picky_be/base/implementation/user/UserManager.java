@@ -177,4 +177,8 @@ public class UserManager {
     public boolean getNicknameValidation(String nickname){
         return !userRepository.existsByNickname(nickname);
     }
+
+    public Long getUserIdByNickname(String nickname) {
+        return userRepository.findByNickname(nickname);
+    }
 }

@@ -3,6 +3,7 @@ package com.ureca.picky_be.base.presentation.controller.lineReview;
 
 import com.ureca.picky_be.base.business.lineReview.LineReviewUseCase;
 import com.ureca.picky_be.base.business.lineReview.dto.*;
+import com.ureca.picky_be.base.business.user.dto.UserLineReviewsReq;
 import com.ureca.picky_be.jpa.lineReview.SortType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -46,6 +47,7 @@ public class LineReviewController {
         - 다음 페이지 요청 시, 마지막 리뷰 정보를 기반으로 `lastReviewId`를 반드시 포함해야 하며, LATEST 정렬의 경우 `lastCreatedAt`도 포함해야 함.
         """
     )
+
     @GetMapping("/movie/{movieId}")
     public Slice<ReadLineReviewResp> readLineReview(
             @PathVariable Long movieId,
@@ -61,6 +63,18 @@ public class LineReviewController {
         LineReviewQueryRequest queryReq = new LineReviewQueryRequest(movieId, lastReviewId, lastCreatedAt, sortType);
 
         return lineReviewUseCase.getLineReviewsByMovie(PageRequest.ofSize(size), queryReq);
+    }
+
+    @GetMapping("/{nickname}")
+    @Operation(summary = "닉네임으로 해당 사용자가 작성한 한줄평 조회", description = "마이페이지에서 사용자 닉네임으로 해당 사용자가 작성한 한줄평들을 확인하는 API입니다.")
+    public Slice<GetUserLineReviewResp> getUserLineReviews(
+            @PathVariable String nickname,
+            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0", required = false) Long lastReviewId) {
+
+        UserLineReviewsReq req = new UserLineReviewsReq(nickname, lastReviewId);
+
+        return lineReviewUseCase.getLineReviewsByNickname(PageRequest.ofSize(size), req);
     }
 
 
