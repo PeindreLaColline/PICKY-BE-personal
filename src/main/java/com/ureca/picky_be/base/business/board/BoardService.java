@@ -80,9 +80,9 @@ public class BoardService implements BoardUseCase {
     }
 
     @Override
-    public Slice<GetBoardInfoResp> getBoards(Pageable pageable) {
+    public Slice<GetBoardInfoResp> getBoards(Pageable pageable, Long lastBoardId) {
         Long userId = authManager.getUserId();
-        Slice<BoardProjection> recentBoards = boardManager.getRecentMovieBoards(userId, pageable);
+        Slice<BoardProjection> recentBoards = boardManager.getRecentMovieBoards(userId, lastBoardId, pageable);
         List<Long> boardIds = recentBoards.getContent().stream()
                 .map(BoardProjection::getBoardId)
                 .toList();

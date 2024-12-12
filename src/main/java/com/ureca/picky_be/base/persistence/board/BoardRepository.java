@@ -69,10 +69,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     FROM Board b
     JOIN User u ON b.userId = u.id
     JOIN Movie m ON b.movie.id = m.id
-    WHERE b.isDeleted = 'FALSE'
+    WHERE b.isDeleted = 'FALSE' AND (:lastBoardId IS NULL OR b.id < :lastBoardId)
     ORDER BY b.createdAt DESC
     """)
-    Slice<BoardProjection> getRecentBoards(@Param("userId") Long userId, Pageable pageable);
+    Slice<BoardProjection> getRecentBoards(@Param("userId") Long userId, @Param("lastBoardId") Long lastBoardId, Pageable pageable);
 
     @Query("""
     SELECT bc.id as commentId, bc.userId AS writerId, u.name AS writerNickname, u.profileUrl AS writerProfileUrl, bc.context AS context,

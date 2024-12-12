@@ -85,11 +85,12 @@ public class BoardManager {
     }
 
     @Transactional(readOnly = true)
-    public Slice<BoardProjection> getRecentMovieBoards(Long userId, Pageable pageable) {
+    public Slice<BoardProjection> getRecentMovieBoards(Long userId, Long lastBoardId, Pageable pageable) {
         // 특정 영화 무비로그들 최신순 기준으로 Board들을 가져온다
 
         try {
-            Slice<BoardProjection> boards = boardRepository.getRecentBoards(userId, pageable);
+            validateCursor(lastBoardId);
+            Slice<BoardProjection> boards = boardRepository.getRecentBoards(userId, lastBoardId, pageable);
             return boards;
         } catch(Exception e) {
             throw new CustomException(ErrorCode.BOARD_MOVIE_RELATED_GET_FAILED);

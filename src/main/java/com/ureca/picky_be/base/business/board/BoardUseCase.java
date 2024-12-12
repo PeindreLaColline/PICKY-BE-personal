@@ -22,7 +22,7 @@ public interface BoardUseCase {
     void updateBoard(Long boardId, UpdateBoardReq req);                          // 본인이 작성한 게시글 수정
     void deleteBoard(Long boardId);                          // 본인이 작성한 게시글 삭제
 
-    Slice<GetBoardInfoResp> getBoards(Pageable pageable);   // 무비로그 메인 페이지 게시글들 가져오기(최신순)
+    Slice<GetBoardInfoResp> getBoards(Pageable pageable, Long lastBoardId);   // 무비로그 메인 페이지 게시글들 가져오기(최신순)
     Slice<GetBoardInfoResp> getMovieRelatedBoards(Pageable pageable, BoardMovieIdQueryReq req);     // 특정 영화들에 대한 무비 로그 가져오기
 
     void addBoardComment(AddBoardCommentReq req, Long boardId);                  // 댓글 작성
