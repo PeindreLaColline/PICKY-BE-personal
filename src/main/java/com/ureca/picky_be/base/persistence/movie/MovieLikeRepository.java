@@ -37,7 +37,8 @@ public interface MovieLikeRepository extends JpaRepository<MovieLike, Long> {
         )
         FROM MovieLike ml
         LEFT JOIN Movie m ON ml.movie = m
-        WHERE ml.user.id = :userId AND ml.id < :lastMovieLikeId
+        WHERE ml.user.id = :userId AND (:lastMovieLikeId IS NULL OR ml.id < :lastMovieLikeId)
+        
         ORDER BY ml.createdAt DESC
     """)
     Slice<GetUserLikeMovieResp> findByUserId(

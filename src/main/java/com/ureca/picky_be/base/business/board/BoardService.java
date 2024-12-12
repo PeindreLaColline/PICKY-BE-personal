@@ -7,14 +7,14 @@ import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.AddBoardCommentReq;
 import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.base.business.board.dto.contentDto.BoardContentWithBoardId;
-import com.ureca.picky_be.base.business.board.dto.likeDto.AddOrDeleteBoardLikeResp;
 import com.ureca.picky_be.base.business.notification.dto.BoardCreatedEvent;
+import com.ureca.picky_be.base.business.user.dto.BoardQueryReq;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
 import com.ureca.picky_be.base.implementation.content.ImageManager;
 import com.ureca.picky_be.base.implementation.content.VideoManager;
 import com.ureca.picky_be.base.implementation.mapper.BoardDtoMapper;
-import com.ureca.picky_be.base.persistence.board.BoardRepository;
+import com.ureca.picky_be.base.implementation.user.UserManager;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
@@ -23,6 +23,7 @@ import com.ureca.picky_be.jpa.board.BoardContentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +44,7 @@ public class BoardService implements BoardUseCase {
     private final ImageManager imageManager;
     private final VideoManager videoManager;
     private final ApplicationEventPublisher eventPublisher;
+    private final UserManager userManager;
 
     @Override
     @Transactional
@@ -131,7 +132,7 @@ public class BoardService implements BoardUseCase {
     @Override
     public Slice<GetAllBoardCommentsResp> getAllBoardComments(Long boardId, Pageable pageable) {
         Slice<BoardCommentProjection> comments = boardManager.getTenBoardCommentsPerReq(boardId, pageable);
-        return comments.map(boardDtoMapper::toGetBoardInfoResp);
+        return comments.map(boardDtoMapper::toGetBoardCommentsInfoResp);
     }
 
     @Override
@@ -166,5 +167,17 @@ public class BoardService implements BoardUseCase {
             boardManager.createBoardLike(userId, board);
             return true;
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Slice<GetBoardInfoResp> getBoardsByNickName(PageRequest pageRequest, BoardQueryReq req) {
+        Long userId = userManager.getUserIdByNickname(req.nickname());
+        Slice<BoardProjection> boards = boardManager.findBoardsByUserId(userId, req, pageRequest);
+        List<Long> boardIds = boards.getContent().stream()
+                .map(BoardProjection::getBoardId)
+                .toList();
+        List<BoardContentWithBoardId> boardContentWithBoardIds = processBoardContents(boardManager.getBoardContentWithBoardId(boardIds));
+        return boardDtoMapper.toGetBoardInfoResps(boards, boardContentWithBoardIds);
     }
 }

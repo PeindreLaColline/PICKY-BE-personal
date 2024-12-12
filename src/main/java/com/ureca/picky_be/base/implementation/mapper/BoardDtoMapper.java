@@ -88,7 +88,7 @@ public class BoardDtoMapper {
         );
     }*/
 
-    public GetAllBoardCommentsResp toGetBoardInfoResp(BoardCommentProjection projection) {
+    public GetAllBoardCommentsResp toGetBoardCommentsInfoResp(BoardCommentProjection projection) {
         return new GetAllBoardCommentsResp(
                 projection.getCommentId(),
                 projection.getWriterId(),

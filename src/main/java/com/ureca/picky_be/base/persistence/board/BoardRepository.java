@@ -84,6 +84,22 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     """)
     Slice<BoardCommentProjection> getBoardComments(@Param("boardId") Long boardId, Pageable pageable);
 
+    @Query("""
+    SELECT b.id AS boardId, b.userId AS writerId, b.writerNickname AS writerNickname, u.profileUrl AS writerProfileUrl, b.context AS context, b.isSpoiler AS isSpoiler,
+        b.createdAt AS createdAt, b.updatedAt AS updatedAt,
+        (SELECT COUNT(l) FROM BoardLike l WHERE l.board.id = b.id) AS likeCount,
+        (SELECT COUNT(c) FROM BoardComment c WHERE c.board.id = b.id) AS commentCount,
+        (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.userId = :userId) THEN true ELSE false END) AS isLike,
+        m.title AS movieName
+    FROM Board b
+    JOIN User u ON b.userId = u.id
+    JOIN Movie m ON b.movie.id = m.id
+    WHERE b.userId = :userId AND b.isDeleted = 'FALSE' AND (:lastBoardId IS NULL OR b.id < :lastBoardId)
+    ORDER BY b.createdAt DESC
+    """)
+    Slice<BoardProjection> findByIdAndCursor(@Param("userId") Long userId, @Param("lastBoardId") Long lastBoardId, Pageable pageable);
+
+
 
 
 }

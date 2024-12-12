@@ -6,11 +6,13 @@ import com.ureca.picky_be.base.business.board.dto.BoardProjection;
 import com.ureca.picky_be.base.business.board.dto.boardDto.UpdateBoardReq;
 import com.ureca.picky_be.base.business.board.dto.contentDto.AddBoardContentReq;
 import com.ureca.picky_be.base.business.board.dto.contentDto.BoardContentWithBoardId;
+import com.ureca.picky_be.base.business.user.dto.BoardQueryReq;
 import com.ureca.picky_be.base.persistence.board.BoardLikeRepository;
 import com.ureca.picky_be.base.persistence.board.BoardRepository;
 import com.ureca.picky_be.base.persistence.board.BoardCommentRepository;
 import com.ureca.picky_be.base.persistence.board.BoardContentRepository;
 import com.ureca.picky_be.base.persistence.movie.MovieRepository;
+import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.jpa.board.Board;
@@ -19,6 +21,7 @@ import com.ureca.picky_be.jpa.board.BoardLike;
 import com.ureca.picky_be.jpa.config.IsDeleted;
 import com.ureca.picky_be.jpa.movie.Movie;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
@@ -36,6 +39,7 @@ public class BoardManager {
     private final BoardCommentRepository boardCommentRepository;
     private final BoardLikeRepository boardLikeRepository;
     private final BoardContentRepository boardContentRepository;
+    private final UserRepository userRepository;
 
 
     @Transactional
@@ -90,6 +94,34 @@ public class BoardManager {
             throw new CustomException(ErrorCode.BOARD_MOVIE_RELATED_GET_FAILED);
         }
     }
+
+
+    @Transactional(readOnly = true)
+    public Slice<BoardProjection> findBoardsByUserId(Long userId,  BoardQueryReq req, PageRequest pageRequest) {
+        String nickname = req.nickname();
+        Long lastBoardId = req.lastBoardId();
+
+        if (!userRepository.existsByNickname(nickname)) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        // 커서 유효성 검사
+        validateCursor(lastBoardId);
+        try {
+            return boardRepository.findByIdAndCursor(userId, lastBoardId, pageRequest);
+        } catch(Exception e) {
+            throw new CustomException(ErrorCode.BOARD_USER_ID_GET_FAILED);
+        }
+    }
+
+    private void validateCursor(Long lastBoardId) {
+        // 첫 요청일 경우
+        if(lastBoardId == null) return;
+        if(lastBoardId <= 0) {
+            throw new CustomException(ErrorCode.BOARD_INVALID_CURSOR);
+        }
+    }
+
 
     @Transactional(readOnly = true)
     public List<BoardContentWithBoardId> getBoardContentWithBoardId(List<Long> boardIds){

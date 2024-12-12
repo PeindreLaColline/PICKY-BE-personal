@@ -1,23 +1,16 @@
 package com.ureca.picky_be.base.presentation.controller.user;
 
-import com.ureca.picky_be.base.business.lineReview.dto.LineReviewQueryRequest;
-import com.ureca.picky_be.base.business.lineReview.dto.ReadLineReviewResp;
 import com.ureca.picky_be.base.business.movie.MovieUseCase;
 import com.ureca.picky_be.base.business.movie.dto.GetGenres;
 import com.ureca.picky_be.base.business.user.UserUseCase;
 import com.ureca.picky_be.base.business.user.dto.*;
 import com.ureca.picky_be.global.success.SuccessCode;
-import com.ureca.picky_be.jpa.lineReview.SortType;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -65,9 +58,6 @@ public class UserController {
     public GetNicknameValidationResp isValid(@RequestParam String nickname){
         return userUseCase.getNicknameValidation(nickname);
     }
-
-
-
 
 
 }

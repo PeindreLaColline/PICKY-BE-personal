@@ -66,12 +66,12 @@ public class MovieController {
     }
 
 
-    @GetMapping("likes/{nickname}")
+    @GetMapping("user/{nickname}")
     @Operation(summary = "닉네임으로 해당 사용자가 좋아요 누른 영화들 조회", description = "마이페이지에서 사용자 닉네임으로 해당 사용자가 좋아요 누른 영화들을 확인하는 API입니다.")
     public Slice<GetUserLikeMovieResp> getUserLikeMovies(
             @PathVariable String nickname,
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "0", required = false) Long lastMovieLikeId) {
+            @RequestParam(required = false) Long lastMovieLikeId) {
 
         GetUserLikeMovieReq req = new GetUserLikeMovieReq(nickname, lastMovieLikeId);
 
