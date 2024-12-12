@@ -45,10 +45,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     FROM Board b
     JOIN User u ON b.userId = u.id
     JOIN Movie m ON b.movie.id = m.id
-    WHERE b.movie.id = :movieId AND b.isDeleted = 'FALSE'
+    WHERE b.movie.id = :movieId AND b.isDeleted = 'FALSE' AND (:lastBoardId IS NULL OR b.id < :lastBoardId)
     ORDER BY b.createdAt DESC
     """)
-    Slice<BoardProjection> getRecentMovieRelatedBoards(@Param("userId") Long userId, @Param("movieId") Long movieId, Pageable pageable);
+    Slice<BoardProjection> getRecentMovieRelatedBoards(@Param("userId") Long userId, @Param("movieId") Long movieId, @Param("lastBoardId") Long lastBoardId, Pageable pageable);
 
 
     @Query("""
@@ -69,20 +69,20 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     FROM Board b
     JOIN User u ON b.userId = u.id
     JOIN Movie m ON b.movie.id = m.id
-    WHERE b.isDeleted = 'FALSE'
+    WHERE b.isDeleted = 'FALSE' AND (:lastBoardId IS NULL OR b.id < :lastBoardId)
     ORDER BY b.createdAt DESC
     """)
-    Slice<BoardProjection> getRecentBoards(@Param("userId") Long userId, Pageable pageable);
+    Slice<BoardProjection> getRecentBoards(@Param("userId") Long userId, @Param("lastBoardId") Long lastBoardId, Pageable pageable);
 
     @Query("""
-    SELECT bc.id as commentId, bc.userId AS writerId, u.name AS writerNickname, u.profileUrl AS writerProfileUrl, bc.context AS context,
+    SELECT bc.id as commentId, bc.userId AS writerId, u.nickname AS writerNickname, u.profileUrl AS writerProfileUrl, bc.context AS context,
         bc.createdAt AS createdAt, bc.updatedAt AS updatedAt
     FROM BoardComment bc
     JOIN User u ON bc.userId = u.id
-    WHERE bc.board.id = :boardId and bc.board.isDeleted = 'FALSE'
+    WHERE bc.board.id = :boardId and bc.board.isDeleted = 'FALSE' AND (:lastCommentId IS NULL OR bc.id < :lastCommentId)
     ORDER BY bc.createdAt DESC
     """)
-    Slice<BoardCommentProjection> getBoardComments(@Param("boardId") Long boardId, Pageable pageable);
+    Slice<BoardCommentProjection> getBoardComments(@Param("boardId") Long boardId, @Param("lastBoardId") Long lastCommentId, Pageable pageable);
 
     @Query("""
     SELECT b.id AS boardId, b.userId AS writerId, b.writerNickname AS writerNickname, u.profileUrl AS writerProfileUrl, b.context AS context, b.isSpoiler AS isSpoiler,

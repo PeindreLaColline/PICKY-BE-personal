@@ -71,12 +71,13 @@ public class BoardManager {
     }
 
     @Transactional(readOnly = true)
-    public Slice<BoardProjection> getRecentMovieRelatedBoards(Long userId, Long movieId, Pageable pageable) {
+    public Slice<BoardProjection> getRecentMovieRelatedBoards(Long userId, Long movieId, Long lastBoardId, Pageable pageable) {
         // 특정 영화 무비로그들 최신순 기준으로 Board들을 가져온다
         if(!movieRepository.existsById(movieId)) throw new CustomException(ErrorCode.MOVIE_NOT_FOUND);
 
         try {
-            Slice<BoardProjection> boards = boardRepository.getRecentMovieRelatedBoards(userId, movieId, pageable);
+            validateCursor(lastBoardId);
+            Slice<BoardProjection> boards = boardRepository.getRecentMovieRelatedBoards(userId, movieId, lastBoardId, pageable);
             return boards;
         } catch(Exception e) {
             throw new CustomException(ErrorCode.BOARD_MOVIE_RELATED_GET_FAILED);
@@ -84,11 +85,12 @@ public class BoardManager {
     }
 
     @Transactional(readOnly = true)
-    public Slice<BoardProjection> getRecentMovieBoards(Long userId, Pageable pageable) {
+    public Slice<BoardProjection> getRecentMovieBoards(Long userId, Long lastBoardId, Pageable pageable) {
         // 특정 영화 무비로그들 최신순 기준으로 Board들을 가져온다
 
         try {
-            Slice<BoardProjection> boards = boardRepository.getRecentBoards(userId, pageable);
+            validateCursor(lastBoardId);
+            Slice<BoardProjection> boards = boardRepository.getRecentBoards(userId, lastBoardId, pageable);
             return boards;
         } catch(Exception e) {
             throw new CustomException(ErrorCode.BOARD_MOVIE_RELATED_GET_FAILED);
@@ -114,11 +116,11 @@ public class BoardManager {
         }
     }
 
-    private void validateCursor(Long lastBoardId) {
+    private void validateCursor(Long lastId) {
         // 첫 요청일 경우
-        if(lastBoardId == null) return;
-        if(lastBoardId <= 0) {
-            throw new CustomException(ErrorCode.BOARD_INVALID_CURSOR);
+        if(lastId == null) return;
+        if(lastId <= 0) {
+            throw new CustomException(ErrorCode.LAST_ID_INVALID_CURSOR);
         }
     }
 
@@ -129,13 +131,14 @@ public class BoardManager {
     }
 
     @Transactional(readOnly = true)
-    public Slice<BoardCommentProjection> getTenBoardCommentsPerReq(Long boardId, Pageable pageable) {
+    public Slice<BoardCommentProjection> getTenBoardCommentsPerReq(Long boardId, Long lastCommentId, Pageable pageable) {
         // 특정 Board 최신순 기준으로 댓글들을 가져온다
         if(!boardRepository.existsById(boardId)) throw new CustomException(ErrorCode.BOARD_NOT_FOUND);
         if(boardRepository.findIsDeleted(boardId) == IsDeleted.TRUE) throw new CustomException(ErrorCode.BOARD_IS_DELETED);
+        validateCursor(lastCommentId);
 
         try {
-            Slice<BoardCommentProjection> comments = boardRepository.getBoardComments(boardId, pageable);
+            Slice<BoardCommentProjection> comments = boardRepository.getBoardComments(boardId, lastCommentId, pageable);
             return comments;
         } catch(Exception e) {
             throw new CustomException(ErrorCode.BOARD_COMMENT_READ_FAILED);
