@@ -104,7 +104,7 @@ public class BoardController {
     }
 
     @Operation(summary = "닉네임으로 해당 사용자가 작성한 게시글 조회", description = "마이페이지에서 사용자 닉네임으로 해당 사용자가 작성한 게시글들 확인하는 API입니다.")
-    @GetMapping("likes/{nickname}")
+    @GetMapping("user/{nickname}")
     public Slice<GetBoardInfoResp> getUserBoards(
             @PathVariable String nickname,
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,

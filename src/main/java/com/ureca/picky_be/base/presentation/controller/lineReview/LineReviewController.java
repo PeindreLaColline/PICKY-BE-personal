@@ -65,7 +65,7 @@ public class LineReviewController {
         return lineReviewUseCase.getLineReviewsByMovie(PageRequest.ofSize(size), queryReq);
     }
 
-    @GetMapping("/{nickname}")
+    @GetMapping("user/{nickname}")
     @Operation(summary = "닉네임으로 해당 사용자가 작성한 한줄평 조회", description = "마이페이지에서 사용자 닉네임으로 해당 사용자가 작성한 한줄평들을 확인하는 API입니다.")
     public Slice<GetUserLineReviewResp> getUserLineReviews(
             @PathVariable String nickname,
