@@ -1,9 +1,6 @@
 package com.ureca.picky_be.base.implementation.lineReview;
 
-import com.ureca.picky_be.base.business.lineReview.dto.CreateLineReviewReq;
-import com.ureca.picky_be.base.business.lineReview.dto.LineReviewProjection;
-import com.ureca.picky_be.base.business.lineReview.dto.LineReviewQueryRequest;
-import com.ureca.picky_be.base.business.lineReview.dto.UpdateLineReviewReq;
+import com.ureca.picky_be.base.business.lineReview.dto.*;
 import com.ureca.picky_be.base.business.user.dto.UserLineReviewsReq;
 import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
@@ -112,7 +109,7 @@ public class LineReviewManager {
         }
     }
 
-    public Slice<LineReviewProjection> findLineReviewsByNickname(Long userId, UserLineReviewsReq req, PageRequest pageRequest) {
+    public Slice<MyPageLineReviewProjection> findLineReviewsByNickname(Long userId, UserLineReviewsReq req, PageRequest pageRequest) {
         Long lastReviewId = req.lastReviewId();
         lastReviewIdValication(lastReviewId);
         return lineReviewRepository.findByUserIdAndCursor(userId, lastReviewId, pageRequest);

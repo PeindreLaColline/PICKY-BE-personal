@@ -49,10 +49,11 @@ public class LineReviewService implements LineReviewUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public Slice<ReadLineReviewResp> getLineReviewsByNickname(PageRequest pageRequest, UserLineReviewsReq req) {
+    public Slice<GetUserLineReviewResp> getLineReviewsByNickname(PageRequest pageRequest, UserLineReviewsReq req) {
         Long userId = userManager.getUserIdByNickname(req.nickname());
-        Slice<LineReviewProjection> lineReviews = lineReviewManager.findLineReviewsByNickname(userId, req, pageRequest);
-        return lineReviews.map(lineReviewDtoMapper::toReadLineReviewResp);
+
+        Slice<MyPageLineReviewProjection> lineReviews = lineReviewManager.findLineReviewsByNickname(userId, req, pageRequest);
+        return lineReviews.map(lineReviewDtoMapper::toGetUserLineReviewResp);
     }
 
 }

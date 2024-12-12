@@ -14,5 +14,5 @@ public interface LineReviewUseCase {
     UpdateLineReviewResp updateLineReview(Long lineReviewId, UpdateLineReviewReq req);
 
     Slice<ReadLineReviewResp> getLineReviewsByMovie(PageRequest pageRequest, LineReviewQueryRequest queryReq);
-    Slice<ReadLineReviewResp> getLineReviewsByNickname(PageRequest pageRequest, UserLineReviewsReq req);
+    Slice<GetUserLineReviewResp> getLineReviewsByNickname(PageRequest pageRequest, UserLineReviewsReq req);
 }
