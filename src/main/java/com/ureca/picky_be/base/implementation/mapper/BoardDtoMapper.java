@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,7 +39,8 @@ public class BoardDtoMapper {
 
     public Slice<GetBoardInfoResp> toGetBoardInfoResps(
             Slice<BoardProjection> recentBoards,
-            List<BoardContentWithBoardId> boardContentWithBoardIds
+            List<BoardContentWithBoardId> boardContentWithBoardIds,
+            List<String> profileUrls
     ) {
         Map<Long, List<GetBoardContentResp>> boardContentMap = boardContentWithBoardIds.stream()
                 .collect(Collectors.groupingBy(
@@ -49,21 +51,25 @@ public class BoardDtoMapper {
                         )
                 ));
 
+        AtomicInteger index = new AtomicInteger(0);
+
         return recentBoards.map(board -> {
             List<GetBoardContentResp> contents = boardContentMap.getOrDefault(board.getBoardId(), Collections.emptyList());
+
+            String transformedProfileUrl = profileUrls.get(index.getAndIncrement());
 
             return new GetBoardInfoResp(
                     board.getBoardId(),
                     board.getWriterId(),
                     board.getWriterNickname(),
-                    board.getWriterProfileUrl(),
+                    transformedProfileUrl,
                     board.getContext(),
                     board.getIsSpoiler(),
                     board.getCreatedAt(),
                     board.getUpdatedAt(),
                     board.getLikeCount(),
                     board.getCommentCount(),
-                    contents, // Attach contents
+                    contents,
                     board.getMovieName(),
                     board.getIsLike()
             );

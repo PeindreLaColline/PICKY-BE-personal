@@ -9,6 +9,8 @@ import com.ureca.picky_be.base.implementation.board.BoardManager;
 import com.ureca.picky_be.base.implementation.content.ImageManager;
 import com.ureca.picky_be.base.implementation.mapper.UserDtoMapper;
 import com.ureca.picky_be.base.implementation.user.UserManager;
+import com.ureca.picky_be.global.exception.CustomException;
+import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.user.User;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +41,16 @@ public class UserService implements UserUseCase {
 
     @Override
     public SuccessCode updateUserInfo(String nickname, MultipartFile profile) throws IOException {
-        userManager.updateUserNickname(authManager.getUserId(), nickname);
-        return userManager.registerProfile(profile, authManager.getUserId());
+        if(nickname.isEmpty() && profile.isEmpty()) {
+            throw new CustomException(ErrorCode.NO_DATA_RECEIVED);
+        }
+        if(!nickname.isEmpty()) {
+            userManager.updateUserNickname(authManager.getUserId(), nickname);
+        }
+        if(profile != null) {
+            userManager.registerProfile(profile, authManager.getUserId());
+        }
+        return SuccessCode.UPDATE_USER_SUCCESS;
     }
 
     @Override

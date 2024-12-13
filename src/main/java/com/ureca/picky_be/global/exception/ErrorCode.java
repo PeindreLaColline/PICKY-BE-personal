@@ -25,6 +25,7 @@ public enum ErrorCode {
     USER_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "USR004", "유저 정보 업데이트에 실패했습니다."),
     USER_UPDATE_BAD_REQUEST(HttpStatus.BAD_REQUEST, "USR005", "입력할 정보가 존재하지 않습니다"),
     NO_USER_FOUND(HttpStatus.BAD_REQUEST, "USR006", "해당 조건을 만족하는 유저가 없습니다."),
+    NO_DATA_RECEIVED(HttpStatus.BAD_REQUEST, "USR007", "업데이트할 데이터를 받지 못했습니다."),
 
     // GENRE
     GENRE_NOT_FOUND(HttpStatus.NOT_FOUND, "GEN001", "해당 영화 장르를 찾지 못했습니다."),
