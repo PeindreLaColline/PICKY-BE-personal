@@ -29,7 +29,8 @@ public class MovieDtoMapper {
             List<FilmCrew> actors,
             List<FilmCrew> directors,
             boolean like,
-            List<Platform> platforms
+            List<Platform> platforms,
+            double rating
     ) {
         List<GetMovieDetailResp.MovieInfo.GenreInfo> genreInfoList = genres.stream()
                 .map(genre -> new GetMovieDetailResp.MovieInfo.GenreInfo(genre.getId()))
@@ -77,6 +78,7 @@ public class MovieDtoMapper {
                 Optional.ofNullable(movie.getOstUrl()).orElse("OST not found"),
                 movieBehindVideoUrls,
                 like,
+                rating,
                 new GetMovieDetailResp.StreamingPlatform(
                         platformTypes.contains(PlatformType.NETFLIX),
                         platformTypes.contains(PlatformType.DISNEY),

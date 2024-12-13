@@ -13,6 +13,7 @@ public record GetMovieDetailResp(
         @JsonProperty("ost") String ost,
         @JsonProperty("movie_behind_videos") List<String> movieBehindVideos,
         @JsonProperty("like") boolean like,
+        @JsonProperty("rating") double rating,
         @JsonProperty("streaming_platform") StreamingPlatform streamingPlatform
 ) {
     public record MovieInfo(
