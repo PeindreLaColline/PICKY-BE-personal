@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @Operation(summary = "닉네임으로 마이페이지 접속시 데이터(게시글 수, 팔로워, 팔로잉 수) 조회", description = "nickname으로 해당 사용자에 대한 정보를 조회하는 API입니다.")
-    @PatchMapping("/mypage/{nickname}")
+    @GetMapping("/mypage/{nickname}")
     public GetMyPageUserInfoResp updateUserInfo(@PathVariable String nickname) {
         return userUseCase.getMyPageUserInfo(nickname);
     }
