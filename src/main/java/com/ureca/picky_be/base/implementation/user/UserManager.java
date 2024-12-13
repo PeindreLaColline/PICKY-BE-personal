@@ -2,6 +2,7 @@ package com.ureca.picky_be.base.implementation.user;
 
 import com.ureca.picky_be.base.business.user.dto.RegisterUserReq;
 import com.ureca.picky_be.base.implementation.content.ProfileManager;
+import com.ureca.picky_be.base.persistence.follow.FollowRepository;
 import com.ureca.picky_be.base.persistence.movie.GenreRepository;
 import com.ureca.picky_be.base.persistence.movie.MovieLikeRepository;
 import com.ureca.picky_be.base.persistence.movie.MovieRepository;
@@ -30,7 +31,9 @@ public class UserManager {
     private final GenreRepository genreRepository;
     private final MovieLikeRepository movieLikeRepository;
     private final MovieRepository movieRepository;
+    private final FollowRepository followRepository;
     private final ProfileManager profileManager;
+
 
     @Transactional
     public SuccessCode registerProfile(MultipartFile profile, Long userId) throws IOException {
@@ -178,7 +181,19 @@ public class UserManager {
         return !userRepository.existsByNickname(nickname);
     }
 
+    @Transactional(readOnly = true)
     public Long getUserIdByNickname(String nickname) {
         return userRepository.findByNickname(nickname);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Integer getUserFollowerCount(Long userId) {
+        return followRepository.countByFollowerId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public Integer getUserFollowingCount(Long userId) {
+        return followRepository.countByFollowingId(userId);
     }
 }

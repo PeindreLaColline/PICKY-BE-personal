@@ -47,6 +47,7 @@ public enum ErrorCode {
     BOARD_DELETE_FAILED(HttpStatus.BAD_REQUEST, "BOD006", "게시물 삭제에 실패했습니다."),
     BOARD_IS_DELETED(HttpStatus.BAD_REQUEST, "BOD007", "삭제된 게시물입니다."),
     BOARD_USER_ID_GET_FAILED(HttpStatus.BAD_REQUEST, "BOD009", "특정 사용자가 작성한 게시물들을 가져오는데에 실패했습니다."),
+    BOARD_COUNT_FAIL(HttpStatus.BAD_REQUEST, "BOD010", "특정 사용자가 작성한 게시물 갯수를 가져오는데에 실패했습니다."),
 
     // BOARD_CONTENT
     INVALID_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "BDC001","PHOTO, VIDEO값만 가능합니다"),

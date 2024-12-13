@@ -1,7 +1,6 @@
-package com.ureca.picky_be.jpa.following;
+package com.ureca.picky_be.jpa.follow;
 
 import com.ureca.picky_be.jpa.config.BaseEntity;
-import com.ureca.picky_be.jpa.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,10 +17,10 @@ public class Follow extends BaseEntity {
     private Long id;
 
     @Column(name = "follower_id", nullable = false)
-    private Long followerId;
+    private Long followerId;        // 신청자(상대한테 신청하는 사람)
 
     @Column(name = "following_id", nullable = false)
-    private Long followingId;
+    private Long followingId;       // 수령자(누군가의 신청을 받는 사람)
 
 
 }

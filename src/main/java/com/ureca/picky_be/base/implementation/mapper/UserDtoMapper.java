@@ -1,5 +1,6 @@
 package com.ureca.picky_be.base.implementation.mapper;
 
+import com.ureca.picky_be.base.business.user.dto.GetMyPageUserInfoResp;
 import com.ureca.picky_be.base.business.user.dto.GetNicknameValidationResp;
 import com.ureca.picky_be.base.business.user.dto.GetUserResp;
 import com.ureca.picky_be.jpa.genre.Genre;
