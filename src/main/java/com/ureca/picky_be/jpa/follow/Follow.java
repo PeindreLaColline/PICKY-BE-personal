@@ -1,7 +1,6 @@
-package com.ureca.picky_be.jpa.following;
+package com.ureca.picky_be.jpa.follow;
 
 import com.ureca.picky_be.jpa.config.BaseEntity;
-import com.ureca.picky_be.jpa.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
