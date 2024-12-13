@@ -77,7 +77,6 @@ public class LineReviewController {
         return lineReviewUseCase.getLineReviewsByNickname(PageRequest.ofSize(size), req);
     }
 
-
     @GetMapping("/movie/{movieId}/genders")
     public GetLineReviewGenderInfoResp getGenderLineReviewInfo(@PathVariable Long movieId) {
         return lineReviewUseCase.getGenderLineReviewInfo(movieId);
@@ -87,6 +86,4 @@ public class LineReviewController {
     public GetLineReviewRatingInfoResp getRatingPercentage(@PathVariable Long movieId) {
         return lineReviewUseCase.getRatingLineReviewInfo(movieId);
     }
-
-
 }
