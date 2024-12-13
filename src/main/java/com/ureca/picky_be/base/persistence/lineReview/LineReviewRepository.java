@@ -71,7 +71,8 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
                lr.context AS context, lr.isSpoiler AS isSpoiler,
                COUNT(CASE WHEN lrl.preference = 'LIKE' AND lrl.isDeleted = false THEN lrl.id END) AS likes,
                COUNT(CASE WHEN lrl.preference = 'DISLIKE' AND lrl.isDeleted = false THEN lrl.id END) AS dislikes,
-               lr.createdAt AS createdAt
+               lr.createdAt AS createdAt,
+               (CASE WHEN lr.userId = :userId THEN true ELSE false END) AS isAuthor
         FROM LineReview lr
         LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
         LEFT JOIN Movie m ON lr.movieId = m.id

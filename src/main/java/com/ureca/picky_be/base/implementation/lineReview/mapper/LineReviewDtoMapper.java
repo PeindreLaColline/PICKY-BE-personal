@@ -62,7 +62,8 @@ public class LineReviewDtoMapper {
                     projection.getMovieId(),
                     projection.getMovieTitle(),
                     projection.getMoviePosterUrl()
-                )
+                ),
+                projection.getIsAuthor()
         );
     }
 
