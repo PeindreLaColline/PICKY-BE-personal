@@ -52,7 +52,7 @@ public class MovieService implements MovieUseCase{
         List<FilmCrew> directors = movieManager.getDirectors(movie);
         boolean like = movieManager.getMovieLike(movieId, authManager.getUserId());
         List<Platform> platforms = movieManager.getStreamingPlatform(movie);
-        return movieDtoMapper.toGetMovieDetailResp(movie, movieBehindVideos, genres, actors, directors, like, platforms);
+        return movieDtoMapper.toGetMovieDetailResp(movie, movieBehindVideos, genres, actors, directors, like, platforms, movie.getTotalRating());
     }
 
     @Override
