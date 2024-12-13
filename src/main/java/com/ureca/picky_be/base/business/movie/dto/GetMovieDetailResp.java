@@ -54,5 +54,6 @@ public record GetMovieDetailResp(
                         .toList();
             }
         }
+
     }
 }

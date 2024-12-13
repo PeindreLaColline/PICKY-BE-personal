@@ -33,6 +33,7 @@ public enum ErrorCode {
     MOVIE_NOT_FOUND(HttpStatus.NOT_FOUND, "MOV001", "해당 영화가 존재하지 않습니다."),
     MOVIE_LIKE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "MOV002", "영화 좋아요/취소에 실패했습니다."),
     MOVIE_LIKE_INVALID_CURSOR(HttpStatus.BAD_REQUEST, "MOV003", "movieLikeId는 0보다 큰 값이어야 합니다."),
+    MOVIE_EXISTS(HttpStatus.BAD_REQUEST, "MOV004", "해당 id를 가진 영화가 이미 존재합니다."),
 
     // FILM CREW
     ACTOR_NOT_FOUND(HttpStatus.NOT_FOUND, "CRW001", "해당 영화의 배우를 찾을 수 없습니다"),

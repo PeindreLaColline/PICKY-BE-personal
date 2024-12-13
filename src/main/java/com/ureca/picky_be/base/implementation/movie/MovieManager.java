@@ -59,6 +59,9 @@ public class MovieManager {
 
     /* 영화 추가 */
     public Movie addMovie(AddMovieReq addMovieReq) {
+        if(movieRepository.existsById(addMovieReq.movieInfo().id())){
+            throw new CustomException(ErrorCode.MOVIE_EXISTS);
+        }
         Movie movie = addMovieInfo(addMovieReq);
         List<MovieBehindVideo> movieBehindVideos = addMovieBehindVideos(addMovieReq.movieBehindVideos(), movie);
         List<MovieGenre> movieGenres = addMovieGenres(addMovieReq.movieInfo().genres(), movie);
@@ -255,7 +258,56 @@ public class MovieManager {
                 }
             }
         }
+        if(updateMovieReq.streamingPlatform() != null){
+            updateStreamingPlatform(updateMovieReq, movie);
+        }
         return SuccessCode.UPDATE_MOVIE_SUCCESS;
+    }
+
+    private void updateStreamingPlatform(UpdateMovieReq updateMovieReq, Movie movie) {
+        platformRepository.deleteAllByMovie(movie);
+        if(updateMovieReq.streamingPlatform().coupang()){
+            Platform platform = Platform.builder()
+                    .platformType(PlatformType.COUPANG)
+                    .movie(movie)
+                    .build();
+            platformRepository.save(platform);
+        }
+        if(updateMovieReq.streamingPlatform().disney()){
+            Platform platform = Platform.builder()
+                    .platformType(PlatformType.DISNEY)
+                    .movie(movie)
+                    .build();
+            platformRepository.save(platform);
+        }
+        if(updateMovieReq.streamingPlatform().netflix()){
+            Platform platform = Platform.builder()
+                    .platformType(PlatformType.NETFLIX)
+                    .movie(movie)
+                    .build();
+            platformRepository.save(platform);
+        }
+        if(updateMovieReq.streamingPlatform().tving()){
+            Platform platform = Platform.builder()
+                    .platformType(PlatformType.TVING)
+                    .movie(movie)
+                    .build();
+            platformRepository.save(platform);
+        }
+        if(updateMovieReq.streamingPlatform().wavve()){
+            Platform platform = Platform.builder()
+                    .platformType(PlatformType.WAVVE)
+                    .movie(movie)
+                    .build();
+            platformRepository.save(platform);
+        }
+        if(updateMovieReq.streamingPlatform().watcha()){
+            Platform platform = Platform.builder()
+                    .platformType(PlatformType.WATCHA)
+                    .movie(movie)
+                    .build();
+            platformRepository.save(platform);
+        }
     }
 
     private Movie updateMovieInfo(Movie movie, UpdateMovieReq updateMovieReq){
