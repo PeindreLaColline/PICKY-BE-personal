@@ -78,11 +78,13 @@ public class LineReviewController {
     }
 
     @GetMapping("/movie/{movieId}/genders")
+    @Operation(summary = "특정 영화에 대한 한줄평 작성자 성별에 따른 데이터 조회 API", description = "해당 영화의 전체 작성자, 남성, 여성 작성자수, 성별별 평점 평균 데이터가 있습니다.")
     public GetLineReviewGenderInfoResp getGenderLineReviewInfo(@PathVariable Long movieId) {
         return lineReviewUseCase.getGenderLineReviewInfo(movieId);
     }
 
     @GetMapping("/movie/{movieId}/ratings")
+    @Operation(summary = "특정 영화에 대한 한줄평 평점별 비율 데이터 조회 API", description = "해당 영화 한줄평 평점들(1~5까지) 각 점수별 사용자 수를 출력하는 API입니다.")
     public GetLineReviewRatingInfoResp getRatingPercentage(@PathVariable Long movieId) {
         return lineReviewUseCase.getRatingLineReviewInfo(movieId);
     }
