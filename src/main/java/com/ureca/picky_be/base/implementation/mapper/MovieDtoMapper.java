@@ -8,12 +8,15 @@ import com.ureca.picky_be.jpa.genre.Genre;
 import com.ureca.picky_be.jpa.movie.FilmCrew;
 import com.ureca.picky_be.jpa.movie.Movie;
 import com.ureca.picky_be.jpa.movie.MovieBehindVideo;
+import com.ureca.picky_be.jpa.platform.Platform;
+import com.ureca.picky_be.jpa.platform.PlatformType;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -25,7 +28,8 @@ public class MovieDtoMapper {
             List<Genre> genres,
             List<FilmCrew> actors,
             List<FilmCrew> directors,
-            boolean like
+            boolean like,
+            List<Platform> platforms
     ) {
         List<GetMovieDetailResp.MovieInfo.GenreInfo> genreInfoList = genres.stream()
                 .map(genre -> new GetMovieDetailResp.MovieInfo.GenreInfo(genre.getId()))
@@ -53,6 +57,10 @@ public class MovieDtoMapper {
                 .map(MovieBehindVideo::getUrl)
                 .toList();
 
+        Set<PlatformType> platformTypes = platforms.stream()
+                .map(Platform::getPlatformType)
+                .collect(Collectors.toSet());
+
         return new GetMovieDetailResp(
                 new GetMovieDetailResp.MovieInfo(
                         movie.getId(),
@@ -68,7 +76,15 @@ public class MovieDtoMapper {
                 Optional.ofNullable(movie.getTrailerUrl()).orElse("Trailer not found"),
                 Optional.ofNullable(movie.getOstUrl()).orElse("OST not found"),
                 movieBehindVideoUrls,
-                like
+                like,
+                new GetMovieDetailResp.StreamingPlatform(
+                        platformTypes.contains(PlatformType.NETFLIX),
+                        platformTypes.contains(PlatformType.DISNEY),
+                        platformTypes.contains(PlatformType.WATCHA),
+                        platformTypes.contains(PlatformType.WAVVE),
+                        platformTypes.contains(PlatformType.TVING),
+                        platformTypes.contains(PlatformType.COUPANG)
+                )
         );
     }
 
