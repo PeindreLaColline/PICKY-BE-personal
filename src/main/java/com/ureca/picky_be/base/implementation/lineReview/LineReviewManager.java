@@ -77,14 +77,13 @@ public class LineReviewManager {
     }
 
 
-    public Slice<LineReviewProjection> findLineReviewsByMovie(LineReviewQueryRequest queryReq, PageRequest pageRequest) {
+    public Slice<LineReviewProjection> findLineReviewsByMovie(Long userId, LineReviewQueryRequest queryReq, PageRequest pageRequest) {
         try {
             // 요청 데이터 변수로 저장 (가독성 향상)
             Long movieId = queryReq.movieId();
             Long lastReviewId = queryReq.lastReviewId();
             LocalDateTime lastCreatedAt = queryReq.lastCreatedAt();
             SortType sortType = queryReq.sortType();
-
             // 영화 존재 여부 확인
             if (!movieRepository.existsById(movieId)) {
                 throw new CustomException(ErrorCode.MOVIE_NOT_FOUND);
@@ -96,9 +95,9 @@ public class LineReviewManager {
             // 정렬 타입에 따라 쿼리 호출
             switch (sortType) {
                 case LIKES:
-                    return lineReviewRepository.findByMovieAndLikesCursor(movieId, lastReviewId, pageRequest);
+                    return lineReviewRepository.findByMovieAndLikesCursor(userId, movieId, lastReviewId, pageRequest);
                 case LATEST:
-                    return lineReviewRepository.findByMovieAndLatestCursor(movieId, lastReviewId, lastCreatedAt, pageRequest);
+                    return lineReviewRepository.findByMovieAndLatestCursor(movieId, lastReviewId, lastCreatedAt, userId, pageRequest);
                 default:
                     throw new CustomException(ErrorCode.LINEREVIEW_INVALID_SORTTYPE);
             }

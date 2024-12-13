@@ -71,6 +71,8 @@ public class SecurityConfig {
 
             // LINEREVIEW
             "/api/v1/linereview/*",
+            "/api/v1/linereview/movie/*",
+
 
     };
 
@@ -90,6 +92,7 @@ public class SecurityConfig {
             // LINEREVIEW
             "/api/v1/linereview/create",
             "/api/v1/linereview/*",
+            "/api/v1/linereview/movie/*",
     };
 
     private static final String[] AUTH_USER_PATCH = {

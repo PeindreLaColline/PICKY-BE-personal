@@ -72,7 +72,6 @@ public class BoardService implements BoardUseCase {
         return SuccessCode.CREATE_BOARD_SUCCESS;
     }
 
-
     @Override
     @Transactional
     public void updateBoard(Long boardId , UpdateBoardReq req) {

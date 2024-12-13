@@ -42,7 +42,8 @@ public class LineReviewDtoMapper {
                 projection.getIsSpoiler(),
                 projection.getLikes(),
                 projection.getDislikes(),
-                projection.getCreatedAt()
+                projection.getCreatedAt(),
+                projection.getIsAuthor()
         );
     }
 
