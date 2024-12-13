@@ -2,12 +2,9 @@ package com.ureca.picky_be.base.persistence.board;
 
 import com.ureca.picky_be.base.business.board.dto.BoardCommentProjection;
 import com.ureca.picky_be.base.business.board.dto.BoardProjection;
-import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.jpa.board.Board;
-import com.ureca.picky_be.jpa.board.BoardContent;
 import com.ureca.picky_be.jpa.config.IsDeleted;
 import org.springframework.data.annotation.ReadOnlyProperty;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -99,6 +96,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     """)
     Slice<BoardProjection> findByIdAndCursor(@Param("userId") Long userId, @Param("lastBoardId") Long lastBoardId, Pageable pageable);
 
+    Integer countByUserId(Long userId);
 
 
 

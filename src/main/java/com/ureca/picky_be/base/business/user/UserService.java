@@ -1,9 +1,11 @@
 package com.ureca.picky_be.base.business.user;
 
+import com.ureca.picky_be.base.business.user.dto.GetMyPageUserInfoResp;
 import com.ureca.picky_be.base.business.user.dto.GetNicknameValidationResp;
 import com.ureca.picky_be.base.business.user.dto.GetUserResp;
 import com.ureca.picky_be.base.business.user.dto.RegisterUserReq;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
+import com.ureca.picky_be.base.implementation.board.BoardManager;
 import com.ureca.picky_be.base.implementation.content.ImageManager;
 import com.ureca.picky_be.base.implementation.mapper.UserDtoMapper;
 import com.ureca.picky_be.base.implementation.user.UserManager;
@@ -23,6 +25,7 @@ public class UserService implements UserUseCase {
     private final UserDtoMapper userDtoMapper;
     private final AuthManager authManager;
     private final ImageManager imageManager;
+    private final BoardManager boardManager;
 
     @Override
     public SuccessCode registerUserInfo(RegisterUserReq req) {
@@ -53,6 +56,16 @@ public class UserService implements UserUseCase {
     @Override
     public GetNicknameValidationResp getNicknameValidation(String nickname){
         return userDtoMapper.toGetNicknameValidationResp(userManager.getNicknameValidation(nickname));
+    }
+
+    @Override
+    public GetMyPageUserInfoResp getMyPageUserInfo(String nickname) {
+        Long userId = userManager.getUserIdByNickname(nickname);
+        Integer boardCount = boardManager.getUserBoardCount(userId);
+        Integer followerCount = userManager.getUserFollowerCount(userId);
+        Integer followingCount = userManager.getUserFollowingCount(userId);
+
+        return new GetMyPageUserInfoResp(userId, boardCount, followerCount, followingCount);
     }
 
 

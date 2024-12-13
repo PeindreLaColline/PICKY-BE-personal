@@ -1,5 +1,6 @@
 package com.ureca.picky_be.base.business.user;
 
+import com.ureca.picky_be.base.business.user.dto.GetMyPageUserInfoResp;
 import com.ureca.picky_be.base.business.user.dto.GetNicknameValidationResp;
 import com.ureca.picky_be.base.business.user.dto.GetUserResp;
 import com.ureca.picky_be.base.business.user.dto.RegisterUserReq;
@@ -15,4 +16,5 @@ public interface UserUseCase {
     GetUserResp getUserInfo();
     GetNicknameValidationResp getNicknameValidation(String nickname);
 
+    GetMyPageUserInfoResp getMyPageUserInfo(String nickname);
 }

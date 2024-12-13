@@ -244,6 +244,12 @@ public class BoardManager {
         }
     }
 
-
-
+    @Transactional(readOnly = true)
+    public Integer getUserBoardCount(Long userId) {
+        try{
+            return boardRepository.countByUserId(userId);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.BOARD_COUNT_FAIL);
+        }
+    }
 }
