@@ -5,6 +5,7 @@ import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
 import com.ureca.picky_be.jpa.movie.Movie;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -82,7 +83,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     )
     ORDER BY COUNT(ml) DESC, m.totalRating DESC
 """)
-    List<GetSimpleMovieResp> findMoviesByGenreIdWithLikesUsingCursor(
+    Slice<GetSimpleMovieResp> findMoviesByGenreIdWithLikesUsingCursor(
             @Param("genreId") Long genreId,
             @Param("lastLikeCount") Integer lastLikeCount,
             @Param("lastMovieId") Long lastMovieId,
