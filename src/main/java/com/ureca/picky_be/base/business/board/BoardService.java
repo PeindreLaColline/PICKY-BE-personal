@@ -13,6 +13,7 @@ import com.ureca.picky_be.base.business.user.dto.BoardQueryReq;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
 import com.ureca.picky_be.base.implementation.content.ImageManager;
+import com.ureca.picky_be.base.implementation.content.ProfileManager;
 import com.ureca.picky_be.base.implementation.content.VideoManager;
 import com.ureca.picky_be.base.implementation.mapper.BoardDtoMapper;
 import com.ureca.picky_be.base.implementation.user.UserManager;
@@ -44,6 +45,7 @@ public class BoardService implements BoardUseCase {
     private final BoardDtoMapper boardDtoMapper;
     private final ImageManager imageManager;
     private final VideoManager videoManager;
+    private final ProfileManager profileManager;
     private final ApplicationEventPublisher eventPublisher;
     private final UserManager userManager;
 
@@ -83,22 +85,30 @@ public class BoardService implements BoardUseCase {
     public Slice<GetBoardInfoResp> getBoards(Pageable pageable, Long lastBoardId) {
         Long userId = authManager.getUserId();
         Slice<BoardProjection> recentBoards = boardManager.getRecentMovieBoards(userId, lastBoardId, pageable);
+        List<String> profileUrls = recentBoards.getContent().stream()
+                .map(BoardProjection::getWriterProfileUrl)
+                .map(profileManager::getPresignedUrl)
+                .toList();
         List<Long> boardIds = recentBoards.getContent().stream()
                 .map(BoardProjection::getBoardId)
                 .toList();
         List<BoardContentWithBoardId> boardContentWithBoardIds = processBoardContents(boardManager.getBoardContentWithBoardId(boardIds));
-        return boardDtoMapper.toGetBoardInfoResps(recentBoards, boardContentWithBoardIds);
+        return boardDtoMapper.toGetBoardInfoResps(recentBoards, boardContentWithBoardIds, profileUrls);
     }
 
     @Override
     public Slice<GetBoardInfoResp> getMovieRelatedBoards(Pageable pageable, BoardMovieIdQueryReq req) {
         Long userId = authManager.getUserId();
         Slice<BoardProjection> recentMovieRelatedBoards = boardManager.getRecentMovieRelatedBoards(userId, req.movieId(), req.lastBoardId(), pageable);
+        List<String> profileUrls = recentMovieRelatedBoards.getContent().stream()
+                .map(BoardProjection::getWriterProfileUrl)
+                .map(profileManager::getPresignedUrl)
+                .toList();
         List<Long> boardIds = recentMovieRelatedBoards.getContent().stream()
                 .map(BoardProjection::getBoardId)
                 .toList();
         List<BoardContentWithBoardId> boardContentWithBoardIds = processBoardContents(boardManager.getBoardContentWithBoardId(boardIds));
-        return boardDtoMapper.toGetBoardInfoResps(recentMovieRelatedBoards, boardContentWithBoardIds);
+        return boardDtoMapper.toGetBoardInfoResps(recentMovieRelatedBoards, boardContentWithBoardIds, profileUrls);
     }
 
     public List<BoardContentWithBoardId> processBoardContents(List<BoardContentWithBoardId> boardContentWithBoardIds) {
@@ -175,10 +185,14 @@ public class BoardService implements BoardUseCase {
     public Slice<GetBoardInfoResp> getBoardsByNickName(PageRequest pageRequest, BoardQueryReq req) {
         Long userId = userManager.getUserIdByNickname(req.nickname());
         Slice<BoardProjection> boards = boardManager.findBoardsByUserId(userId, req, pageRequest);
+        List<String> profileUrls = boards.getContent().stream()
+                .map(BoardProjection::getWriterProfileUrl)
+                .map(profileManager::getPresignedUrl)
+                .toList();
         List<Long> boardIds = boards.getContent().stream()
                 .map(BoardProjection::getBoardId)
                 .toList();
         List<BoardContentWithBoardId> boardContentWithBoardIds = processBoardContents(boardManager.getBoardContentWithBoardId(boardIds));
-        return boardDtoMapper.toGetBoardInfoResps(boards, boardContentWithBoardIds);
+        return boardDtoMapper.toGetBoardInfoResps(boards, boardContentWithBoardIds , profileUrls);
     }
 }

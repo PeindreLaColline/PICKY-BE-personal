@@ -239,6 +239,10 @@ public class MovieManager {
         return movieLikeRepository.existsByMovieIdAndUserId(movieId, userId);
     }
 
+    public List<Platform> getStreamingPlatform(Movie movie) {
+        return platformRepository.findAllByMovie(movie);
+    }
+
     /* 영화 수정 */
     public SuccessCode updateMovie (Long movieId, UpdateMovieReq updateMovieReq){
         Movie movie = movieRepository.findById(movieId)
