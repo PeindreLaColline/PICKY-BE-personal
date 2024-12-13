@@ -53,7 +53,7 @@ public class MovieController {
 
     @Operation(summary = "영화 장르별 조회", description = "영화 장르별 조회")
     @GetMapping("/genre")
-    public List<GetSimpleMovieResp> getMoviesByGenre(@RequestParam Long genreId,
+    public Slice<GetSimpleMovieResp> getMoviesByGenre(@RequestParam Long genreId,
                                                      @RequestParam(required = false) Long lastMovieId,
                                                      @RequestParam(required = false) Integer lastLikeCount) {
         return movieUseCase.getMoviesByGenre(genreId, lastMovieId, lastLikeCount);

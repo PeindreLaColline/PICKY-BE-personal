@@ -286,16 +286,13 @@ public class MovieManager {
         return movieRepository.findTop10MoviesWithLikes(pageable);
     }
 
-    public List<GetSimpleMovieResp> getMoviesByGenre(Long genreId, Long lastMovieId, Integer lastLikeCount){
+    public Slice<GetSimpleMovieResp> getMoviesByGenre(Long genreId, Long lastMovieId, Integer lastLikeCount){
 /*        // 영화 존재 여부 확인
         if (lastMovieId != null && !movieRepository.existsById(lastMovieId)) {
             throw new CustomException(ErrorCode.MOVIE_NOT_FOUND);
         }*/
 
         //validateCursor(genreId, lastMovieId);
-        System.out.println(23947923);
-        System.out.println(movieRepository.findMoviesByGenreIdWithLikesUsingCursor(genreId, lastLikeCount, lastMovieId, PageRequest.ofSize(12)));
-        System.out.println("sefefwefw");
         return movieRepository.findMoviesByGenreIdWithLikesUsingCursor(genreId, lastLikeCount, lastMovieId, PageRequest.ofSize(12));
     }
 
