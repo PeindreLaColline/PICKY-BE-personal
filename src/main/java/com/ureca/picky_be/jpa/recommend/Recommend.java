@@ -15,13 +15,13 @@ public class Recommend extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="user_id", nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name="movie_id", nullable = false)
+    @Column(name = "movie_id", nullable = false)
     private Long movieId;
 
     @Column(nullable = false)
-    private Long similarity;
+    private Double similarity;
 
 }
