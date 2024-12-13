@@ -29,7 +29,7 @@ public class LineReviewManager {
 
     public LineReview createLineReview(CreateLineReviewReq req, Long userId, String userNickname) {
         try {
-            if (req.rating() < 0 || req.rating() > 5) {
+            if (req.rating() == 0 || req.rating() < 0 || req.rating() > 5) {
                 throw new CustomException(ErrorCode.LINEREVIEW_INVALID_RATING);
             }
 
