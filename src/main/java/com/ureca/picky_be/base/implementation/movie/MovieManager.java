@@ -13,6 +13,8 @@ import com.ureca.picky_be.jpa.genre.Genre;
 import com.ureca.picky_be.jpa.lineReview.SortType;
 import com.ureca.picky_be.jpa.movie.*;
 import com.ureca.picky_be.jpa.movieworker.MovieWorker;
+import com.ureca.picky_be.jpa.platform.Platform;
+import com.ureca.picky_be.jpa.platform.PlatformType;
 import com.ureca.picky_be.jpa.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +37,7 @@ public class MovieManager {
     private final GenreRepository genreRepository;
     private final MovieLikeRepository movieLikeRepository;
     private final UserRepository userRepository;
+    private final PlatformRepository platformRepository;
 
     /* 회원가입시에 영화 리스트 전송 */
     @Transactional(readOnly = true)
@@ -55,12 +58,58 @@ public class MovieManager {
     }
 
     /* 영화 추가 */
-    public SuccessCode addMovie(AddMovieReq addMovieReq) {
+    public Movie addMovie(AddMovieReq addMovieReq) {
         Movie movie = addMovieInfo(addMovieReq);
         List<MovieBehindVideo> movieBehindVideos = addMovieBehindVideos(addMovieReq.movieBehindVideos(), movie);
         List<MovieGenre> movieGenres = addMovieGenres(addMovieReq.movieInfo().genres(), movie);
         List<FilmCrew> actors = addActors(addMovieReq.movieInfo().credits(), movie);
         List<FilmCrew> directors = addDirectors(addMovieReq.movieInfo().credits(), movie);
+        return movie;
+    }
+
+    public SuccessCode addStreamingPlatform(AddMovieReq addMovieReq, Movie movie) {
+        if(addMovieReq.streamingPlatform().coupang()){
+            Platform platform = Platform.builder()
+                    .platformType(PlatformType.COUPANG)
+                    .movie(movie)
+                    .build();
+            platformRepository.save(platform);
+        }
+        if(addMovieReq.streamingPlatform().disney()){
+            Platform platform = Platform.builder()
+                    .platformType(PlatformType.DISNEY)
+                    .movie(movie)
+                    .build();
+            platformRepository.save(platform);
+        }
+        if(addMovieReq.streamingPlatform().netflix()){
+            Platform platform = Platform.builder()
+                    .platformType(PlatformType.NETFLIX)
+                    .movie(movie)
+                    .build();
+            platformRepository.save(platform);
+        }
+        if(addMovieReq.streamingPlatform().tving()){
+            Platform platform = Platform.builder()
+                    .platformType(PlatformType.TVING)
+                    .movie(movie)
+                    .build();
+            platformRepository.save(platform);
+        }
+        if(addMovieReq.streamingPlatform().wavve()){
+            Platform platform = Platform.builder()
+                    .platformType(PlatformType.WAVVE)
+                    .movie(movie)
+                    .build();
+            platformRepository.save(platform);
+        }
+        if(addMovieReq.streamingPlatform().watcha()){
+            Platform platform = Platform.builder()
+                    .platformType(PlatformType.WATCHA)
+                    .movie(movie)
+                    .build();
+            platformRepository.save(platform);
+        }
         return SuccessCode.CREATE_MOVIE_SUCCESS;
     }
 
