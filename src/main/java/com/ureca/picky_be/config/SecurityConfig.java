@@ -60,6 +60,7 @@ public class SecurityConfig {
 
             // USER
             "/api/v1/user",
+            "/api/v1/user/mypage/*",
 
             // NOTIFICATION
             "/api/v1/notification/connect",
