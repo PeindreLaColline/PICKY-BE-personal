@@ -15,4 +15,8 @@ public interface LineReviewUseCase {
 
     Slice<ReadLineReviewResp> getLineReviewsByMovie(PageRequest pageRequest, LineReviewQueryRequest queryReq);
     Slice<GetUserLineReviewResp> getLineReviewsByNickname(PageRequest pageRequest, UserLineReviewsReq req);
+
+    GetLineReviewRatingInfoResp getRatingLineReviewInfo(Long movieId);
+
+    GetLineReviewGenderInfoResp getGenderLineReviewInfo(Long movieId);
 }

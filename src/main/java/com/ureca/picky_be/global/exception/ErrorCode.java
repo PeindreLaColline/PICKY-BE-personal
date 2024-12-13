@@ -93,6 +93,9 @@ public enum ErrorCode {
     LINEREVIEW_INVALID_CURSOR3(HttpStatus.BAD_REQUEST, "LR0010", "lastCreatedAt은 현재 시점 이전이어야 합니다."),
     LINEREVIEW_INVALID_SORT(HttpStatus.BAD_REQUEST, "LR0011", "유효하지 않은 정렬 방식입니다"),
     LINEREVIEW_GET_FAILED(HttpStatus.BAD_REQUEST, "LR0012", "한줄평 조회에 실패했습니다."),
+    LINEREVIEW_GENDER_QUERY_FAILED(HttpStatus.BAD_REQUEST, "LR0013", "한줄평 성별에 따른 조회에 실패했습니다."),
+    LINEREVIEW_RATING_QUERY_FAILED(HttpStatus.BAD_REQUEST, "LR0014", "한줄평 평점별 조회에 실패했습니다."),
+
 
     //LineReviewLike
     INVALID_PREFERENCE(HttpStatus.BAD_REQUEST, "LRL001","LIKE, DISLIKE값만 가능합니다"),

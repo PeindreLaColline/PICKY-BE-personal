@@ -56,4 +56,16 @@ public class LineReviewService implements LineReviewUseCase {
         return lineReviews.map(lineReviewDtoMapper::toGetUserLineReviewResp);
     }
 
+    @Override
+    public GetLineReviewRatingInfoResp getRatingLineReviewInfo(Long movieId) {
+        RatingLineReviewProjection proj = lineReviewManager.getTotalRatingfInfo(movieId);
+        return lineReviewDtoMapper.toGetLineReviewRatingInfoResp(proj);
+    }
+
+    @Override
+    public GetLineReviewGenderInfoResp getGenderLineReviewInfo(Long movieId) {
+        GenderLineReviewProjection proj = lineReviewManager.getGenderRatingfInfo(movieId);
+        return lineReviewDtoMapper.toGetLineReviewGenderInfoResp(proj);
+    }
+
 }

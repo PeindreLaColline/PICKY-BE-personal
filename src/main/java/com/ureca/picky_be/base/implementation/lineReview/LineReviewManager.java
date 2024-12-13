@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -29,7 +30,7 @@ public class LineReviewManager {
 
     public LineReview createLineReview(CreateLineReviewReq req, Long userId, String userNickname) {
         try {
-            if (req.rating() < 0 || req.rating() > 5) {
+            if (req.rating() == 0 || req.rating() < 0 || req.rating() > 5) {
                 throw new CustomException(ErrorCode.LINEREVIEW_INVALID_RATING);
             }
 
@@ -146,6 +147,29 @@ public class LineReviewManager {
             throw new CustomException(ErrorCode.LINEREVIEW_INVALID_CURSOR3);
         }
     }
+
+    @Transactional(readOnly = true)
+    public RatingLineReviewProjection getTotalRatingfInfo(Long movieId) {
+        try {
+            return lineReviewRepository.findRatingByMovieId(movieId);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.LINEREVIEW_RATING_QUERY_FAILED);
+        }
+
+    }
+
+    @Transactional(readOnly = true)
+    public GenderLineReviewProjection getGenderRatingfInfo(Long movieId) {
+        try {
+            return lineReviewRepository.findGenderRatingByMovieIdAnd(movieId);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.LINEREVIEW_GENDER_QUERY_FAILED);
+        }
+
+    }
+
+
+
 }
 
 

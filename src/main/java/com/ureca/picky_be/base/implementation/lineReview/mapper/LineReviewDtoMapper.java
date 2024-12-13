@@ -64,4 +64,26 @@ public class LineReviewDtoMapper {
                 )
         );
     }
+
+    public GetLineReviewRatingInfoResp toGetLineReviewRatingInfoResp(RatingLineReviewProjection projection) {
+        return new GetLineReviewRatingInfoResp(
+                projection.getTotalCount(),
+                projection.getOneCount(),
+                projection.getTwoCount(),
+                projection.getThreeCount(),
+                projection.getFourCount(),
+                projection.getFiveCount()
+        );
+
+    }
+
+    public GetLineReviewGenderInfoResp toGetLineReviewGenderInfoResp(GenderLineReviewProjection projection) {
+        return new GetLineReviewGenderInfoResp(
+                projection.getTotalCount(),
+                projection.getMaleCount(),
+                projection.getFemaleCount(),
+                projection.getMaleAverageRating(),
+                projection.getFemaleAverageRating()
+        );
+    }
 }

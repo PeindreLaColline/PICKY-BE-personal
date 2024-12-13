@@ -1,7 +1,9 @@
 package com.ureca.picky_be.base.persistence.lineReview;
 
+import com.ureca.picky_be.base.business.lineReview.dto.GenderLineReviewProjection;
 import com.ureca.picky_be.base.business.lineReview.dto.LineReviewProjection;
 import com.ureca.picky_be.base.business.lineReview.dto.MyPageLineReviewProjection;
+import com.ureca.picky_be.base.business.lineReview.dto.RatingLineReviewProjection;
 import com.ureca.picky_be.jpa.lineReview.LineReview;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -83,4 +85,34 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
     @Modifying(clearAutomatically = true)
     @Transactional
     void deleteByUserId(Long userId);
+
+
+    @Query("""
+        SELECT
+            COUNT(*) AS totalCount,
+            SUM(CASE WHEN lr.rating = 1 THEN 1 ELSE 0 END) AS oneCount,
+            SUM(CASE WHEN lr.rating = 2 THEN 1 ELSE 0 END) AS twoCount,
+            SUM(CASE WHEN lr.rating = 3 THEN 1 ELSE 0 END) AS threeCount,
+            SUM(CASE WHEN lr.rating = 4 THEN 1 ELSE 0 END) AS fourCount,
+            SUM(CASE WHEN lr.rating = 5 THEN 1 ELSE 0 END) AS fiveCount
+        FROM LineReview lr
+        WHERE lr.movieId = :movieId AND lr.isDeleted = 'FALSE'
+""")
+    RatingLineReviewProjection findRatingByMovieId(@Param("movieId") Long movieId);
+
+
+    @Query("""
+        SELECT
+        COALESCE(AVG(CASE WHEN u.gender = 'MALE' THEN lr.rating END), 0.0) AS maleAverageRating,
+        COUNT(CASE WHEN u.gender = 'MALE' THEN 1 END) AS maleCount,
+        COALESCE(AVG(CASE WHEN u.gender = 'FEMALE' THEN lr.rating END), 0.0) AS femaleAverageRating,
+        COUNT(CASE WHEN u.gender = 'FEMALE' THEN 1 END) AS femaleCount,
+        COUNT(*) AS totalCount
+        FROM LineReview lr
+        JOIN User u ON lr.userId = u.id
+        WHERE lr.movieId = :movieId AND lr.isDeleted = 'FALSE'
+""")
+    GenderLineReviewProjection findGenderRatingByMovieIdAnd(@Param("movieId") Long movieId);
+
+
 }
