@@ -55,10 +55,6 @@ public class MovieService implements MovieUseCase{
 
     @Override
     public SuccessCode updateMovie(Long movieId, UpdateMovieReq updateMovieReq) {
-        // 개발 편의를 위해 관리자 권한 체크 임시 주석 처리
-        /*if(authManager.getUserRole() != Role.ADMIN){
-            throw new CustomException(ErrorCode.UNAUTHORIZED);
-        }*/
         return movieManager.updateMovie(movieId, updateMovieReq);
     }
 
