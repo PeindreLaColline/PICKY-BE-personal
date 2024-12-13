@@ -12,7 +12,8 @@ public record GetMovieDetailResp(
         @JsonProperty("trailer") String trailer,
         @JsonProperty("ost") String ost,
         @JsonProperty("movie_behind_videos") List<String> movieBehindVideos,
-        @JsonProperty("like") boolean like
+        @JsonProperty("like") boolean like,
+        @JsonProperty("streaming_platform") StreamingPlatform streamingPlatform
 ) {
     public record MovieInfo(
             @JsonProperty("id") Long id,
@@ -56,4 +57,13 @@ public record GetMovieDetailResp(
         }
 
     }
+
+    public record StreamingPlatform(
+            boolean netflix,
+            boolean disney,
+            boolean watcha,
+            boolean wavve,
+            boolean tving,
+            boolean coupang
+    ){}
 }

@@ -13,6 +13,7 @@ import com.ureca.picky_be.jpa.genre.Genre;
 import com.ureca.picky_be.jpa.movie.FilmCrew;
 import com.ureca.picky_be.jpa.movie.Movie;
 import com.ureca.picky_be.jpa.movie.MovieBehindVideo;
+import com.ureca.picky_be.jpa.platform.Platform;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -50,7 +51,8 @@ public class MovieService implements MovieUseCase{
         List<FilmCrew> actors = movieManager.getActors(movie);
         List<FilmCrew> directors = movieManager.getDirectors(movie);
         boolean like = movieManager.getMovieLike(movieId, authManager.getUserId());
-        return movieDtoMapper.toGetMovieDetailResp(movie, movieBehindVideos, genres, actors, directors, like);
+        List<Platform> platforms = movieManager.getStreamingPlatform(movie);
+        return movieDtoMapper.toGetMovieDetailResp(movie, movieBehindVideos, genres, actors, directors, like, platforms);
     }
 
     @Override
