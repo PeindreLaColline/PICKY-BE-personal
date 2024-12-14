@@ -72,7 +72,7 @@ public class UserManager {
 
     @Transactional
     public SuccessCode updateUserNickname(Long userId, String nickname) {
-        if(nickname==null || nickname.isEmpty()){
+        if(nickname==null){
             throw new CustomException(ErrorCode.USER_UPDATE_BAD_REQUEST);
         }
         User user = userRepository.findById(userId)

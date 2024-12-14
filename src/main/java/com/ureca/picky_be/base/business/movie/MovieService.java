@@ -1,6 +1,5 @@
 package com.ureca.picky_be.base.business.movie;
 
-import com.ureca.picky_be.base.business.lineReview.dto.MyPageLineReviewProjection;
 import com.ureca.picky_be.base.business.movie.dto.*;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisReq;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
@@ -20,9 +19,10 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +62,20 @@ public class MovieService implements MovieUseCase{
 
     @Override
     public List<GetSimpleMovieResp> getRecommends() {
-        return movieManager.getRecommends();
+        List<Long> movieIds = movieManager.getRecommendsFromAi(authManager.getUserId());
+
+        List<Movie> movies = movieIds.stream()
+                .map(movieId -> {
+                    if (!movieManager.isExists(movieId)) {
+                        return movieManager.saveMovieAuto(movieId);
+                    } else {
+                        return movieManager.findByMovieId(movieId);
+                    }
+                })
+                .collect(Collectors.toList());
+
+        List<GetSimpleMovieProjection> simpleMovieProjections = movieManager.getRecommendsAi(movies);
+        return movieDtoMapper.toGetSimpleMovies(simpleMovieProjections).toList();
     }
 
     @Override

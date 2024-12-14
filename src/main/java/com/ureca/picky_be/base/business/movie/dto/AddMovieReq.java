@@ -17,13 +17,15 @@ public record AddMovieReq(
 ) {
     public record MovieInfo(
             @JsonProperty("id") Long id,
-            @JsonProperty("original_title") String title,
+            @JsonProperty("title") String title,
             @JsonProperty("release_date") Date releaseDate,
             @JsonProperty("poster_path") String posterUrl,
             @JsonProperty("overview") String plot,
             @JsonProperty("runtime") int runtime,
             @JsonProperty("genres") List<GenreInfo> genres,
             @JsonProperty("credits") Credits credits,
+            @JsonProperty("original_language") String originalLanguage,
+            @JsonProperty("popularity") double popularity,
             @JsonProperty("backdrop_path") String backdropUrl
     ){
         public record GenreInfo(
@@ -38,14 +40,14 @@ public record AddMovieReq(
             public record Cast(
                     @JsonProperty("id") Long id,
                     @JsonProperty("character") String role,
-                    @JsonProperty("original_name") String name,
+                    @JsonProperty("name") String name,
                     @JsonProperty("profile_path") String profileUrl
             ) {}
 
             public record Crew(
                     @JsonProperty("id") Long id,
                     @JsonProperty("job") String job,
-                    @JsonProperty("original_name") String name,
+                    @JsonProperty("name") String name,
                     @JsonProperty("profile_path") String profileUrl
             ) {}
 
