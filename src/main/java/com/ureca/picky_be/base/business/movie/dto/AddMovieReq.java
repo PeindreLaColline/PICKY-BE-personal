@@ -40,14 +40,14 @@ public record AddMovieReq(
             public record Cast(
                     @JsonProperty("id") Long id,
                     @JsonProperty("character") String role,
-                    @JsonProperty("original_name") String name,
+                    @JsonProperty("name") String name,
                     @JsonProperty("profile_path") String profileUrl
             ) {}
 
             public record Crew(
                     @JsonProperty("id") Long id,
                     @JsonProperty("job") String job,
-                    @JsonProperty("original_name") String name,
+                    @JsonProperty("name") String name,
                     @JsonProperty("profile_path") String profileUrl
             ) {}
 
