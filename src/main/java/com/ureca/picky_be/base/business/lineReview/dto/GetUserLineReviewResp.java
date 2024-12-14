@@ -12,6 +12,7 @@ public record GetUserLineReviewResp(
         Integer likes,         // 좋아요 수
         Integer dislikes,         // 좋아요 수
         LocalDateTime createdAt, // 생성 시간
-        LineReviewMovieInfo movie   //
+        LineReviewMovieInfo movie,   // 영화 정보
+        boolean isAuthor    // 작성자 여부
 ) {
 }
