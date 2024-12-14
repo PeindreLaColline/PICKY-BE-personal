@@ -123,5 +123,21 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     ORDER BY m.id DESC, :createdAt DESC
     """)
     List<GetSimpleMovieProjection> findMoviesOrderByCreatedAtUsingCursor(Long lastMovieId, LocalDateTime createdAt, Pageable pageable);
+
+    @Query("""
+    SELECT
+        m.id AS movieId,
+        m.title AS title,
+        CAST(COUNT(ml) AS int) AS likes,
+        m.totalRating AS totalRating,
+        m.posterUrl AS posterUrl,
+        m.backdropUrl AS backdropUrl
+    FROM Movie m
+    LEFT JOIN MovieLike ml ON ml.movie.id = m.id
+    WHERE m IN :movies
+    GROUP BY m.id, m.title, m.totalRating, m.posterUrl, m.backdropUrl
+    ORDER BY m.popularity DESC
+    """)
+    List<GetSimpleMovieProjection> findMoviesByMovieIdWithAi(List<Movie> movies);
 }
 

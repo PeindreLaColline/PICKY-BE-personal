@@ -1,10 +1,7 @@
 package com.ureca.picky_be.base.presentation.controller.movie;
 
-import com.ureca.picky_be.base.business.lineReview.dto.GetUserLineReviewResp;
 import com.ureca.picky_be.base.business.movie.MovieUseCase;
 import com.ureca.picky_be.base.business.movie.dto.*;
-import com.ureca.picky_be.base.business.user.dto.UserLineReviewsReq;
-import com.ureca.picky_be.base.implementation.mapper.MovieDtoMapper;
 import com.ureca.picky_be.global.success.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,7 +36,7 @@ public class MovieController {
         return movieUseCase.updateMovie(movieId, updateMovieReq);
     }
 
-    @Operation(summary = "영화 추천 리스트(30개)", description = "AI 개발 완료 전까지 임시로 랜덤으로 보냅니다. 프론트에서는 그냥 그대로 개발하시면 됩나다.")
+    @Operation(summary = "영화 추천 리스트(30개)", description = "AI가 추천하는 영화목록! 영화 자동 추가 가능")
     @GetMapping("/recommend")
     public List<GetSimpleMovieResp> getRecommendMovies() {
         return movieUseCase.getRecommends();

@@ -100,11 +100,6 @@ public class VideoManager {
             s3Config.s3Client().putObject(putObjectRequest, uploadFile.toPath()); //uploaedFile.toPath(): 업로드할 로컬 파일의 경로
             return "https://" + s3Config.getBucket() + ".s3." + s3Config.getRegion() + ".amazonaws.com/" + fileName;
         } catch (S3Exception e) {
-            log.error("AWS Error Code: {}", e.awsErrorDetails().errorCode());
-            log.error("AWS Error Message: {}", e.awsErrorDetails().errorMessage());
-            log.error("HTTP Status Code: {}", e.statusCode());
-            log.error("AWS Request ID: {}", e.awsErrorDetails());
-            log.error("AWS Service Name: {}", e.awsErrorDetails().serviceName());
             throw new CustomException(ErrorCode.S3_UPLOAD_FAILED);
         } catch (Exception e) {
             throw new CustomException(ErrorCode.UNKNOWN_ERROR);
@@ -155,7 +150,7 @@ public class VideoManager {
 
         GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
                 .getObjectRequest(getObjectRequest)
-                .signatureDuration(Duration.ofMinutes(10))
+                .signatureDuration(Duration.ofDays(1))
                 .build();
 
         return s3Presigner.presignGetObject(presignRequest).url().toString();

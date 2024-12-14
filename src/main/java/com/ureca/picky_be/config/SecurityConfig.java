@@ -49,7 +49,8 @@ public class SecurityConfig {
             //content 임시로 전체허용 이거 옮겨야함
             "/api/v1/content/image",
             "/api/v1/content/video",
-            "/api/v1/content/profile"
+            "/api/v1/content/profile",
+            "/addMovie"
 
 
     };
@@ -60,7 +61,7 @@ public class SecurityConfig {
 
             // USER
             "/api/v1/user",
-            "/api/v1/user/mypage/*",
+            "/api/v1/user/mypage/**",
 
             // NOTIFICATION
             "/api/v1/notification/connect",
@@ -70,7 +71,7 @@ public class SecurityConfig {
             "/api/v1/board/*",
 
             // LINEREVIEW
-            "/api/v1/linereview/*",
+            "/api/v1/linereview/**",
 
     };
 
@@ -89,7 +90,7 @@ public class SecurityConfig {
 
             // LINEREVIEW
             "/api/v1/linereview/create",
-            "/api/v1/linereview/*",
+            "/api/v1/linereview/**",
     };
 
     private static final String[] AUTH_USER_PATCH = {
