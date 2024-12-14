@@ -10,5 +10,6 @@ public interface BoardCommentProjection {
     String getContext(); // 글 내용
     LocalDateTime getCreatedAt(); // 생성일자
     LocalDateTime getUpdatedAt(); // 업데이트 일자
+    boolean getIsAuthor();  // 작성자 여부
 }
 

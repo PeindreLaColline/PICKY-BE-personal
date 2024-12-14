@@ -17,6 +17,8 @@ public record GetBoardInfoResp(
         Integer commentsCount,
         List<GetBoardContentResp> contents,
         String movieTitle,
-        Boolean isLike) {
+        Boolean isLike,
+        boolean isAuthor
+        ) {
 
 }

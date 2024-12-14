@@ -38,7 +38,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         (SELECT COUNT(l) FROM BoardLike l WHERE l.board.id = b.id) AS likeCount,
         (SELECT COUNT(c) FROM BoardComment c WHERE c.board.id = b.id) AS commentCount,
         (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.userId = :userId) THEN true ELSE false END) AS isLike,
-        m.title AS movieName
+        m.title AS movieName,
+        (CASE WHEN b.userId = :userId THEN true ELSE false END) AS isAuthor
     FROM Board b
     JOIN User u ON b.userId = u.id
     JOIN Movie m ON b.movie.id = m.id
@@ -62,7 +63,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                     ), '[]')
             FROM BoardContent bc
             WHERE bc.board.id = b.id) AS contents,
-        m.title AS movieName
+        m.title AS movieName,
+        (CASE WHEN b.userId = :userId THEN true ELSE false END) AS isAuthor
     FROM Board b
     JOIN User u ON b.userId = u.id
     JOIN Movie m ON b.movie.id = m.id
@@ -73,13 +75,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query("""
     SELECT bc.id as commentId, bc.userId AS writerId, u.nickname AS writerNickname, u.profileUrl AS writerProfileUrl, bc.context AS context,
-        bc.createdAt AS createdAt, bc.updatedAt AS updatedAt
+        bc.createdAt AS createdAt, bc.updatedAt AS updatedAt,
+        (CASE WHEN bc.userId = :userId THEN true ELSE false END) AS isAuthor
     FROM BoardComment bc
     JOIN User u ON bc.userId = u.id
     WHERE bc.board.id = :boardId and bc.board.isDeleted = 'FALSE' AND (:lastCommentId IS NULL OR bc.id < :lastCommentId)
     ORDER BY bc.createdAt DESC
     """)
-    Slice<BoardCommentProjection> getBoardComments(@Param("boardId") Long boardId, @Param("lastCommentId") Long lastCommentId, Pageable pageable);
+    Slice<BoardCommentProjection> getBoardComments(@Param("userId") Long userId, @Param("boardId") Long boardId, @Param("lastCommentId") Long lastCommentId, Pageable pageable);
 
     @Query("""
     SELECT b.id AS boardId, b.userId AS writerId, b.writerNickname AS writerNickname, u.profileUrl AS writerProfileUrl, b.context AS context, b.isSpoiler AS isSpoiler,
@@ -87,7 +90,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         (SELECT COUNT(l) FROM BoardLike l WHERE l.board.id = b.id) AS likeCount,
         (SELECT COUNT(c) FROM BoardComment c WHERE c.board.id = b.id) AS commentCount,
         (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.userId = :userId) THEN true ELSE false END) AS isLike,
-        m.title AS movieName
+        m.title AS movieName,
+        (CASE WHEN b.userId = :userId THEN true ELSE false END) AS isAuthor
     FROM Board b
     JOIN User u ON b.userId = u.id
     JOIN Movie m ON b.movie.id = m.id

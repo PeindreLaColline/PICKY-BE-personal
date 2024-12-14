@@ -9,6 +9,7 @@ public record GetAllBoardCommentsResp(
         String writerProfileUrl,
         String context,
         LocalDateTime createdDate,
-        LocalDateTime updatedDate
+        LocalDateTime updatedDate,
+        boolean isAuthor
 ) {
 }
