@@ -43,6 +43,10 @@ public class Movie extends BaseEntity {
 
     private String ostUrl;
 
+    private String originalLanguage;
+
+    private double popularity;
+
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'FALSE'")
     private IsDeleted isDeleted;      // 삭제 여부
