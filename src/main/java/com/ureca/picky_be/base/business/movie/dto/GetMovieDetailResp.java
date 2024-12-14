@@ -18,7 +18,7 @@ public record GetMovieDetailResp(
 ) {
     public record MovieInfo(
             @JsonProperty("id") Long id,
-            @JsonProperty("original_title") String title,
+            @JsonProperty("title") String title,
             @JsonProperty("release_date") Date releaseDate,
             @JsonProperty("poster_path") String posterUrl,
             @JsonProperty("backdrop_path") String backdropUrl,

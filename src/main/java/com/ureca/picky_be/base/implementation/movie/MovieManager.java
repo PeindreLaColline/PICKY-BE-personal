@@ -9,22 +9,28 @@ import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
+import com.ureca.picky_be.jpa.config.IsDeleted;
 import com.ureca.picky_be.jpa.genre.Genre;
-import com.ureca.picky_be.jpa.lineReview.SortType;
 import com.ureca.picky_be.jpa.movie.*;
 import com.ureca.picky_be.jpa.movieworker.MovieWorker;
 import com.ureca.picky_be.jpa.platform.Platform;
 import com.ureca.picky_be.jpa.platform.PlatformType;
 import com.ureca.picky_be.jpa.user.User;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -38,6 +44,15 @@ public class MovieManager {
     private final MovieLikeRepository movieLikeRepository;
     private final UserRepository userRepository;
     private final PlatformRepository platformRepository;
+    private final RecommendRepository recommendRepository;
+
+    RestClient restClient = RestClient.create();
+
+    @Value("${tmdb.token}")
+    private String tmdbToken;
+
+    @Value("${tmdb.url}")
+    private String tmdbUrl;
 
     /* 회원가입시에 영화 리스트 전송 */
     @Transactional(readOnly = true)
@@ -68,6 +83,52 @@ public class MovieManager {
         List<FilmCrew> actors = addActors(addMovieReq.movieInfo().credits(), movie);
         List<FilmCrew> directors = addDirectors(addMovieReq.movieInfo().credits(), movie);
         return movie;
+    }
+
+    public Movie saveMovieAuto(Long movieId){
+        try{
+            AddMovieAuto addMovieAuto =  restClient
+                    .get()
+                    .uri(buildTmdbUrl(movieId))
+                    .headers(headers -> headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + tmdbToken))
+                    .retrieve()
+                    .body(AddMovieAuto.class);
+            return addMovieAuto(addMovieAuto);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.VALIDATION_ERROR);
+        }
+    }
+
+    public Movie addMovieAuto(AddMovieAuto addMovieAuto) {
+        Movie movie = Movie.builder()
+                .id(addMovieAuto.id())
+                .title(addMovieAuto.title())
+                .releaseDate(addMovieAuto.releaseDate())
+                .posterUrl(addMovieAuto.posterUrl())
+                .backdropUrl(addMovieAuto.backdropUrl())
+                .totalRating(2.5)
+                .plot(addMovieAuto.plot())
+                .runningTime(addMovieAuto.runtime())
+                .isDeleted(IsDeleted.FALSE)
+                .originalLanguage(addMovieAuto.originalLanguage())
+                .popularity(addMovieAuto.popularity())
+                .build();
+        return movieRepository.save(movie);
+    }
+
+    private String buildTmdbUrl(Long movieId){
+        String sd = UriComponentsBuilder
+                .fromHttpUrl(tmdbUrl + movieId)
+                .queryParam("append_to_response", "credits")
+                .queryParam("language", "ko-KR")
+                .build()
+                .toUriString();
+        System.out.println(sd);
+        return sd;
+    }
+
+    public boolean isExists(Long movieId){
+        return movieRepository.existsById(movieId);
     }
 
     public SuccessCode addStreamingPlatform(AddMovieReq addMovieReq, Movie movie) {
@@ -128,6 +189,9 @@ public class MovieManager {
                 .runningTime(addMovieReq.movieInfo().runtime())
                 .trailerUrl(addMovieReq.trailer())
                 .ostUrl(addMovieReq.ost())
+                .isDeleted(IsDeleted.FALSE)
+                .originalLanguage(addMovieReq.movieInfo().originalLanguage())
+                .popularity(addMovieReq.movieInfo().popularity())
                 .build();
         return movieRepository.save(movie);
     }
@@ -205,6 +269,11 @@ public class MovieManager {
         return movieRepository.findById(movieId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
     }
+
+/*    public Movie getMovieAi(Long movieId) {
+        return movieRepository.findById(movieId)
+                .orElse(addMovieAuto(movieId));
+    }*/
 
     public List<MovieBehindVideo> getMovieBehindVideos(Long movieId) {
         return movieBehindVideoRepository.findAllByMovieId(movieId);
@@ -380,10 +449,23 @@ public class MovieManager {
         return filmCrewRepository.saveAll(filmCrews);
     }
 
+    public Movie findByMovieId(Long movieId) {
+        return movieRepository.findById(movieId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
+    }
+
+    public List<GetSimpleMovieProjection> getRecommendsAi(List<Movie> movies){
+        return movieRepository.findMoviesByMovieIdWithAi(movies);
+    }
+
     /* 기준에 따른 영화 리스트 get */
     public List<GetSimpleMovieResp> getRecommends(){
         Pageable pageable = PageRequest.of(0, 30);
         return movieRepository.findTop30MoviesWithLikes(pageable);
+    }
+
+    public List<Long> getRecommendsFromAi(Long userId){
+        return recommendRepository.findAllMovieIdsByUserId(userId);
     }
 
     public List<GetSimpleMovieResp> getTop10(){
