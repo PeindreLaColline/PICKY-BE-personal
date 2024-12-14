@@ -190,7 +190,8 @@ public class MovieManager {
                     .body(AddMovieAuto.class);
             return addMovieAuto(addMovieAuto);
         } catch (Exception e) {
-            throw new CustomException(ErrorCode.VALIDATION_ERROR);
+            return null;
+            //throw new CustomException(ErrorCode.VALIDATION_ERROR);
         }
     }
 
