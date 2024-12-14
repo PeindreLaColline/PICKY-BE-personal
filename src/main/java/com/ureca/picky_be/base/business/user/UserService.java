@@ -41,10 +41,10 @@ public class UserService implements UserUseCase {
 
     @Override
     public SuccessCode updateUserInfo(String nickname, MultipartFile profile) throws IOException {
-        if(nickname.isEmpty() && profile.isEmpty()) {
+        if(nickname==null && profile==null) {
             throw new CustomException(ErrorCode.NO_DATA_RECEIVED);
         }
-        if(!nickname.isEmpty()) {
+        if(nickname!=null) {
             userManager.updateUserNickname(authManager.getUserId(), nickname);
         }
         if(profile != null) {
@@ -74,9 +74,6 @@ public class UserService implements UserUseCase {
         Integer boardCount = boardManager.getUserBoardCount(userId);
         Integer followerCount = userManager.getUserFollowerCount(userId);
         Integer followingCount = userManager.getUserFollowingCount(userId);
-
         return new GetMyPageUserInfoResp(userId, boardCount, followerCount, followingCount);
     }
-
-
 }
