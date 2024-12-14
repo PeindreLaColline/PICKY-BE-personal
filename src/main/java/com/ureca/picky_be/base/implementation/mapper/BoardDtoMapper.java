@@ -71,7 +71,8 @@ public class BoardDtoMapper {
                     board.getCommentCount(),
                     contents,
                     board.getMovieName(),
-                    board.getIsLike()
+                    board.getIsLike(),
+                    board.getIsAuthor()
             );
         });
     }
@@ -102,7 +103,8 @@ public class BoardDtoMapper {
                 projection.getWriterProfileUrl(),
                 projection.getContext(),
                 projection.getCreatedAt(),
-                projection.getUpdatedAt()
+                projection.getUpdatedAt(),
+                projection.getIsAuthor()
         );
     }
 
