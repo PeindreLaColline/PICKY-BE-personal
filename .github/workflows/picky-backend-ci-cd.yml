@@ -77,28 +77,6 @@ jobs:
           sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest . 
           sudo docker push ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
 
-      - name: Install docker-compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose --version
-          
-      - name: Run docker-compose
-        run: |
-          docker-compose up -d
-
-      - name: Check CA certificate
-        run: |
-          ls -l config/certs/ca/ca.crt || echo "CA certificate not found"
-
-      - name: Test curl command
-        run: |
-          curl -s --cacert config/certs/ca/ca.crt https://localhost:9200/_cluster/health || echo "Curl failed"
-
-      - name: Validate docker-compose.yml
-        run: |
-          docker-compose config
-
       - name: docker run
         uses: appleboy/ssh-action@master
         with:
@@ -112,3 +90,4 @@ jobs:
             sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
             sudo docker run -d -p 80:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo docker-compose up -d
