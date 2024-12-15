@@ -76,7 +76,7 @@ jobs:
           sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest . 
           sudo docker push ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
- 
+
       - name: docker run
         uses: appleboy/ssh-action@master
         with:
@@ -85,8 +85,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           # passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
-            sudo docker stop picky-backend
-            sudo docker rm picky-backend
-            sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
-            sudo docker run -d -p 80:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo docker-compose down
+
+            sudo docker-compose pull
+
+            sudo docker-compose up -d
