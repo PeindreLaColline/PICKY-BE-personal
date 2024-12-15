@@ -61,9 +61,6 @@ jobs:
           touch kibana.yml
           echo "${{ secrets.KIBANA }}" >> kibana.yml
           
-          cd $GITHUB_WORKSPACE
-          touch ./docker-compose.yml
-          echo "${{ secrets.DOCKER_COMPOSE }}" >> ./docker-compose.yml
 
 
 
