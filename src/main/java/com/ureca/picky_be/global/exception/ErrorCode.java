@@ -115,6 +115,10 @@ public enum ErrorCode {
     PLAYLIST_CREATE_FAILED(HttpStatus.BAD_REQUEST, "PL003", "플레이리스트에 추가하려는 영화 리스트 혹은 제목이 null입니다."),
     PLAYLIST_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "PL004", "수정하려는 플레이리스트의 영화 리스트 혹은 제목이 null입니다."),
 
+    // EMAIL
+    EMAIL_SEND_FAILED(HttpStatus.BAD_REQUEST, "EML001", "이메일 전송에 실패했습니다."),
+    USER_EMAIL_EMPTY(HttpStatus.BAD_REQUEST, "EML002", "해당 사용자의 이메일이 존재하지 않습니다."),
+
     ;
 
     private final HttpStatus httpStatus; // HTTP 상태 코드

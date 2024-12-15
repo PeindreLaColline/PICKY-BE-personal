@@ -33,8 +33,14 @@ public enum SuccessCode {
 
     // Notification
     SSEEMITTER_CONNECT_SUCCESS(201, "SseEmitter 생성 완료"),
-    NOTIFICATION_SENT_SUCCESS(201, "알림 전송 완료")
+    NOTIFICATION_SENT_SUCCESS(201, "알림 전송 완료"),
+
+    // Email
+    EMAIL_SEND_SUCCESS(200, "이메일 전송 완료")
+
     ;
+
+
 
 
     private final int status;    // HTTP 상태 코드
