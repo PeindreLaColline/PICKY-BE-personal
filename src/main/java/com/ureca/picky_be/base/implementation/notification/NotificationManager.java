@@ -11,6 +11,7 @@ import com.ureca.picky_be.base.persistence.notification.NotificationRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.board.Board;
 import com.ureca.picky_be.jpa.entity.movie.Movie;
 import com.ureca.picky_be.jpa.entity.notification.Notification;
@@ -19,6 +20,8 @@ import com.ureca.picky_be.jpa.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -95,7 +98,10 @@ public class NotificationManager {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
         Long senderId = board.getUserId();
-        User receiver = userRepository.findById(senderId)
+        User sender = userRepository.findById(senderId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        User receiver = userRepository.findById(receiverId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
@@ -207,6 +213,29 @@ public class NotificationManager {
             } catch(Exception e) {
                 System.err.println("알림 전송 실패 사용자 ID " + receiver.getId() + ": " + e.getMessage());
             }
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<CreateNotificationResp> getNotifications(Long receiverId, Long lastNotificationId, Pageable pageable) {
+        lastNotificationIdValidation(lastNotificationId);
+        return notificationRepository.findUnreadNotificationsByUserId(receiverId, lastNotificationId, pageable);
+    }
+
+    private void lastNotificationIdValidation(Long lastNotificationId) {
+        if(lastNotificationId == null) return;
+        if(lastNotificationId <= 0) {
+            throw new CustomException(ErrorCode.LAST_ID_INVALID_CURSOR);
+        }
+    }
+
+    @Transactional
+    public void updateNotificationToRead(Long notificationId) {
+        Notification noti = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOTIFICATION_NOT_FOUND));
+        if(!noti.getIsRead()) {
+            noti.read();
+            notificationRepository.save(noti);
         }
     }
 }

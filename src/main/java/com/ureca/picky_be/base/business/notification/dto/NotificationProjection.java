@@ -7,8 +7,8 @@ public interface NotificationProjection {
     Long getMovieId();
     String getMovieTitle();
     String getMoviePosterUrl();
-    Long getUserId();
-    String getUserProfileUrl();
+    Long getSenderId();
+    String getSenderProfileUrl();
     String getUserNickName();
     LocalDateTime getCreatedAt();
 //    Boolean getIsRead();

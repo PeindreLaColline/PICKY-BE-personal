@@ -1,13 +1,17 @@
 package com.ureca.picky_be.base.presentation.controller.notification;
 
 
+import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.base.business.notification.NotificationUseCase;
 import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.notification.NotificationType;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -59,6 +63,21 @@ public class NotificationController {
     ) {
         notificationUseCase.sendTest(writerId, movieId, boardId);
         return SuccessCode.NOTIFICATION_SENT_SUCCESS;
+    }
+
+
+    @GetMapping("/notifications")
+    @Operation(summary = "사용자 미확인 알림들 조회 API", description = "읽지 않은 알림들을 조회하는 API입니다.")
+    public Slice<CreateNotificationResp> getUnreadNotifications (
+            @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,
+            @RequestParam(required = false) Long lastNotificationId) {
+        return notificationUseCase.getUnreadNotifications(PageRequest.ofSize(size), lastNotificationId);
+    }
+
+    @PatchMapping("/notifications/{notificationId}")
+    @Operation(summary = "사용자가 알림 읽음 업데이트 API", description = "특정 알림을 클릭하면 읽음처리하는 API입니다.")
+    public SuccessCode updateNotificationToRead(@PathVariable Long notificationId) {
+        return notificationUseCase.updateNotificationToRead(notificationId);
     }
 
 
