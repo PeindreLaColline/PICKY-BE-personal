@@ -1,35 +1,35 @@
-package com.ureca.picky_be.elasticsearch.document.movie;
+package com.ureca.picky_be.elasticsearch.document.user;
 
-import com.ureca.picky_be.jpa.entity.config.IsDeleted;
+import com.ureca.picky_be.jpa.entity.user.Role;
+import com.ureca.picky_be.jpa.entity.user.Status;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import java.util.Date;
 
-@Document(indexName = "movie")
+@Document(indexName = "user")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MovieDocument {
+public class UserDocument {
     @Id
     @Field(type = FieldType.Long)
     private Long id;
 
+    @Field(type = FieldType.Keyword)
+    private String email;
+
     @Field(type = FieldType.Text)
-    private String title;
-
-    @Field(type = FieldType.Date)
-    private Date releaseDate;
+    private String nickname;
 
     @Field(type = FieldType.Keyword)
-    private String posterUrl;
+    private Role role = Role.USER;
 
     @Field(type = FieldType.Keyword)
-    private IsDeleted isDeleted;
+    private Status status;
 
 }
