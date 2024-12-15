@@ -54,6 +54,7 @@ public class MovieService implements MovieUseCase{
         return movieDtoMapper.toGetMovieDetailResp(movie, movieBehindVideos, genres, actors, directors, like, platforms, movie.getTotalRating());
     }
 
+    @Transactional
     @Override
     public SuccessCode updateMovie(Long movieId, UpdateMovieReq updateMovieReq) {
         return movieManager.updateMovie(movieId, updateMovieReq);

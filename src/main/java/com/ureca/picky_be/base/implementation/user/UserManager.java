@@ -48,8 +48,6 @@ public class UserManager {
             }
         }
         else{
-            System.out.println(profile.isEmpty());
-            System.out.println("헤헤");
             user.registerProfile(profileManager.uploadProfile(profile));
             userRepository.save(user);
         }

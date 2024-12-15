@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface MovieBehindVideoRepository extends JpaRepository<MovieBehindVideo, Long> {
     List<MovieBehindVideo> findAllByMovieId(Long movieId);
+    void deleteAllByMovieId(Long movieId);
 }
