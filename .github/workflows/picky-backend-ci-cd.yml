@@ -53,6 +53,8 @@ jobs:
           echo "${{ secrets.S3 }}" >> s3.yml
           touch tmdb.yml
           echo "${{ secrets.TMDB }}" >> tmdb.yml
+          touch mail.yml
+          echo "${{ secrets.MAIL }}" >> mail.yml
           
 
       - name: Grant execute permission for gradlew
