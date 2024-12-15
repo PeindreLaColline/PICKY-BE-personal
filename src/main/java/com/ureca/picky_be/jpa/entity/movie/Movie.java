@@ -64,4 +64,15 @@ public class Movie extends BaseEntity {
         if(updateMovieReq.ost() != null) this.ostUrl = updateMovieReq.ost();
         return this;
     }
+
+    @Transactional
+    public void updateTrailer(String trailerUrl){
+        this.trailerUrl = trailerUrl;
+    }
+
+    @Transactional
+    public void updateOst(String ostUrl) {
+        this.ostUrl = ostUrl;
+    }
+
 }

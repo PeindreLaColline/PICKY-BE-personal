@@ -371,10 +371,38 @@ public class MovieManager {
         if(updateMovieReq.streamingPlatform() != null){
             updateStreamingPlatform(updateMovieReq, movie);
         }
+        if(updateMovieReq.trailer() != null){
+            updateTrailer(updateMovieReq.trailer(), movie);
+        }
+        if(updateMovieReq.ost() != null){
+            updateOst(updateMovieReq.ost(), movie);
+        }
+        if(updateMovieReq.movieBehindVideos() != null){
+            updateBehindVideo(updateMovieReq.movieBehindVideos(), movie);
+        }
         return SuccessCode.UPDATE_MOVIE_SUCCESS;
     }
     // </editor-fold>
     // <editor-fold desc="영화 수정에 필요한 메서드">
+    private void updateBehindVideo(List<String> behindVideos, Movie movie) {
+        movieBehindVideoRepository.deleteAllByMovieId(movie.getId());
+        List<MovieBehindVideo> movieBehindVideos = behindVideos.stream()
+                .map(url -> MovieBehindVideo.builder()
+                        .url(url)
+                        .movie(movie)
+                        .build())
+                .toList();
+        movieBehindVideoRepository.saveAll(movieBehindVideos);
+    }
+
+    private void updateOst(String ostUrl, Movie movie){
+        movie.updateOst(ostUrl);
+    }
+
+    private void updateTrailer(String trailerUrl, Movie movie){
+        movie.updateTrailer(trailerUrl);
+    }
+
     private void updateStreamingPlatform(UpdateMovieReq updateMovieReq, Movie movie) {
         platformRepository.deleteAllByMovie(movie);
         if(updateMovieReq.streamingPlatform().coupang()){
