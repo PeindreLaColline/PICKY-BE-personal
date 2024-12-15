@@ -19,6 +19,7 @@ spring:
       - classpath:properties/temp-token.yml
       - classpath:properties/s3.yml
       - classpath:properties/tmdb.yml
+      - classpath:properties/mail.yml
 
 
 ---

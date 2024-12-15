@@ -50,3 +50,4 @@ out/
 **/s3.yml
 **/temp-token.yml
 **/tmdb.yml
+**/mail.yml
