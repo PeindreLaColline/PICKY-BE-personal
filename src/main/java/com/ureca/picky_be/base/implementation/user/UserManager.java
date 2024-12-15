@@ -194,6 +194,16 @@ public class UserManager {
 
     @Transactional(readOnly = true)
     public Integer getUserFollowingCount(Long userId) {
-        return followRepository.countByFollowingId(userId);
+        return null;
+    }
+
+    @Transactional(readOnly = true)
+    public String getUserEmailById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if(user.getEmail() == null || user.getEmail().isEmpty())
+            throw new CustomException(ErrorCode.USER_EMAIL_EMPTY);
+        return user.getEmail();
     }
 }
