@@ -51,3 +51,8 @@ out/
 **/temp-token.yml
 **/tmdb.yml
 **/mail.yml
+**/kibana.yml
+
+
+#Elastic Search
+.env
