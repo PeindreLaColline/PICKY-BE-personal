@@ -3,6 +3,9 @@ package com.ureca.picky_be.base.business.notification;
 import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.notification.NotificationManager;
+import com.ureca.picky_be.global.exception.CustomException;
+import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.notification.NotificationType;
 import com.ureca.picky_be.jpa.entity.user.User;
 import lombok.RequiredArgsConstructor;
@@ -63,5 +66,16 @@ public class NotificationService implements NotificationUseCase {
         Long receiverId = authManager.getUserId();
 
         return notificationManager.getNotifications(receiverId, lastNotificationId, pageRequest);
+    }
+
+    @Override
+    public SuccessCode updateNotificationToRead(Long notificationId) {
+        try {
+            notificationManager.updateNotificationToRead(notificationId);
+        } catch (Exception e) {
+            System.out.println("e = " + e.getMessage());
+            throw new CustomException(ErrorCode.NOTIFICATION_UPDATE_FAILED);
+        }
+        return SuccessCode.NOTIFICATION_READ_SUCCESS;
     }
 }

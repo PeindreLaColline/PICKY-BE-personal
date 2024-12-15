@@ -11,6 +11,7 @@ import com.ureca.picky_be.base.persistence.notification.NotificationRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.board.Board;
 import com.ureca.picky_be.jpa.entity.movie.Movie;
 import com.ureca.picky_be.jpa.entity.notification.Notification;
@@ -225,6 +226,16 @@ public class NotificationManager {
         if(lastNotificationId == null) return;
         if(lastNotificationId <= 0) {
             throw new CustomException(ErrorCode.LAST_ID_INVALID_CURSOR);
+        }
+    }
+
+    @Transactional
+    public void updateNotificationToRead(Long notificationId) {
+        Notification noti = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOTIFICATION_NOT_FOUND));
+        if(!noti.getIsRead()) {
+            noti.read();
+            notificationRepository.save(noti);
         }
     }
 }

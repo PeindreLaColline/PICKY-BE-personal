@@ -108,6 +108,9 @@ public enum ErrorCode {
     // Notification
     INVALID_NOTIFICATION_TYPE(HttpStatus.BAD_REQUEST, "NTF001","MOVIENEWBOARD(좋아요한 영화에 대해 새로운 게시글이 달린 경우), FOLLOWINGNEWBOARD(팔로우한 사용자가 새로운 게시글을 작성한 경우),MYBOARDNEWCOMMENT(내 게시글에 새로운 댓글이 달린 경우)만 가능합니다"),
     DTO_MAPPING_FAILED(HttpStatus.BAD_REQUEST, "NTF002","DTO 변환 과정에서 실패했습니다."),
+    NOTIFICATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "NTF003","존재하지 않는 알림입니다."),
+    NOTIFICATION_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "NTF004","알림 업데이트에 실패했습니다."),
+
 
     //Playlist
     PLAYLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "PL001", "플레이리스트 조회에 실패했습니다."),

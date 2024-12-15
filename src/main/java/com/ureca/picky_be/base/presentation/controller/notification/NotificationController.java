@@ -67,11 +67,17 @@ public class NotificationController {
 
 
     @GetMapping("/notifications")
-    @Operation(summary = "사용자 미확인 알림들 조회 API", description = "특정 무비 로그에 대한 댓글들을 조회하는 API입니다.")
+    @Operation(summary = "사용자 미확인 알림들 조회 API", description = "읽지 않은 알림들을 조회하는 API입니다.")
     public Slice<CreateNotificationResp> getUnreadNotifications (
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,
             @RequestParam(required = false) Long lastNotificationId) {
         return notificationUseCase.getUnreadNotifications(PageRequest.ofSize(size), lastNotificationId);
+    }
+
+    @PatchMapping("/notifications/{notificationId}")
+    @Operation(summary = "사용자가 알림 읽음 업데이트 API", description = "특정 알림을 클릭하면 읽음처리하는 API입니다.")
+    public SuccessCode updateNotificationToRead(@PathVariable Long notificationId) {
+        return notificationUseCase.updateNotificationToRead(notificationId);
     }
 
 

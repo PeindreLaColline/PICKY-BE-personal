@@ -1,6 +1,7 @@
 package com.ureca.picky_be.base.business.notification;
 
 import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
+import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.notification.NotificationType;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -17,4 +18,6 @@ public interface NotificationUseCase {
 
 
     Slice<CreateNotificationResp> getUnreadNotifications(PageRequest pageRequest, Long lastNotificationId);
+
+    SuccessCode updateNotificationToRead(Long notificationId);
 }
