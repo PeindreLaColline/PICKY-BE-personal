@@ -7,6 +7,7 @@ import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.mapper.MovieDtoMapper;
 import com.ureca.picky_be.base.implementation.movie.MovieManager;
 import com.ureca.picky_be.base.implementation.user.UserManager;
+import com.ureca.picky_be.elasticsearch.document.movie.MovieDocument;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.genre.Genre;
 import com.ureca.picky_be.jpa.entity.movie.FilmCrew;
@@ -39,7 +40,9 @@ public class MovieService implements MovieUseCase{
     @Override
     public SuccessCode addMovie(AddMovieReq addMovieReq) {
         Movie movie = movieManager.addMovie(addMovieReq);
-        return movieManager.addStreamingPlatform(addMovieReq, movie);
+        movieManager.addStreamingPlatform(addMovieReq, movie);
+        movieManager.addMovieElastic(movie);
+        return SuccessCode.CREATE_MOVIE_SUCCESS;
     }
 
     @Override
@@ -111,5 +114,11 @@ public class MovieService implements MovieUseCase{
 
         Slice<GetUserLikeMovieResp> likeMovies = movieManager.findLikeMoviesByNickname(userId, req, pageRequest);
         return likeMovies;
+    }
+
+    @Override
+    public List<GetSearchMoviesResp> getSearchMovies(String keyword) {
+        List<MovieDocument> movies = movieManager.getSearchMovies(keyword);
+        return movieDtoMapper.toGetSearchMovies(movies);
     }
 }

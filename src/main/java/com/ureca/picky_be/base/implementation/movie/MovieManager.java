@@ -6,6 +6,7 @@ import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
 import com.ureca.picky_be.base.persistence.movie.*;
 import com.ureca.picky_be.base.persistence.movieworker.MovieWorkerRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
+import com.ureca.picky_be.elasticsearch.document.movie.MovieDocument;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
@@ -44,6 +45,7 @@ public class MovieManager {
     private final UserRepository userRepository;
     private final PlatformRepository platformRepository;
     private final RecommendRepository recommendRepository;
+    private final MovieSearchRepository movieSearchRepository;
 
     RestClient restClient = RestClient.create();
 
@@ -172,6 +174,7 @@ public class MovieManager {
         List<MovieGenre> movieGenres = addMovieGenres(addMovieReq.movieInfo().genres(), movie);
         List<FilmCrew> actors = addActors(addMovieReq.movieInfo().credits(), movie);
         List<FilmCrew> directors = addDirectors(addMovieReq.movieInfo().credits(), movie);
+
         return movie;
     }
 
@@ -303,7 +306,7 @@ public class MovieManager {
         return filmCrewRepository.saveAll(filmCrews);
     }
 
-    public SuccessCode addStreamingPlatform(AddMovieReq addMovieReq, Movie movie) {
+    public void addStreamingPlatform(AddMovieReq addMovieReq, Movie movie) {
         if(addMovieReq.streamingPlatform().coupang()){
             Platform platform = Platform.builder()
                     .platformType(PlatformType.COUPANG)
@@ -346,7 +349,6 @@ public class MovieManager {
                     .build();
             platformRepository.save(platform);
         }
-        return SuccessCode.CREATE_MOVIE_SUCCESS;
     }
     // </editor-fold>
     // <editor-fold desc="영화 수정">
@@ -594,4 +596,26 @@ public class MovieManager {
         lastMovieLikeIdValidation(lastMovieLikeId);
         return movieLikeRepository.findByUserId(userId, lastMovieLikeId, pageRequest);
     }
+
+    public List<MovieDocument> getSearchMovies(String keyword) {
+        return movieSearchRepository.findByTitle(keyword);
+    }
+
+    public void addMovieElastic(Movie movie) {
+        try {
+            MovieDocument newMovieDocument = MovieDocument.builder()
+                    .id(movie.getId())
+                    .title(movie.getTitle())
+                    .releaseDate(movie.getReleaseDate())
+                    .posterUrl(movie.getPosterUrl())
+                    .isDeleted(movie.getIsDeleted())
+                    .build();
+
+            movieSearchRepository.save(newMovieDocument);
+        } catch (Exception e) {
+            throw  e;
+        }
+    }
+
+
 }

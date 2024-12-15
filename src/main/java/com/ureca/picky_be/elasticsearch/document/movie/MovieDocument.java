@@ -16,7 +16,6 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class MovieDocument {
-
     @Id
     @Field(type = FieldType.Long)
     private Long id;
@@ -30,7 +29,7 @@ public class MovieDocument {
     @Field(type = FieldType.Keyword)
     private String posterUrl;
 
-    @Field(type = FieldType.Boolean)
+    @Field(type = FieldType.Keyword)
     private IsDeleted isDeleted;
 
 }

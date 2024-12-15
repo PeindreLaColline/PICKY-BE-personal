@@ -119,6 +119,8 @@ public enum ErrorCode {
     EMAIL_SEND_FAILED(HttpStatus.BAD_REQUEST, "EML001", "이메일 전송에 실패했습니다."),
     USER_EMAIL_EMPTY(HttpStatus.BAD_REQUEST, "EML002", "해당 사용자의 이메일이 존재하지 않습니다."),
 
+    //ElasticSearch
+    ELASTIC_MOVIE_CREATE_FAILED(HttpStatus.BAD_REQUEST,"EMC001","엘라스틱 서치 무비 생성 실패")
     ;
 
     private final HttpStatus httpStatus; // HTTP 상태 코드
