@@ -1,7 +1,7 @@
 package com.ureca.picky_be.base.business.notification;
 
 import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
-import com.ureca.picky_be.jpa.notification.NotificationType;
+import com.ureca.picky_be.jpa.entity.notification.NotificationType;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 public interface NotificationUseCase {

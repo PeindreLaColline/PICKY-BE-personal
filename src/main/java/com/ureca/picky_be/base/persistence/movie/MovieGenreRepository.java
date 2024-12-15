@@ -1,6 +1,6 @@
 package com.ureca.picky_be.base.persistence.movie;
 
-import com.ureca.picky_be.jpa.movie.MovieGenre;
+import com.ureca.picky_be.jpa.entity.movie.MovieGenre;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

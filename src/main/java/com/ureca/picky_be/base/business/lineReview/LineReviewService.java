@@ -6,7 +6,7 @@ import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.lineReview.LineReviewManager;
 import com.ureca.picky_be.base.implementation.lineReview.mapper.LineReviewDtoMapper;
 import com.ureca.picky_be.base.implementation.user.UserManager;
-import com.ureca.picky_be.jpa.lineReview.LineReview;
+import com.ureca.picky_be.jpa.entity.lineReview.LineReview;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;

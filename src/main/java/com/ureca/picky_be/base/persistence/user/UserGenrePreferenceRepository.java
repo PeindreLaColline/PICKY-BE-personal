@@ -1,6 +1,6 @@
 package com.ureca.picky_be.base.persistence.user;
 
-import com.ureca.picky_be.jpa.user.UserGenrePreference;
+import com.ureca.picky_be.jpa.entity.user.UserGenrePreference;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;

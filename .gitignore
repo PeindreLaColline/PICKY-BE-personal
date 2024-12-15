@@ -57,3 +57,4 @@ docker-compose.yml
 #Elastic Search
 .env
 elastic-agent-8.8.2-darwin-x86_64
+**/elasticsearch.yml

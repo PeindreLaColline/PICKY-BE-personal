@@ -1,7 +1,7 @@
 package com.ureca.picky_be.base.persistence.user;
 
-import com.ureca.picky_be.jpa.user.SocialPlatform;
-import com.ureca.picky_be.jpa.user.User;
+import com.ureca.picky_be.jpa.entity.user.SocialPlatform;
+import com.ureca.picky_be.jpa.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

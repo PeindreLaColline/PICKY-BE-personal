@@ -5,12 +5,11 @@ import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.web.JwtTokenProvider;
 import com.ureca.picky_be.global.web.LocalJwtDto;
-import com.ureca.picky_be.jpa.user.User;
+import com.ureca.picky_be.jpa.entity.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 

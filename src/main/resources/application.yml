@@ -20,6 +20,7 @@ spring:
       - classpath:properties/s3.yml
       - classpath:properties/tmdb.yml
       - classpath:properties/mail.yml
+      - classpath:properties/elasticsearch.yml
 
 
 ---

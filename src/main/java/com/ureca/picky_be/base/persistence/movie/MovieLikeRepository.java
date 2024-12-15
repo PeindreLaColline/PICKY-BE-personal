@@ -1,7 +1,7 @@
 package com.ureca.picky_be.base.persistence.movie;
 
 import com.ureca.picky_be.base.business.movie.dto.GetUserLikeMovieResp;
-import com.ureca.picky_be.jpa.movie.MovieLike;
+import com.ureca.picky_be.jpa.entity.movie.MovieLike;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;

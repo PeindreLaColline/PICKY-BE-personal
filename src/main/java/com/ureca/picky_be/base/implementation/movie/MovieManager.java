@@ -9,14 +9,13 @@ import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
-import com.ureca.picky_be.jpa.config.IsDeleted;
-import com.ureca.picky_be.jpa.genre.Genre;
-import com.ureca.picky_be.jpa.movie.*;
-import com.ureca.picky_be.jpa.movieworker.MovieWorker;
-import com.ureca.picky_be.jpa.platform.Platform;
-import com.ureca.picky_be.jpa.platform.PlatformType;
-import com.ureca.picky_be.jpa.user.User;
-import jakarta.persistence.EntityNotFoundException;
+import com.ureca.picky_be.jpa.entity.config.IsDeleted;
+import com.ureca.picky_be.jpa.entity.genre.Genre;
+import com.ureca.picky_be.jpa.entity.movie.*;
+import com.ureca.picky_be.jpa.entity.movieworker.MovieWorker;
+import com.ureca.picky_be.jpa.entity.platform.Platform;
+import com.ureca.picky_be.jpa.entity.platform.PlatformType;
+import com.ureca.picky_be.jpa.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +29,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor

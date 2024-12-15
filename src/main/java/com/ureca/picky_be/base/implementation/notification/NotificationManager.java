@@ -11,19 +11,18 @@ import com.ureca.picky_be.base.persistence.notification.NotificationRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
-import com.ureca.picky_be.jpa.board.Board;
-import com.ureca.picky_be.jpa.movie.Movie;
-import com.ureca.picky_be.jpa.movie.MovieLike;
-import com.ureca.picky_be.jpa.notification.Notification;
-import com.ureca.picky_be.jpa.notification.NotificationType;
-import com.ureca.picky_be.jpa.user.User;
+import com.ureca.picky_be.jpa.entity.board.Board;
+import com.ureca.picky_be.jpa.entity.movie.Movie;
+import com.ureca.picky_be.jpa.entity.notification.Notification;
+import com.ureca.picky_be.jpa.entity.notification.NotificationType;
+import com.ureca.picky_be.jpa.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import org.yaml.snakeyaml.emitter.Emitter;
+
 import java.util.List;
 
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package com.ureca.picky_be.base.persistence.movieworker;
 
-import com.ureca.picky_be.jpa.movieworker.MovieWorker;
+import com.ureca.picky_be.jpa.entity.movieworker.MovieWorker;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
