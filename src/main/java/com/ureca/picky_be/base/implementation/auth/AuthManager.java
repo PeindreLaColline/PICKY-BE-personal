@@ -3,7 +3,7 @@ package com.ureca.picky_be.base.implementation.auth;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.web.CustomUserDetails;
-import com.ureca.picky_be.jpa.user.Role;
+import com.ureca.picky_be.jpa.entity.user.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

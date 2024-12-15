@@ -3,12 +3,11 @@ package com.ureca.picky_be.base.business.notification;
 import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.notification.NotificationManager;
-import com.ureca.picky_be.jpa.notification.NotificationType;
-import com.ureca.picky_be.jpa.user.User;
+import com.ureca.picky_be.jpa.entity.notification.NotificationType;
+import com.ureca.picky_be.jpa.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.ureca.picky_be.base.persistence.lineReview;
 
-import com.ureca.picky_be.jpa.lineReview.LineReviewSoftDelete;
+import com.ureca.picky_be.jpa.entity.lineReview.LineReviewSoftDelete;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;

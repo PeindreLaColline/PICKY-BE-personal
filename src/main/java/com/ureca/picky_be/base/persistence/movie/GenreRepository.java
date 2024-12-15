@@ -1,6 +1,6 @@
 package com.ureca.picky_be.base.persistence.movie;
 
-import com.ureca.picky_be.jpa.genre.Genre;
+import com.ureca.picky_be.jpa.entity.genre.Genre;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

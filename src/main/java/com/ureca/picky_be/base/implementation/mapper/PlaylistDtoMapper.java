@@ -6,7 +6,7 @@ import com.ureca.picky_be.base.business.playlist.dto.AddPlaylistResp;
 import com.ureca.picky_be.base.business.playlist.dto.GetPlaylistProjection;
 import com.ureca.picky_be.base.business.playlist.dto.GetPlaylistResp;
 import com.ureca.picky_be.base.business.playlist.dto.UpdatePlaylistResp;
-import com.ureca.picky_be.jpa.playlist.Playlist;
+import com.ureca.picky_be.jpa.entity.playlist.Playlist;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 

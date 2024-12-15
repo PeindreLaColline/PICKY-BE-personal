@@ -1,8 +1,8 @@
 package com.ureca.picky_be.base.persistence.movie;
 
-import com.ureca.picky_be.jpa.movie.FilmCrew;
-import com.ureca.picky_be.jpa.movie.FilmCrewPosition;
-import com.ureca.picky_be.jpa.movie.Movie;
+import com.ureca.picky_be.jpa.entity.movie.FilmCrew;
+import com.ureca.picky_be.jpa.entity.movie.FilmCrewPosition;
+import com.ureca.picky_be.jpa.entity.movie.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -8,11 +8,11 @@ import com.ureca.picky_be.base.implementation.mapper.MovieDtoMapper;
 import com.ureca.picky_be.base.implementation.movie.MovieManager;
 import com.ureca.picky_be.base.implementation.user.UserManager;
 import com.ureca.picky_be.global.success.SuccessCode;
-import com.ureca.picky_be.jpa.genre.Genre;
-import com.ureca.picky_be.jpa.movie.FilmCrew;
-import com.ureca.picky_be.jpa.movie.Movie;
-import com.ureca.picky_be.jpa.movie.MovieBehindVideo;
-import com.ureca.picky_be.jpa.platform.Platform;
+import com.ureca.picky_be.jpa.entity.genre.Genre;
+import com.ureca.picky_be.jpa.entity.movie.FilmCrew;
+import com.ureca.picky_be.jpa.entity.movie.Movie;
+import com.ureca.picky_be.jpa.entity.movie.MovieBehindVideo;
+import com.ureca.picky_be.jpa.entity.platform.Platform;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service

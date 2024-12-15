@@ -5,12 +5,10 @@ import com.ureca.picky_be.base.business.notification.NotificationUseCase;
 import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.global.success.SuccessCode;
-import com.ureca.picky_be.jpa.notification.Notification;
-import com.ureca.picky_be.jpa.notification.NotificationType;
+import com.ureca.picky_be.jpa.entity.notification.NotificationType;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

@@ -4,9 +4,7 @@ import com.ureca.picky_be.base.business.lineReview.dto.GenderLineReviewProjectio
 import com.ureca.picky_be.base.business.lineReview.dto.LineReviewProjection;
 import com.ureca.picky_be.base.business.lineReview.dto.MyPageLineReviewProjection;
 import com.ureca.picky_be.base.business.lineReview.dto.RatingLineReviewProjection;
-import com.ureca.picky_be.jpa.lineReview.LineReview;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import com.ureca.picky_be.jpa.entity.lineReview.LineReview;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;

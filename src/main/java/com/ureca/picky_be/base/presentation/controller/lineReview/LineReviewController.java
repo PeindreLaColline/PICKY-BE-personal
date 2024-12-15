@@ -4,7 +4,7 @@ package com.ureca.picky_be.base.presentation.controller.lineReview;
 import com.ureca.picky_be.base.business.lineReview.LineReviewUseCase;
 import com.ureca.picky_be.base.business.lineReview.dto.*;
 import com.ureca.picky_be.base.business.user.dto.UserLineReviewsReq;
-import com.ureca.picky_be.jpa.lineReview.SortType;
+import com.ureca.picky_be.jpa.entity.lineReview.SortType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;

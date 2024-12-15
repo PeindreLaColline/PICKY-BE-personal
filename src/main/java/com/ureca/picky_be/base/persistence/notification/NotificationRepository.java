@@ -1,14 +1,11 @@
 package com.ureca.picky_be.base.persistence.notification;
 
 import com.ureca.picky_be.base.business.notification.dto.NotificationProjection;
-import com.ureca.picky_be.jpa.notification.Notification;
+import com.ureca.picky_be.jpa.entity.notification.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.util.Map;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {

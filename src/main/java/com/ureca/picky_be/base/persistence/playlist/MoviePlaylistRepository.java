@@ -1,7 +1,7 @@
 package com.ureca.picky_be.base.persistence.playlist;
 
-import com.ureca.picky_be.jpa.movie.MoviePlaylist;
-import com.ureca.picky_be.jpa.playlist.Playlist;
+import com.ureca.picky_be.jpa.entity.movie.MoviePlaylist;
+import com.ureca.picky_be.jpa.entity.playlist.Playlist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

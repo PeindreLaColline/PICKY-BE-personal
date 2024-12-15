@@ -1,7 +1,7 @@
 package com.ureca.picky_be.base.implementation.lineReview.mapper;
 
 import com.ureca.picky_be.base.business.lineReview.dto.*;
-import com.ureca.picky_be.jpa.lineReview.LineReview;
+import com.ureca.picky_be.jpa.entity.lineReview.LineReview;
 import org.springframework.stereotype.Component;
 
 @Component

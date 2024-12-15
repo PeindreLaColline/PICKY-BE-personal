@@ -3,7 +3,7 @@ package com.ureca.picky_be.base.persistence.movie;
 import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieProjection;
 import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
-import com.ureca.picky_be.jpa.movie.Movie;
+import com.ureca.picky_be.jpa.entity.movie.Movie;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;

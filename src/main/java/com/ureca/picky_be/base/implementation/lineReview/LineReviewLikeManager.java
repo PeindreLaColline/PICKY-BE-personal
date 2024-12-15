@@ -7,10 +7,10 @@ import com.ureca.picky_be.base.persistence.lineReview.LineReviewLikeRepository;
 import com.ureca.picky_be.base.persistence.lineReview.LineReviewRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
-import com.ureca.picky_be.jpa.lineReview.LineReview;
-import com.ureca.picky_be.jpa.lineReview.LineReviewLike;
-import com.ureca.picky_be.jpa.lineReview.Preference;
-import com.ureca.picky_be.jpa.user.User;
+import com.ureca.picky_be.jpa.entity.lineReview.LineReview;
+import com.ureca.picky_be.jpa.entity.lineReview.LineReviewLike;
+import com.ureca.picky_be.jpa.entity.lineReview.Preference;
+import com.ureca.picky_be.jpa.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

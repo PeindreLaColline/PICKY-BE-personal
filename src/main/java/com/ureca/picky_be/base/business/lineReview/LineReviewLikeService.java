@@ -4,7 +4,7 @@ import com.ureca.picky_be.base.business.lineReview.dto.*;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.lineReview.LineReviewLikeManager;
 import com.ureca.picky_be.base.implementation.lineReview.mapper.LineReviewLikeMapper;
-import com.ureca.picky_be.jpa.lineReview.LineReviewLike;
+import com.ureca.picky_be.jpa.entity.lineReview.LineReviewLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
