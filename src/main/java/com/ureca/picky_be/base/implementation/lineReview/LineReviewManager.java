@@ -7,6 +7,7 @@ import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.base.persistence.lineReview.LineReviewRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.jpa.config.IsDeleted;
 import com.ureca.picky_be.jpa.lineReview.LineReview;
 import com.ureca.picky_be.jpa.lineReview.SortType;
 import com.ureca.picky_be.jpa.user.User;
@@ -48,6 +49,7 @@ public class LineReviewManager {
                     .rating(req.rating())
                     .writerNickname(userNickname)
                     .context(req.context())
+                    .isDeleted(IsDeleted.FALSE)
                     .isSpoiler(req.isSpoiler())
                     .build();
             return lineReviewRepository.save(lineReview);

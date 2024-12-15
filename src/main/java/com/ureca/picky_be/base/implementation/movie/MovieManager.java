@@ -168,6 +168,7 @@ public class MovieManager {
         if(movieRepository.existsById(addMovieReq.movieInfo().id())){
             throw new CustomException(ErrorCode.MOVIE_EXISTS);
         }
+
         Movie movie = addMovieInfo(addMovieReq);
         List<MovieBehindVideo> movieBehindVideos = addMovieBehindVideos(addMovieReq.movieBehindVideos(), movie);
         List<MovieGenre> movieGenres = addMovieGenres(addMovieReq.movieInfo().genres(), movie);
