@@ -26,10 +26,14 @@ jobs:
       - name: checkout
         uses: actions/checkout@main
 
+      - name: install jq
+        run: sudo apt-get install jq
+        
       - name: create env and secure file
         run: |
           echo "${{ secrets.SECRETS_ENV }}" > secrets.json
           jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' secrets.json > .env
+          cat .env
           cd ./src/main/resources/properties
           touch jwt.yml
           echo "${{ secrets.JWT }}" >> jwt.yml
