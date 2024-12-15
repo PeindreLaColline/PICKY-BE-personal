@@ -19,6 +19,8 @@ import com.ureca.picky_be.jpa.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -210,6 +212,19 @@ public class NotificationManager {
             } catch(Exception e) {
                 System.err.println("알림 전송 실패 사용자 ID " + receiver.getId() + ": " + e.getMessage());
             }
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<CreateNotificationResp> getNotifications(Long receiverId, Long lastNotificationId, Pageable pageable) {
+        lastNotificationIdValidation(lastNotificationId);
+        return notificationRepository.findUnreadNotificationsByUserId(receiverId, lastNotificationId, pageable);
+    }
+
+    private void lastNotificationIdValidation(Long lastNotificationId) {
+        if(lastNotificationId == null) return;
+        if(lastNotificationId <= 0) {
+            throw new CustomException(ErrorCode.LAST_ID_INVALID_CURSOR);
         }
     }
 }

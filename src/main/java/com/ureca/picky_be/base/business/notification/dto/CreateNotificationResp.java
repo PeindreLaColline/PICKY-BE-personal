@@ -8,9 +8,9 @@ public record CreateNotificationResp(
         Long movieId,
         String movieTitle,
         String moviePosterUrl,
-        Long userId,
-        String userProfileUrl,
-        String userNickName,
+        Long senderId,
+        String senderProfileUrl,
+        String senderNickName,
         LocalDateTime createdAt,
         Boolean isRead
 ) {

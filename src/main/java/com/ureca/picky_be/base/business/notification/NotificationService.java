@@ -7,6 +7,8 @@ import com.ureca.picky_be.jpa.entity.notification.NotificationType;
 import com.ureca.picky_be.jpa.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.List;
@@ -54,5 +56,12 @@ public class NotificationService implements NotificationUseCase {
         NotificationType type = NotificationType.LIKEMOVIENEWBOARD;
         List<User> users = notificationManager.sendTest(writerId, boardId);
         notificationManager.sendEmitter(users, writerId, movieId, boardId, type);
+    }
+
+    @Override
+    public Slice<CreateNotificationResp> getUnreadNotifications(PageRequest pageRequest, Long lastNotificationId) {
+        Long receiverId = authManager.getUserId();
+
+        return notificationManager.getNotifications(receiverId, lastNotificationId, pageRequest);
     }
 }
