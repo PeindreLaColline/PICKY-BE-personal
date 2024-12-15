@@ -6,6 +6,7 @@ import com.ureca.picky_be.base.implementation.notification.NotificationManager;
 import com.ureca.picky_be.jpa.notification.NotificationType;
 import com.ureca.picky_be.jpa.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NotificationService implements NotificationUseCase {
     private final NotificationManager notificationManager;
     private final AuthManager authManager;
@@ -20,6 +22,7 @@ public class NotificationService implements NotificationUseCase {
     @Override
     public SseEmitter subscribe(String lastEventId) {
         Long userId = authManager.getUserId();
+        log.info("Subscribing Emitter : " + userId);
         String emitterId = notificationManager.makeTimeIncludeId(userId);
         SseEmitter emitter = notificationManager.createNewSseEmitter(emitterId);
         emitter.onCompletion(() -> notificationManager.deleteEmitterDueToComplete(emitterId));

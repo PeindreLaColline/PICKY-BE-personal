@@ -50,8 +50,6 @@ public class SecurityConfig {
             "/api/v1/content/image",
             "/api/v1/content/video",
             "/api/v1/content/profile",
-            "/addMovie"
-
 
     };
 
