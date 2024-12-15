@@ -597,6 +597,7 @@ public class MovieManager {
         return movieLikeRepository.findByUserId(userId, lastMovieLikeId, pageRequest);
     }
 
+    @Transactional(readOnly = true)
     public List<MovieDocument> getSearchMovies(String keyword) {
         return movieSearchRepository.findByTitle(keyword);
     }

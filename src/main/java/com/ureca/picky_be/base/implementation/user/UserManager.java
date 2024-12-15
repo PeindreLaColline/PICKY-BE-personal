@@ -219,7 +219,7 @@ public class UserManager {
             throw new CustomException(ErrorCode.USER_EMAIL_EMPTY);
         return user.getEmail();
     }
-
+    @Transactional(readOnly = true)
     public List<UserDocument> getSearchUsers(String keyword) {
         return userSearchRepository.findByNicknameExcludingAdminAndSuspended(keyword);
     }
