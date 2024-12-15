@@ -60,14 +60,13 @@ jobs:
           echo "${{ secrets.MAIL }}" >> mail.yml
           touch kibana.yml
           echo "${{ secrets.KIBANA }}" >> kibana.yml
-        
-        
-          cd
-          touch docker-compose.yml
-          echo "${{ secrets.DOCKER_COMPOSE }}" >> docker-compose.yml
+          
+          cd $GITHUB_WORKSPACE
+          touch ./docker-compose.yml
+          echo "${{ secrets.DOCKER_COMPOSE }}" >> ./docker-compose.yml
 
-          
-          
+
+
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
