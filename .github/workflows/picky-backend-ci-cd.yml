@@ -25,11 +25,12 @@ jobs:
 
       - name: checkout
         uses: actions/checkout@main
-        
+
+      - name: install jq
+        run: sudo apt-get install jq
+
       - name: create env and secure file
         run: |
-          touch docker-compose.yml
-          echo "${{ secrets.DOCKER_COMPOSE }}" >> docker-compose.yml
           cd ./src/main/resources/properties
           touch jwt.yml
           echo "${{ secrets.JWT }}" >> jwt.yml
@@ -59,6 +60,13 @@ jobs:
           echo "${{ secrets.MAIL }}" >> mail.yml
           touch kibana.yml
           echo "${{ secrets.KIBANA }}" >> kibana.yml
+        
+        
+          cd
+          touch docker-compose.yml
+          echo "${{ secrets.DOCKER_COMPOSE }}" >> docker-compose.yml
+
+          
           
 
       - name: Grant execute permission for gradlew
@@ -85,4 +93,4 @@ jobs:
             sudo docker rm picky-backend
             sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
-            sudo docker run -d -p 80:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo docker run -d -p 80:8080 --name picky-backend --env-file .env -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
