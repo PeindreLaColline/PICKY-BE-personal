@@ -62,11 +62,8 @@ jobs:
           echo "${{ secrets.KIBANA }}" >> kibana.yml
           
           cd $GITHUB_WORKSPACE
-          touch ./docker-compose.yml
-          echo "${{ secrets.DOCKER_COMPOSE }}" >> ./docker-compose.yml
-
-
-
+          touch docker-compose.yml
+          echo "${{ secrets.DOCKER_COMPOSE }}" >> docker-compose.yml
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -79,6 +76,22 @@ jobs:
           sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest . 
           sudo docker push ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+
+      - name: Check CA certificate
+        run: |
+          ls -l config/certs/ca/ca.crt || echo "CA certificate not found"
+
+          - name: Test curl command
+          run: |
+          curl -s --cacert config/certs/ca/ca.crt https://localhost:9200/_cluster/health || echo "Curl failed"
+
+          - name: Validate docker-compose.yml
+          run: |
+          docker-compose config
+
+          - name: Run docker-compose
+          run: |
+          docker-compose up -d
 
       - name: docker run
         uses: appleboy/ssh-action@master
