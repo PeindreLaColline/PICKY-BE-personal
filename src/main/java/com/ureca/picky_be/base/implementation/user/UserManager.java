@@ -39,7 +39,7 @@ public class UserManager {
     public SuccessCode registerProfile(MultipartFile profile, Long userId) throws IOException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        if(profile == null){
+        if(profile.isEmpty()){
             try{
                 user.registerProfile(null);
                 userRepository.save(user);
@@ -48,6 +48,8 @@ public class UserManager {
             }
         }
         else{
+            System.out.println(profile.isEmpty());
+            System.out.println("헤헤");
             user.registerProfile(profileManager.uploadProfile(profile));
             userRepository.save(user);
         }

@@ -60,14 +60,12 @@ jobs:
           echo "${{ secrets.MAIL }}" >> mail.yml
           touch kibana.yml
           echo "${{ secrets.KIBANA }}" >> kibana.yml
-        
-        
-          cd
+          touch elasticsearch.yml
+          echo "${{ secrets.ELASTICSEARCH }}" >> elasticsearch.yml
+          
+          cd $GITHUB_WORKSPACE
           touch docker-compose.yml
           echo "${{ secrets.DOCKER_COMPOSE }}" >> docker-compose.yml
-
-          
-          
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -80,7 +78,7 @@ jobs:
           sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest . 
           sudo docker push ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
-
+ 
       - name: docker run
         uses: appleboy/ssh-action@master
         with:
@@ -93,4 +91,4 @@ jobs:
             sudo docker rm picky-backend
             sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
-            sudo docker run -d -p 80:8080 --name picky-backend --env-file .env -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo docker run -d -p 80:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest

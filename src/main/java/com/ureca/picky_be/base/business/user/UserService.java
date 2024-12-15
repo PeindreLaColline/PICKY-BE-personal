@@ -44,12 +44,10 @@ public class UserService implements UserUseCase {
         if(nickname==null && profile==null) {
             throw new CustomException(ErrorCode.NO_DATA_RECEIVED);
         }
-        if(nickname!=null) {
+        if(nickname!=null && !authManager.getUserNickname().equals(nickname)) {
             userManager.updateUserNickname(authManager.getUserId(), nickname);
         }
-        if(profile != null) {
-            userManager.registerProfile(profile, authManager.getUserId());
-        }
+        userManager.registerProfile(profile, authManager.getUserId());
         return SuccessCode.UPDATE_USER_SUCCESS;
     }
 
