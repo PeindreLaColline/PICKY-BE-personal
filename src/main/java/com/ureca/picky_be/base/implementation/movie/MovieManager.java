@@ -613,7 +613,7 @@ public class MovieManager {
 
             movieSearchRepository.save(newMovieDocument);
         } catch (Exception e) {
-            throw  e;
+            throw new CustomException(ErrorCode.ELASTIC_MOVIE_CREATE_FAILED);
         }
     }
 

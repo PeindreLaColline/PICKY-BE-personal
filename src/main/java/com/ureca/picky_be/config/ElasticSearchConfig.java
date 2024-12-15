@@ -75,4 +75,6 @@ public class ElasticSearchConfig extends ElasticsearchConfiguration {
         return allHostsValid;
 
     }
+
+
 }
