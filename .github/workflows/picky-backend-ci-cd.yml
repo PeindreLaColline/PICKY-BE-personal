@@ -25,15 +25,11 @@ jobs:
 
       - name: checkout
         uses: actions/checkout@main
-
-      - name: install jq
-        run: sudo apt-get install jq
         
       - name: create env and secure file
         run: |
-          echo "${{ secrets.SECRETS_ENV }}" > secrets.json
-          jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' secrets.json > .env
-          cat .env
+          touch docker-compose.yml
+          echo "${{ secrets.DOCKER_COMPOSE }}" >> docker-compose.yml
           cd ./src/main/resources/properties
           touch jwt.yml
           echo "${{ secrets.JWT }}" >> jwt.yml
@@ -89,4 +85,4 @@ jobs:
             sudo docker rm picky-backend
             sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
-            sudo docker run -d -p 80:8080 --name picky-backend --env-file .env -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo docker run -d -p 80:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
