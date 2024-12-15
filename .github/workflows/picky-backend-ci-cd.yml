@@ -1,3 +1,5 @@
+
+
 name: picky-backend-ci-cd
 
 on:
@@ -77,6 +79,22 @@ jobs:
           sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest . 
           sudo docker push ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
 
+      - name: Run docker-compose
+        run: |
+          docker-compose up -d
+
+      - name: Check CA certificate
+        run: |
+          ls -l config/certs/ca/ca.crt || echo "CA certificate not found"
+
+      - name: Test curl command
+        run: |
+          curl -s --cacert config/certs/ca/ca.crt https://localhost:9200/_cluster/health || echo "Curl failed"
+
+      - name: Validate docker-compose.yml
+        run: |
+          docker-compose config
+
       - name: docker run
         uses: appleboy/ssh-action@master
         with:
@@ -85,8 +103,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           # passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
-            sudo docker-compose down
-
-            sudo docker-compose pull
-
-            sudo docker-compose up -d
+            sudo docker stop picky-backend
+            sudo docker rm picky-backend
+            sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo docker run -d -p 80:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
