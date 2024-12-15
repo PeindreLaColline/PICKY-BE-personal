@@ -10,7 +10,7 @@ public record CreateNotificationResp(
         String moviePosterUrl,
         Long senderId,
         String senderProfileUrl,
-        String senderNickName,
+        String senderNickname,
         LocalDateTime createdAt,
         Boolean isRead
 ) {
