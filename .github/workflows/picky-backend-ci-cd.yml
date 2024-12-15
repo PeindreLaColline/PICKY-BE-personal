@@ -61,6 +61,9 @@ jobs:
           touch kibana.yml
           echo "${{ secrets.KIBANA }}" >> kibana.yml
           
+          cd $GITHUB_WORKSPACE
+          touch ./docker-compose.yml
+          echo "${{ secrets.DOCKER_COMPOSE }}" >> ./docker-compose.yml
 
 
 
@@ -89,4 +92,4 @@ jobs:
             sudo docker rm picky-backend
             sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
-            sudo docker run -d -p 80:8080 --name picky-backend --env-file .env -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo docker run -d -p 80:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
