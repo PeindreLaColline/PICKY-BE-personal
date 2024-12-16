@@ -27,6 +27,7 @@ public class LineReviewLikeManager {
     public LineReviewLike createLineReviewLike(CreateLineReviewLikeReq req, Long userId) {
         LineReview lineReview = lineReviewRepository.findById(req.lineReviewId())
                 .orElseThrow(() -> new CustomException(ErrorCode.LINEREVIEW_NOT_FOUND));
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
@@ -35,7 +36,6 @@ public class LineReviewLikeManager {
         }
 
         Preference preferenceEnum = Preference.fromString(req.preference());
-
         Optional<LineReviewLike> existingLikeOpt = lineReviewLikeRepository.findByLineReviewIdAndUserId(req.lineReviewId(), user.getId());
 
         if (existingLikeOpt.isPresent()) {
@@ -48,11 +48,7 @@ public class LineReviewLikeManager {
             }
         }
 
-        LineReviewLike lineReviewLike = LineReviewLike.builder()
-                .lineReview(lineReview)
-                .user(user)
-                .preference(preferenceEnum)
-                .build();
+        LineReviewLike lineReviewLike = LineReviewLike.of(lineReview, user, preferenceEnum);
         return lineReviewLikeRepository.save(lineReviewLike);
     }
 
