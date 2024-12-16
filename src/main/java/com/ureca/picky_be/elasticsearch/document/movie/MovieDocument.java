@@ -6,22 +6,23 @@ import lombok.*;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.core.suggest.Completion;
 
 import java.util.Date;
+import java.util.List;
 
-@Document(indexName = "movie")
+@Document(indexName = "movies")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class MovieDocument {
-
     @Id
     @Field(type = FieldType.Long)
     private Long id;
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Text, analyzer = "autocomplete_analyzer", searchAnalyzer = "mixed_analyzer")
     private String title;
 
     @Field(type = FieldType.Date)
@@ -30,7 +31,8 @@ public class MovieDocument {
     @Field(type = FieldType.Keyword)
     private String posterUrl;
 
-    @Field(type = FieldType.Boolean)
+    @Field(type = FieldType.Keyword)
     private IsDeleted isDeleted;
+
 
 }

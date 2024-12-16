@@ -1,7 +1,6 @@
 package com.ureca.picky_be.base.implementation.user;
 
 import com.ureca.picky_be.base.business.user.dto.RegisterUserReq;
-import com.ureca.picky_be.base.business.user.dto.UserInfoProjection;
 import com.ureca.picky_be.base.implementation.content.ProfileManager;
 import com.ureca.picky_be.base.persistence.follow.FollowRepository;
 import com.ureca.picky_be.base.persistence.movie.GenreRepository;
@@ -9,12 +8,12 @@ import com.ureca.picky_be.base.persistence.movie.MovieLikeRepository;
 import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.base.persistence.user.UserGenrePreferenceRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
+import com.ureca.picky_be.elasticsearch.document.user.UserDocument;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.genre.Genre;
 import com.ureca.picky_be.jpa.entity.movie.MovieLike;
-import com.ureca.picky_be.jpa.entity.user.Status;
 import com.ureca.picky_be.jpa.entity.user.User;
 import com.ureca.picky_be.jpa.entity.user.UserGenrePreference;
 import lombok.RequiredArgsConstructor;
@@ -41,13 +40,18 @@ public class UserManager {
     public SuccessCode registerProfile(MultipartFile profile, Long userId) throws IOException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        try{
+        if(profile.isEmpty()){
+            try{
+                user.registerProfile(null);
+                userRepository.save(user);
+            } catch(Exception e){
+                throw new CustomException(ErrorCode.USER_UPDATE_FAILED);
+            }
+        }
+        else{
             user.registerProfile(profileManager.uploadProfile(profile));
             userRepository.save(user);
-        } catch(Exception e){
-            throw new CustomException(ErrorCode.USER_PROFILE_UPDATE_FAILED);
         }
-
         return SuccessCode.UPDATE_USER_PROFILE_SUCCESS;
     }
 
@@ -69,16 +73,26 @@ public class UserManager {
 
     @Transactional
     public SuccessCode updateUserNickname(Long userId, String nickname) {
+        if(nickname==null){
+            throw new CustomException(ErrorCode.USER_UPDATE_BAD_REQUEST);
+        }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        try {
+        if(getNicknameValidation(nickname)){
             user.updateNickname(nickname);
+            updateElasticsearchUserNickname(userId, nickname);
             return SuccessCode.UPDATE_USER_SUCCESS;
-        } catch (Exception e) {
+        } else {
             throw new CustomException(ErrorCode.ALREADY_EXIST_NICKNAME);
         }
+    }
 
+    private void updateElasticsearchUserNickname(Long userId, String nickname) {
+        UserDocument userDocument = userSearchRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+        userDocument.setNickname(nickname);
+        userSearchRepository.save(userDocument);
     }
 
     private void validateUpdateUserReq(RegisterUserReq req) {
@@ -187,7 +201,6 @@ public class UserManager {
         return userRepository.findUserInfoById(userId);
     }
 
-
     @Transactional(readOnly = true)
     public Integer getUserFollowerCount(Long userId) {
         return followRepository.countByFollowerId(userId);
@@ -195,7 +208,7 @@ public class UserManager {
 
     @Transactional(readOnly = true)
     public Integer getUserFollowingCount(Long userId) {
-        return followRepository.countByFollowingId(userId);
+        return null;
     }
 
     @Transactional(readOnly = true)
@@ -206,24 +219,5 @@ public class UserManager {
         if(user.getEmail() == null || user.getEmail().isEmpty())
             throw new CustomException(ErrorCode.USER_EMAIL_EMPTY);
         return user.getEmail();
-    }
-
-    @Transactional(readOnly = true)
-    public User getUserById(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-        if (user.getEmail() == null || user.getEmail().isEmpty())
-            throw new CustomException(ErrorCode.USER_EMAIL_EMPTY);
-        return user;
-    }
-
-
-    public void validateUserStatus(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        if(user.getStatus() != Status.REGULAR){
-            throw new CustomException(ErrorCode.USER_SUSPENDED);
-        }
     }
 }

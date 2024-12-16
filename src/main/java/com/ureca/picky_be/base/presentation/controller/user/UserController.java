@@ -65,5 +65,11 @@ public class UserController {
         return userUseCase.getMyPageUserInfo(nickname);
     }
 
+    @Operation(summary="유저 검색 - Elastic Search")
+    @GetMapping("/search")
+    public List<GetSearchUsersResp> getSearchUsers (@RequestParam("keyword") String keyword){
+        return userUseCase.getSearchUsers(keyword);
+    }
+
 
 }
