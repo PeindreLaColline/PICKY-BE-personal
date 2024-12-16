@@ -20,7 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmailManager {
     private final JavaMailSender mailSender;
 
-    @Async
+
+    @Async("customExecutor")
     public void sendOneEmail(String to) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -35,6 +36,7 @@ public class EmailManager {
             mimeMessageHelper.setText(body, true);
 
             // Email 전송
+
             mailSender.send(mimeMessage);
 
         } catch (MessagingException e){
