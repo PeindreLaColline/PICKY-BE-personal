@@ -38,7 +38,14 @@ public enum SuccessCode {
 
 
     // Email
-    EMAIL_SEND_SUCCESS(200, "이메일 전송 완료")
+    EMAIL_SEND_SUCCESS(200, "이메일 전송 완료"),
+
+
+    // FOLOWER
+    CREATE_FOLLOW_SUCCESS(201, "팔로우 완료"),
+    DELETE_FOLLOW_SUCCESS(200, "팔로우 삭제 완료"),
+
+
 
     ;
 
