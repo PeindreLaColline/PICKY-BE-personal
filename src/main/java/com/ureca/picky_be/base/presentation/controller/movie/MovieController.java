@@ -75,10 +75,4 @@ public class MovieController {
         return movieUseCase.getUserLikeMoviesByNickname(PageRequest.ofSize(size), req);
     }
 
-    @GetMapping("/search")
-    @Operation(summary = "영화 검색 - Elastic Search")
-    public List<GetSearchMoviesResp> getSearchMovies (@RequestParam("keyword") String keyword) {
-        return movieUseCase.getSearchMovies(keyword);
-    }
-
 }

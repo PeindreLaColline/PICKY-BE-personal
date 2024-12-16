@@ -1,7 +1,9 @@
 package com.ureca.picky_be.base.implementation.mapper;
 
-import com.ureca.picky_be.base.business.movie.dto.*;
-import com.ureca.picky_be.elasticsearch.document.movie.MovieDocument;
+import com.ureca.picky_be.base.business.movie.dto.GetGenres;
+import com.ureca.picky_be.base.business.movie.dto.GetMovieDetailResp;
+import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieProjection;
+import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
 import com.ureca.picky_be.jpa.entity.genre.Genre;
 import com.ureca.picky_be.jpa.entity.movie.FilmCrew;
 import com.ureca.picky_be.jpa.entity.movie.Movie;
@@ -107,15 +109,5 @@ public class MovieDtoMapper {
                 .collect(Collectors.toList());
 
         return new SliceImpl<>(simpleMovieRespList);
-    }
-
-    public List<GetSearchMoviesResp> toGetSearchMovies(List<MovieDocument> movies) {
-        return movies.stream()
-                .map(movie -> new GetSearchMoviesResp(
-                        movie.getId(),
-                        movie.getTitle(),
-                        movie.getPosterUrl(),
-                        movie.getReleaseDate()
-                )).toList();
     }
 }

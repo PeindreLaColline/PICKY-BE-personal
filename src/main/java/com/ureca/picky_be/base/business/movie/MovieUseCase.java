@@ -24,6 +24,4 @@ public interface MovieUseCase {
     Slice<GetSimpleMovieResp> getMoviesOrderByCreatedAt(Long lastMovieId, LocalDateTime createdAt, int size);
 
     Slice<GetUserLikeMovieResp> getUserLikeMoviesByNickname(PageRequest pageRequest, GetUserLikeMovieReq req);
-
-    List<GetSearchMoviesResp> getSearchMovies(String keyword);
 }
