@@ -211,9 +211,6 @@ public class MovieManager {
                 .originalLanguage(addMovieAuto.originalLanguage())
                 .popularity(addMovieAuto.popularity())
                 .build();
-        addMovieGenresAuto(addMovieAuto.genres(), movie);
-        addActorsAuto(addMovieAuto.credits(), movie);
-        addDirectorsAuto(addMovieAuto.credits(), movie);
         return movieRepository.save(movie);
     }
     // </editor-fold>
