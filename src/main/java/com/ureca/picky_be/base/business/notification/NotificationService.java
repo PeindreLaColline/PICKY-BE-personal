@@ -26,7 +26,6 @@ public class NotificationService implements NotificationUseCase {
     @Override
     public SseEmitter subscribe(String lastEventId) {
         Long userId = authManager.getUserId();
-        log.info("Subscribing Emitter : " + userId);
         String emitterId = notificationManager.makeTimeIncludeId(userId);
         SseEmitter emitter = notificationManager.createNewSseEmitter(emitterId);
         emitter.onCompletion(() -> notificationManager.deleteEmitterDueToComplete(emitterId));
@@ -34,7 +33,7 @@ public class NotificationService implements NotificationUseCase {
 
         // 503 에러를 방지하기 위한 가짜 데이터 전송
         String eventId = notificationManager.makeTimeIncludeId(userId);
-        notificationManager.sendNotification(emitter, eventId, emitterId, "EventStream Created. [UserId = %d]".formatted(userId));
+        notificationManager.sendNotification(emitter, eventId, emitterId, "EventStream Created.");
 
         if(notificationManager.hasLostData(lastEventId)) {
             notificationManager.sendLostData(lastEventId, userId, emitterId, emitter);

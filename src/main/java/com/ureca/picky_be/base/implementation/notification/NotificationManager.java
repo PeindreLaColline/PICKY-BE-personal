@@ -70,7 +70,6 @@ public class NotificationManager {
             emitter.send(SseEmitter.event()
                     .id(eventId)
                     .data(data));
-            System.out.println("Notification sent to " + emitterId);
         } catch (IOException exception) {
             emitterRepository.deleteById(emitterId);
         }
