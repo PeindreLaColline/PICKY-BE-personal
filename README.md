@@ -2,6 +2,9 @@
 
 ### Getting Started
 [피그마 페이지](https://www.figma.com/design/rpAlhiLds5pygwPfPpD4lp/PICKY-%EB%94%94%EC%9E%90%EC%9D%B8-%EC%99%84%EC%84%B1%EB%B3%B8?node-id=0-1&node-type=canvas&t=pwFCyVmMoN1a41le-0)<br />
+[요구사항 정의서](https://docs.google.com/spreadsheets/d/1puQoU2lwXWyVLx6mc33PdlVW_YVREmc3yd3hdZeMDHE/edit?usp=sharing)<br />
+
+
 
 ---
 <br />
@@ -31,44 +34,103 @@
 **디렉토리 구조**
 
 ```planeText
- ├── main
-    │   ├── java
-    │   │   └── com
-    │   │       └── ureca
-    │   │           └── picky_be
-    │   │               ├── PickyBeApplication.java
-    │   │               ├── base
-    │   │               │   ├── business
-    │   │               │   │   └── auth
-    │   │               │   │       ├── AuthUseCase.java
-    │   │               │   │       ├── JwtAuthService.java
-    │   │               │   │       └── dto
-    │   │               │   │           └── LoginReq.java
-    │   │               │   ├── implementation
-    │   │               │   │   └── user
-    │   │               │   │       └── UserManager.java
-    │   │               │   ├── persistence
-    │   │               │   │   └── UserRepository.java
-    │   │               │   └── presentation
-    │   │               │       └── controller
-    │   │               │           └── auth
-    │   │               │               └── AuthController.java
-    │   │               ├── config
-    │   │               │   ├── SecurityConfig.java
-    │   │               │   └── SwaggerConfig.java
-    │   │               └── jpa
-    │   │                   ├── config
-    │   │                   │   ├── BaseEntity.java
-    │   │                   │   └── JpaConfig.java
-    │   │                   └── user
-    │   │                       └── User.java
-    │   └── resources
-    │       └── application.yml
+ .
+├── java
+│   └── com
+│       └── ureca
+│           └── picky_be
+│               ├── base
+│               │   ├── business  # 비즈니스 계층 (Usecase와 Service 파일 위치)
+│               │   │   ├── auth
+│               │   │   │   └── dto
+│               │   │   ├── board
+│               │   │   │   └── dto
+│               │   │   │       ├── boardDto
+│               │   │   │       ├── commentDto
+│               │   │   │       ├── contentDto
+│               │   │   │       └── likeDto
+│               │   │   ├── email
+│               │   │   ├── lineReview
+│               │   │   │   └── dto
+│               │   │   ├── movie
+│               │   │   │   └── dto
+│               │   │   ├── notification
+│               │   │   │   └── dto
+│               │   │   ├── playlist
+│               │   │   │   └── dto
+│               │   │   └── user
+│               │   │       └── dto
+│               │   ├── implementation  # 구현 계층(Manager 위치)         
+│               │   │   ├── auth
+│               │   │   ├── board
+│               │   │   ├── content
+│               │   │   ├── email
+│               │   │   ├── lineReview
+│               │   │   │   └── mapper
+│               │   │   ├── mapper
+│               │   │   ├── movie
+│               │   │   ├── notification
+│               │   │   ├── playlist
+│               │   │   └── user
+│               │   ├── persistence  # 영속 계층(Repository 위치)
+│               │   │   ├── board
+│               │   │   ├── follow
+│               │   │   ├── lineReview
+│               │   │   ├── movie
+│               │   │   ├── movieworker
+│               │   │   ├── notification
+│               │   │   ├── playlist
+│               │   │   └── user
+│               │   └── presentation  # 프레젠테이션 계층(Controller 위치)
+│               │       └── controller
+│               │           ├── admin
+│               │           ├── auth
+│               │           ├── board
+│               │           ├── email
+│               │           ├── lineReview
+│               │           ├── movie
+│               │           ├── notification
+│               │           ├── playlist
+│               │           └── user
+│               ├── config   # Config 관련 디랙토리
+│               │   └── oAuth2
+│               ├── elasticsearch
+│               │   └── document
+│               │       └── movie
+│               ├── global
+│               │   ├── exception
+│               │   ├── response
+│               │   ├── success
+│               │   └── web
+│               └── jpa
+│                   └── entity
+│                       ├── board
+│                       ├── config
+│                       ├── follow
+│                       ├── genre
+│                       ├── lineReview
+│                       ├── movie
+│                       ├── movieworker
+│                       ├── notification
+│                       ├── platform
+│                       ├── playlist
+│                       ├── recommend
+│                       ├── report
+│                       └── user
+└── resources
+    ├── properties
+    └── static
+        └── files
+            ├── image
+            ├── profile
+            └── video
+
 ```
 ---
 ### ERD
-![PICKY-ERD (2)](https://github.com/user-attachments/assets/26abb7ab-9565-4bdc-a77a-880acc1e5b70)
+![PICKY-ERD (2)](https://github.com/user-attachments/assets/a3426484-77e3-4729-bebb-c71f85675754)
 ---
+
 
 ### 설치 및 실행 방법
 
