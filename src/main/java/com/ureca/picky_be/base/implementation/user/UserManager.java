@@ -13,6 +13,7 @@ import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.genre.Genre;
 import com.ureca.picky_be.jpa.entity.movie.MovieLike;
+import com.ureca.picky_be.jpa.entity.user.Status;
 import com.ureca.picky_be.jpa.entity.user.User;
 import com.ureca.picky_be.jpa.entity.user.UserGenrePreference;
 import lombok.RequiredArgsConstructor;
@@ -212,8 +213,17 @@ public class UserManager {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        if(user.getEmail() == null || user.getEmail().isEmpty())
+        if (user.getEmail() == null || user.getEmail().isEmpty())
             throw new CustomException(ErrorCode.USER_EMAIL_EMPTY);
         return user;
+    }
+
+
+    public void validateUserStatus(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        if(user.getStatus() != Status.REGULAR){
+            throw new CustomException(ErrorCode.USER_SUSPENDED);
+        }
     }
 }

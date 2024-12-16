@@ -86,7 +86,7 @@ public class BoardService implements BoardUseCase {
         Slice<BoardProjection> recentBoards = boardManager.getRecentMovieBoards(userId, lastBoardId, pageable);
         List<String> profileUrls = recentBoards.getContent().stream()
                 .map(BoardProjection::getWriterProfileUrl)
-                .map(profileManager::getPresignedUrl)
+                .map(url -> url != null ? profileManager.getPresignedUrl(url) : null)
                 .toList();
         List<Long> boardIds = recentBoards.getContent().stream()
                 .map(BoardProjection::getBoardId)
@@ -187,7 +187,7 @@ public class BoardService implements BoardUseCase {
         Slice<BoardProjection> boards = boardManager.findBoardsByUserId(userId, req, pageRequest);
         List<String> profileUrls = boards.getContent().stream()
                 .map(BoardProjection::getWriterProfileUrl)
-                .map(profileManager::getPresignedUrl)
+                .map(url -> url != null ? profileManager.getPresignedUrl(url) : null)
                 .toList();
         List<Long> boardIds = boards.getContent().stream()
                 .map(BoardProjection::getBoardId)

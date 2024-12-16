@@ -62,10 +62,7 @@ jobs:
           echo "${{ secrets.KIBANA }}" >> kibana.yml
           touch elasticsearch.yml
           echo "${{ secrets.ELASTICSEARCH }}" >> elasticsearch.yml
-          
-          cd $GITHUB_WORKSPACE
-          touch docker-compose.yml
-          echo "${{ secrets.DOCKER_COMPOSE }}" >> docker-compose.yml
+        
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
