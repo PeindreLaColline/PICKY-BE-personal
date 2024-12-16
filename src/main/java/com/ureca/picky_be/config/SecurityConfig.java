@@ -44,7 +44,7 @@ public class SecurityConfig {
             "/api/v1/playlist/all",
 
             // EMAIL
-            "/api/v1/email/**",
+            "/api/v1/email",
 
             //임시 허용
             "/tokentokentoken",
