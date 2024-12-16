@@ -208,6 +208,16 @@ public class UserManager {
         return user.getEmail();
     }
 
+    @Transactional(readOnly = true)
+    public User getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if (user.getEmail() == null || user.getEmail().isEmpty())
+            throw new CustomException(ErrorCode.USER_EMAIL_EMPTY);
+        return user;
+    }
+
 
     public void validateUserStatus(Long userId) {
         User user = userRepository.findById(userId)
@@ -215,6 +225,5 @@ public class UserManager {
         if(user.getStatus() != Status.REGULAR){
             throw new CustomException(ErrorCode.USER_SUSPENDED);
         }
-
     }
 }

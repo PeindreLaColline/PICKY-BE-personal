@@ -18,18 +18,18 @@ public class AsyncConfig implements AsyncConfigurer {
         executor.setCorePoolSize(5); // thread-pool에 항상 살아있는 thread 최소 개수
         executor.setMaxPoolSize(5); // thread-pool에서 사용 가능한 최대 thread 개수
         executor.setQueueCapacity(500); // thread-pool에서 사용할 최대 queue 크기
-        executor.setThreadNamePrefix("custom-task-");
+        executor.setThreadNamePrefix("Notification Executor");
         executor.initialize();
         return executor;
     }
 
-    @Bean
+    @Bean(name = "customExecutor")
     public Executor customExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(5); // thread-pool에 항상 살아있는 thread 최소 개수
         executor.setMaxPoolSize(5); // thread-pool에서 사용 가능한 최대 thread 개수
         executor.setQueueCapacity(500); // thread-pool에서 사용할 최대 queue 크기
-        executor.setThreadNamePrefix("method-task");
+        executor.setThreadNamePrefix("Email Executor");
         executor.initialize();
         return executor;
     }
