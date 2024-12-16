@@ -1,6 +1,7 @@
 package com.ureca.picky_be.base.implementation.email;
 
 
+import com.ureca.picky_be.base.business.email.dto.EventMessageReq;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.jpa.entity.user.User;
@@ -22,13 +23,13 @@ public class EmailManager {
 
 
     @Async("customExecutor")
-    public void sendOneEmail(String to) {
+    public void sendOneEmail(String to, EventMessageReq req) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
 
             // 수신자, 제목, 본문 등 설정
             String subject = "[PICKY] 이벤트 및 이메일 전송 안내";
-            String body = "PICKY 이메일 전송 및 이벤트 안내를 위해 발송된 메일입니다.";
+            String body = req.eventMessage();
 
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
             mimeMessageHelper.setTo(to);
@@ -36,7 +37,6 @@ public class EmailManager {
             mimeMessageHelper.setText(body, true);
 
             // Email 전송
-
             mailSender.send(mimeMessage);
 
         } catch (MessagingException e){
