@@ -1,12 +1,10 @@
 package com.ureca.picky_be.base.business.user;
 
-import com.ureca.picky_be.base.business.user.dto.GetMyPageUserInfoResp;
-import com.ureca.picky_be.base.business.user.dto.GetNicknameValidationResp;
-import com.ureca.picky_be.base.business.user.dto.GetUserResp;
-import com.ureca.picky_be.base.business.user.dto.RegisterUserReq;
+import com.ureca.picky_be.base.business.user.dto.*;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.board.BoardManager;
 import com.ureca.picky_be.base.implementation.content.ImageManager;
+import com.ureca.picky_be.base.implementation.content.ProfileManager;
 import com.ureca.picky_be.base.implementation.mapper.UserDtoMapper;
 import com.ureca.picky_be.base.implementation.user.UserManager;
 import com.ureca.picky_be.global.exception.CustomException;
@@ -26,6 +24,7 @@ public class UserService implements UserUseCase {
     private final UserManager userManager;
     private final UserDtoMapper userDtoMapper;
     private final AuthManager authManager;
+    private final ProfileManager profileManager;
     private final ImageManager imageManager;
     private final BoardManager boardManager;
 
@@ -69,9 +68,12 @@ public class UserService implements UserUseCase {
     @Override
     public GetMyPageUserInfoResp getMyPageUserInfo(String nickname) {
         Long userId = userManager.getUserIdByNickname(nickname);
+        UserInfoProjection proj = userManager.getUserInfoById(userId);
+        String profileUrl = profileManager.getPresignedUrl(proj.getProfileUrl());
+
         Integer boardCount = boardManager.getUserBoardCount(userId);
         Integer followerCount = userManager.getUserFollowerCount(userId);
         Integer followingCount = userManager.getUserFollowingCount(userId);
-        return new GetMyPageUserInfoResp(userId, boardCount, followerCount, followingCount);
+        return new GetMyPageUserInfoResp(userId, profileUrl, proj.getNickname(), proj.getRole(), boardCount, followerCount, followingCount);
     }
 }
