@@ -185,9 +185,9 @@ public class BoardService implements BoardUseCase {
     public Slice<GetBoardInfoResp> getBoardsByNickName(PageRequest pageRequest, BoardQueryReq req) {
         Long userId = userManager.getUserIdByNickname(req.nickname());
         Slice<BoardProjection> boards = boardManager.findBoardsByUserId(userId, req, pageRequest);
-        List<String> profileUrls = boards.getContent().stream()
+        List<String> profileUrls = recentBoards.getContent().stream()
                 .map(BoardProjection::getWriterProfileUrl)
-                .map(profileManager::getPresignedUrl)
+                .map(url -> url != null ? profileManager.getPresignedUrl(url) : null)
                 .toList();
         List<Long> boardIds = boards.getContent().stream()
                 .map(BoardProjection::getBoardId)
