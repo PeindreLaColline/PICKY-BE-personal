@@ -179,15 +179,14 @@ public class MovieManager {
      * when: 사용자가 AI추천 영화 목록 조회시
      * what: 우리 DB에 없는 영화를 외부 API를 통해 정보 불러옴
      */
-    public Movie saveMovieAuto(Long movieId){
+    public AddMovieAuto saveMovieAuto(Long movieId){
         try{
-            AddMovieAuto addMovieAuto =  restClient
+            return restClient
                     .get()
                     .uri(buildTmdbUrl(movieId))
                     .headers(headers -> headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + tmdbToken))
                     .retrieve()
                     .body(AddMovieAuto.class);
-            return addMovieAuto(addMovieAuto);
         } catch (Exception e) {
             return null;
             //throw new CustomException(ErrorCode.VALIDATION_ERROR);
@@ -246,6 +245,7 @@ public class MovieManager {
     }
 
     private List<MovieGenre> addMovieGenres(List<AddMovieReq.MovieInfo.GenreInfo> genres, Movie movie) {
+        System.out.println("addMovieGenres");
         List<MovieGenre> movieGenres = genres.stream()
                 .map(genre -> MovieGenre.builder()
                         .movie(movie)
@@ -347,6 +347,65 @@ public class MovieManager {
             platformRepository.save(platform);
         }
         return SuccessCode.CREATE_MOVIE_SUCCESS;
+    }
+    // </editor-fold>
+    // <editor-fold desc="영화 자동 추가에 필요한 메서드">
+    public List<MovieGenre> addMovieGenresAuto(List<AddMovieReq.MovieInfo.GenreInfo> genres, Movie movie) {
+        List<MovieGenre> movieGenres = genres.stream()
+                .map(genre -> MovieGenre.builder()
+                        .movie(movie)
+                        .genreId(genre.id())
+                        .build())
+                .toList();
+        return movieGenreRepository.saveAll(movieGenres);
+    }
+
+    public List<FilmCrew> addActorsAuto(AddMovieReq.MovieInfo.Credits credits, Movie movie) {
+        List<FilmCrew> filmCrews = credits.cast().stream()
+                .limit(10)
+                .map(cast -> {
+                    MovieWorker movieWorker = movieWorkerRepository.findById(cast.id())
+                            .orElseGet(() -> movieWorkerRepository.save(
+                                    MovieWorker.builder()
+                                            .id(cast.id())
+                                            .name(cast.name())
+                                            .profileUrl(cast.profileUrl())
+                                            .build()
+                            ));
+
+                    return FilmCrew.builder()
+                            .movieWorker(movieWorker)
+                            .movie(movie)
+                            .role(cast.role())
+                            .filmCrewPosition(FilmCrewPosition.ACTOR)
+                            .build();
+                })
+                .toList();
+        return filmCrewRepository.saveAll(filmCrews);
+    }
+
+    public List<FilmCrew> addDirectorsAuto(AddMovieReq.MovieInfo.Credits credits, Movie movie) {
+        List<FilmCrew> filmCrews = credits.getDirectingCrew().stream()
+                .limit(10)
+                .map(cast -> {
+                    MovieWorker movieWorker = movieWorkerRepository.findById(cast.id())
+                            .orElseGet(() -> movieWorkerRepository.save(
+                                    MovieWorker.builder()
+                                            .id(cast.id())
+                                            .name(cast.name())
+                                            .profileUrl(cast.profileUrl())
+                                            .build()
+                            ));
+
+                    return FilmCrew.builder()
+                            .movieWorker(movieWorker)
+                            .movie(movie)
+                            .role("감독감독~!")
+                            .filmCrewPosition(FilmCrewPosition.DIRECTOR)
+                            .build();
+                })
+                .toList();
+        return filmCrewRepository.saveAll(filmCrews);
     }
     // </editor-fold>
     // <editor-fold desc="영화 수정">
