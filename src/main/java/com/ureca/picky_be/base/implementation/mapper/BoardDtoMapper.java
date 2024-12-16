@@ -63,6 +63,7 @@ public class BoardDtoMapper {
                     board.getWriterId(),
                     board.getWriterNickname(),
                     transformedProfileUrl,
+                    board.getWriterRole(),
                     board.getContext(),
                     board.getIsSpoiler(),
                     board.getCreatedAt(),

@@ -80,7 +80,7 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
 """)
     Slice<MyPageLineReviewProjection> findByUserIdAndCursor(
             @Param("requestId") Long requestId,   // 닉네임 사용자
-            @Param("currentId") Long currentId,   // 닉네임 사용자
+            @Param("currentId") Long currentId,   // 로그인 사용자
             @Param("lastReviewId") Long lastReviewId,
             Pageable pageable
     );

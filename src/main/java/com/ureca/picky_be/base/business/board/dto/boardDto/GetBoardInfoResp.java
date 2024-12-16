@@ -9,6 +9,7 @@ public record GetBoardInfoResp(
         Long writerId,
         String writerNickname,
         String writerProfileUrl,
+        String writerRole,
         String context,
         Boolean isSpoiler,
         LocalDateTime createdDate,

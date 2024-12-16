@@ -99,7 +99,7 @@ public class BoardManager {
 
 
     @Transactional(readOnly = true)
-    public Slice<BoardProjection> findBoardsByUserId(Long userId,  BoardQueryReq req, PageRequest pageRequest) {
+    public Slice<BoardProjection> findBoardsByUserId(Long searchUserId, Long currentId, BoardQueryReq req, PageRequest pageRequest) {
         String nickname = req.nickname();
         Long lastBoardId = req.lastBoardId();
 
@@ -110,7 +110,7 @@ public class BoardManager {
         // 커서 유효성 검사
         validateCursor(lastBoardId);
         try {
-            return boardRepository.findByIdAndCursor(userId, lastBoardId, pageRequest);
+            return boardRepository.findByIdAndCursor(searchUserId, currentId, lastBoardId, pageRequest);
         } catch(Exception e) {
             throw new CustomException(ErrorCode.BOARD_USER_ID_GET_FAILED);
         }

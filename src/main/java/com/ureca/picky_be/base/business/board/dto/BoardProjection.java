@@ -10,6 +10,7 @@ public interface BoardProjection {
     Long getWriterId(); // 작성자 ID
     String getWriterNickname(); // 작성자 닉네임
     String getWriterProfileUrl();   // 작성자 프로필 url
+    String getWriterRole();
     String getContext(); // Board 글 내용
     Boolean getIsSpoiler(); // Board 스포일러 여부
     LocalDateTime getCreatedAt(); // Board 생성일자

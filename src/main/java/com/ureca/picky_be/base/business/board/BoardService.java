@@ -183,8 +183,9 @@ public class BoardService implements BoardUseCase {
     @Override
     @Transactional(readOnly = true)
     public Slice<GetBoardInfoResp> getBoardsByNickName(PageRequest pageRequest, BoardQueryReq req) {
-        Long userId = userManager.getUserIdByNickname(req.nickname());
-        Slice<BoardProjection> boards = boardManager.findBoardsByUserId(userId, req, pageRequest);
+        Long searchUserId = userManager.getUserIdByNickname(req.nickname());
+        Long currentId = authManager.getUserId();
+        Slice<BoardProjection> boards = boardManager.findBoardsByUserId(searchUserId, currentId, req, pageRequest);
         List<String> profileUrls = boards.getContent().stream()
                 .map(BoardProjection::getWriterProfileUrl)
                 .map(url -> url != null ? profileManager.getPresignedUrl(url) : null)
