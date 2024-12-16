@@ -46,6 +46,13 @@ public enum SuccessCode {
     DELETE_FOLLOW_SUCCESS(200, "팔로우 삭제 완료"),
 
 
+    // LINE-REVIEW-LIKE
+    CREATE_LINE_REVIEW_LIKE(201, "한줄평 좋아요/싫어요 생성"),
+    DELETE_LINE_REVIEW(200, "한줄평 좋아요/싫어요 삭제"),
+    UPDATE_LINE_REVIEW(200, "한줄평 좋아요/싫어요 업데이트"),
+
+
+
 
     ;
 
