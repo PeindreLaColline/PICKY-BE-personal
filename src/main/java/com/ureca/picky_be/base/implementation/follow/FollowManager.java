@@ -1,5 +1,6 @@
 package com.ureca.picky_be.base.implementation.follow;
 
+import com.ureca.picky_be.base.business.follow.dto.FollowProjection;
 import com.ureca.picky_be.base.persistence.follow.FollowRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
@@ -7,6 +8,8 @@ import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.follow.Follow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -45,4 +48,11 @@ public class FollowManager {
         return rel.isPresent();
     }
 
+    public Slice<FollowProjection> findFollowersByUserId(Long userId, PageRequest pageRequest) {
+        return followRepository.findFollowersByFollowingId(userId, pageRequest);
+    }
+
+    public Slice<FollowProjection> findFollowingsByUserId(Long userId, PageRequest pageRequest) {
+        return followRepository.findFollowingsByFollowerId(userId, pageRequest);
+    }
 }

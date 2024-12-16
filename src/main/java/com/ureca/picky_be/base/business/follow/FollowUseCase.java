@@ -1,10 +1,15 @@
 package com.ureca.picky_be.base.business.follow;
 
+import com.ureca.picky_be.base.business.follow.dto.GetFollowUserResp;
 import com.ureca.picky_be.global.success.SuccessCode;
-import com.ureca.picky_be.jpa.entity.follow.Follow;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 
 public interface FollowUseCase {
 
-    SuccessCode createFollow(Long followingId);
+    SuccessCode manageFollowing(Long followingId);
 
+    Slice<GetFollowUserResp> getFollowers(PageRequest pageRequest, String nickname, Long lastFollowerId);
+
+    Slice<GetFollowUserResp> getFollowings(PageRequest pageRequest, String nickname, Long lastFollowingId);
 }
