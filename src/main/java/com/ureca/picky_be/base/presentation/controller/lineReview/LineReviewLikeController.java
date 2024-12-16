@@ -21,6 +21,7 @@ public class LineReviewLikeController {
         CreateLineReviewLikeResp resp = lineReviewlikeUseCase.createLineReviewLike(req);
         return resp;
     }
+
     @Operation(summary = "한줄평 좋아요 개수", description = "그냥 한번 만들어 봤어요")
     @GetMapping("/{lineReviewId}")
     public CountLineReviewLikeResp countLineReviewLike(@PathVariable Long lineReviewId){

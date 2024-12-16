@@ -70,16 +70,17 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
                COUNT(CASE WHEN lrl.preference = 'LIKE' AND lrl.isDeleted = false THEN lrl.id END) AS likes,
                COUNT(CASE WHEN lrl.preference = 'DISLIKE' AND lrl.isDeleted = false THEN lrl.id END) AS dislikes,
                lr.createdAt AS createdAt,
-               (CASE WHEN lr.userId = :userId THEN true ELSE false END) AS isAuthor
+               (CASE WHEN lr.userId = :currentId THEN true ELSE false END) AS isAuthor
         FROM LineReview lr
         LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
         LEFT JOIN Movie m ON lr.movieId = m.id
-        WHERE lr.userId = :userId AND (:lastReviewId IS NULL OR lr.id < :lastReviewId)
+        WHERE lr.userId = :requestId AND (:lastReviewId IS NULL OR lr.id < :lastReviewId)
         GROUP BY lr.id, lr.userId, lr.movieId, lr.rating, lr.context, lr.isSpoiler, lr.createdAt
         ORDER BY lr.createdAt DESC
 """)
     Slice<MyPageLineReviewProjection> findByUserIdAndCursor(
-            @Param("userId") Long userId,
+            @Param("requestId") Long requestId,   // 닉네임 사용자
+            @Param("currentId") Long currentId,   // 닉네임 사용자
             @Param("lastReviewId") Long lastReviewId,
             Pageable pageable
     );
