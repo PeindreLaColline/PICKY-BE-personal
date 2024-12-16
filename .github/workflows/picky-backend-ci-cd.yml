@@ -86,6 +86,6 @@ jobs:
           script: |
             sudo docker stop picky-backend
             sudo docker rm picky-backend
-            sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo  docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
             sudo docker run -d -p 80:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
