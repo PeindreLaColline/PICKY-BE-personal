@@ -26,6 +26,7 @@ public enum ErrorCode {
     USER_UPDATE_BAD_REQUEST(HttpStatus.BAD_REQUEST, "USR005", "입력할 정보가 존재하지 않습니다"),
     NO_USER_FOUND(HttpStatus.BAD_REQUEST, "USR006", "해당 조건을 만족하는 유저가 없습니다."),
     NO_DATA_RECEIVED(HttpStatus.BAD_REQUEST, "USR007", "업데이트할 데이터를 받지 못했습니다."),
+    USER_SUSPENDED(HttpStatus.BAD_REQUEST, "USR008", "정지된 유저입니다."),
 
     // GENRE
     GENRE_NOT_FOUND(HttpStatus.NOT_FOUND, "GEN001", "해당 영화 장르를 찾지 못했습니다."),
@@ -121,6 +122,9 @@ public enum ErrorCode {
     // EMAIL
     EMAIL_SEND_FAILED(HttpStatus.BAD_REQUEST, "EML001", "이메일 전송에 실패했습니다."),
     USER_EMAIL_EMPTY(HttpStatus.BAD_REQUEST, "EML002", "해당 사용자의 이메일이 존재하지 않습니다."),
+
+    // FOLLOW
+    FOLLOW_SAME_USER(HttpStatus.BAD_REQUEST, "FLW001", "사용자 본인을 팔로우 할 수 없습니다."),
 
     ;
 

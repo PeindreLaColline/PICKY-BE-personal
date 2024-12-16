@@ -1,8 +1,12 @@
 package com.ureca.picky_be.jpa.entity.follow;
 
+import com.ureca.picky_be.jpa.entity.board.Board;
 import com.ureca.picky_be.jpa.entity.config.BaseEntity;
+import com.ureca.picky_be.jpa.entity.config.IsDeleted;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
 
 
 @Getter
@@ -21,6 +25,16 @@ public class Follow extends BaseEntity {
 
     @Column(name = "following_id", nullable = false)
     private Long followingId;       // 수령자(누군가의 신청을 받는 사람)
+
+
+    public static Follow of(Long followerId, Long followingId) {
+        Follow follow = Follow.builder()
+                .followerId(followerId)
+                .followingId(followingId)
+                .build();
+
+        return follow;
+    }
 
 
 }
