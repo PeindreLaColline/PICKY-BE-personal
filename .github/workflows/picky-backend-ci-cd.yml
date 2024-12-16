@@ -3,7 +3,7 @@ name: picky-backend-ci-cd
 on:
   push:
     branches:
-      - dev
+      - UP-elastic-feat
 
 permissions:
   contents: read
@@ -79,7 +79,7 @@ jobs:
       - name: docker run
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: ec2-43-202-51-30.ap-northeast-2.compute.amazonaws.com
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           # passphrase: ${{ secrets.SSH_PASSPHRASE }}
