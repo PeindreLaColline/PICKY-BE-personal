@@ -43,6 +43,9 @@ public class SecurityConfig {
             //PLAYLIST
             "/api/v1/playlist/all",
 
+            // EMAIL
+            "/api/v1/email/**",
+
             //임시 허용
             "/tokentokentoken",
 
@@ -89,6 +92,10 @@ public class SecurityConfig {
             // LINEREVIEW
             "/api/v1/linereview/create",
             "/api/v1/linereview/**",
+
+            // EMAIL
+            "/api/v1/email/**",
+
     };
 
     private static final String[] AUTH_USER_PATCH = {
