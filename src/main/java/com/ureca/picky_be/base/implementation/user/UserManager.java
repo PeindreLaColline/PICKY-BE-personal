@@ -206,4 +206,14 @@ public class UserManager {
             throw new CustomException(ErrorCode.USER_EMAIL_EMPTY);
         return user.getEmail();
     }
+
+    @Transactional(readOnly = true)
+    public User getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if(user.getEmail() == null || user.getEmail().isEmpty())
+            throw new CustomException(ErrorCode.USER_EMAIL_EMPTY);
+        return user;
+    }
 }

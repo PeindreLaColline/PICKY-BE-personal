@@ -23,4 +23,15 @@ public class EmailController {
         mailUseCase.createEmailAndSendToUser(userId);
         return SuccessCode.EMAIL_SEND_SUCCESS;
     }
+
+    @Operation(summary = "회원가입 이메일 전송 API", description = "회원가입시 환영을 위한 이메일")
+    @PostMapping("/register")
+    public SuccessCode sendRegisterCongratulationsEmail(
+            @Parameter(description = "보내려하는 사람의 id")
+            @RequestParam Long userId)
+    {
+        mailUseCase.sendRegisterCongratulationMail(userId);
+        return SuccessCode.EMAIL_SEND_SUCCESS;
+    }
+
 }
