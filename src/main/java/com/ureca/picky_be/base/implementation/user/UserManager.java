@@ -9,6 +9,8 @@ import com.ureca.picky_be.base.persistence.movie.MovieLikeRepository;
 import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.base.persistence.user.UserGenrePreferenceRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
+import com.ureca.picky_be.base.persistence.user.UserSearchRepository;
+import com.ureca.picky_be.elasticsearch.document.user.UserDocument;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
@@ -35,24 +37,30 @@ public class UserManager {
     private final MovieRepository movieRepository;
     private final FollowRepository followRepository;
     private final ProfileManager profileManager;
+    private final UserSearchRepository userSearchRepository;
 
 
     @Transactional
     public SuccessCode registerProfile(MultipartFile profile, Long userId) throws IOException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        try{
+        if(profile.isEmpty()){
+            try{
+                user.registerProfile(null);
+                userRepository.save(user);
+            } catch(Exception e){
+                throw new CustomException(ErrorCode.USER_UPDATE_FAILED);
+            }
+        }
+        else{
             user.registerProfile(profileManager.uploadProfile(profile));
             userRepository.save(user);
-        } catch(Exception e){
-            throw new CustomException(ErrorCode.USER_PROFILE_UPDATE_FAILED);
         }
-
         return SuccessCode.UPDATE_USER_PROFILE_SUCCESS;
     }
 
     @Transactional
-    public SuccessCode registerUserInfo(Long userId, RegisterUserReq req) {
+    public User registerUserInfo(Long userId, RegisterUserReq req) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         validateUpdateUserReq(req);
@@ -64,21 +72,31 @@ public class UserManager {
             }
         }
         user.registerUser(req);
-        return SuccessCode.UPDATE_USER_SUCCESS;
+        return user;
     }
 
     @Transactional
     public SuccessCode updateUserNickname(Long userId, String nickname) {
+        if(nickname==null){
+            throw new CustomException(ErrorCode.USER_UPDATE_BAD_REQUEST);
+        }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        try {
+        if(getNicknameValidation(nickname)){
             user.updateNickname(nickname);
+            updateElasticsearchUserNickname(userId, nickname);
             return SuccessCode.UPDATE_USER_SUCCESS;
-        } catch (Exception e) {
+        } else {
             throw new CustomException(ErrorCode.ALREADY_EXIST_NICKNAME);
         }
+    }
 
+    private void updateElasticsearchUserNickname(Long userId, String nickname) {
+        UserDocument userDocument = userSearchRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+        userDocument.setNickname(nickname);
+        userSearchRepository.save(userDocument);
     }
 
     private void validateUpdateUserReq(RegisterUserReq req) {
@@ -187,7 +205,6 @@ public class UserManager {
         return userRepository.findUserInfoById(userId);
     }
 
-
     @Transactional(readOnly = true)
     public Integer getUserFollowerCount(Long userId) {
         return followRepository.countByFollowerId(userId);
@@ -195,7 +212,7 @@ public class UserManager {
 
     @Transactional(readOnly = true)
     public Integer getUserFollowingCount(Long userId) {
-        return followRepository.countByFollowingId(userId);
+        return null;
     }
 
     @Transactional(readOnly = true)
@@ -208,6 +225,35 @@ public class UserManager {
         return user.getEmail();
     }
 
+    public void validateUserStatus(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        if(user.getStatus() != Status.REGULAR){
+            throw new CustomException(ErrorCode.USER_SUSPENDED);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDocument> getSearchUsers(String keyword) {
+        return userSearchRepository.findByNicknameExcludingAdminAndSuspended(keyword);
+    }
+
+    public void addUserElastic(User user) {
+        try{
+            UserDocument newUserDocument = UserDocument.builder()
+                    .id(user.getId())
+                    .email(user.getEmail())
+                    .nickname(user.getNickname())
+                    .role(user.getRole())
+                    .status(user.getStatus())
+                    .build();
+            userSearchRepository.save(newUserDocument);
+            System.out.println(user.getNickname());
+        }catch (Exception e){
+            throw new CustomException(ErrorCode.ELASTIC_USER_CREATE_FAILED);
+        }
+    }
+
     @Transactional(readOnly = true)
     public User getUserById(Long userId) {
         User user = userRepository.findById(userId)
@@ -216,14 +262,5 @@ public class UserManager {
         if (user.getEmail() == null || user.getEmail().isEmpty())
             throw new CustomException(ErrorCode.USER_EMAIL_EMPTY);
         return user;
-    }
-
-
-    public void validateUserStatus(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        if(user.getStatus() != Status.REGULAR){
-            throw new CustomException(ErrorCode.USER_SUSPENDED);
-        }
     }
 }

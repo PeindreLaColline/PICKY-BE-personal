@@ -8,6 +8,7 @@ import com.ureca.picky_be.base.implementation.content.ProfileManager;
 import com.ureca.picky_be.base.implementation.follow.FollowManager;
 import com.ureca.picky_be.base.implementation.mapper.UserDtoMapper;
 import com.ureca.picky_be.base.implementation.user.UserManager;
+import com.ureca.picky_be.elasticsearch.document.user.UserDocument;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +35,9 @@ public class UserService implements UserUseCase {
 
     @Override
     public SuccessCode registerUserInfo(RegisterUserReq req) {
-        return userManager.registerUserInfo(authManager.getUserId(), req);
+        User user = userManager.registerUserInfo(authManager.getUserId(), req);
+        userManager.addUserElastic(user);
+        return SuccessCode.UPDATE_USER_SUCCESS;
     }
 
     @Override
@@ -107,5 +111,11 @@ public class UserService implements UserUseCase {
         Integer followerCount = userManager.getUserFollowingCount(userId);
         Integer followingCount = userManager.getUserFollowerCount(userId);
         return new GetMyPageUserInfoResp(userId, profileUrl, proj.getNickname(), proj.getRole(), boardCount, followerCount, followingCount, isFollowing);
+    }
+
+    @Override
+    public List<GetSearchUsersResp> getSearchUsers(String keyword) {
+        List<UserDocument> users = userManager.getSearchUsers(keyword);
+        return userDtoMapper.toGetSearchUsers(users);
     }
 }

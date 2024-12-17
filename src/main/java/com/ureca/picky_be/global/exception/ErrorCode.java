@@ -132,6 +132,10 @@ public enum ErrorCode {
     // FOLLOW
     FOLLOW_SAME_USER(HttpStatus.BAD_REQUEST, "FLW001", "사용자 본인을 팔로우 할 수 없습니다."),
 
+    //ElasticSearch
+    ELASTIC_MOVIE_CREATE_FAILED(HttpStatus.BAD_REQUEST,"EMC001","엘라스틱 서치 무비 생성 실패"),
+    ELASTIC_USER_CREATE_FAILED(HttpStatus.BAD_REQUEST,"EMC002","엘라스틱 서치 유저 생성 실패")
+
     ;
 
     private final HttpStatus httpStatus; // HTTP 상태 코드

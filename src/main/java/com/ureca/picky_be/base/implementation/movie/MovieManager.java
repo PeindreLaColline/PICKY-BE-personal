@@ -1,11 +1,13 @@
 package com.ureca.picky_be.base.implementation.movie;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import com.ureca.picky_be.base.business.movie.dto.*;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisReq;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
 import com.ureca.picky_be.base.persistence.movie.*;
 import com.ureca.picky_be.base.persistence.movieworker.MovieWorkerRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
+import com.ureca.picky_be.elasticsearch.document.movie.MovieDocument;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
@@ -45,6 +47,9 @@ public class MovieManager {
     private final UserRepository userRepository;
     private final PlatformRepository platformRepository;
     private final RecommendRepository recommendRepository;
+    private final MovieSearchRepository movieSearchRepository;
+    private final ElasticsearchClient elasticsearchClient;
+
 
     RestClient restClient = RestClient.create();
 
@@ -176,6 +181,7 @@ public class MovieManager {
         List<MovieGenre> movieGenres = addMovieGenres(addMovieReq.movieInfo().genres(), movie);
         List<FilmCrew> actors = addActors(addMovieReq.movieInfo().credits(), movie);
         List<FilmCrew> directors = addDirectors(addMovieReq.movieInfo().credits(), movie);
+
         return movie;
     }
 
@@ -183,14 +189,15 @@ public class MovieManager {
      * when: 사용자가 AI추천 영화 목록 조회시
      * what: 우리 DB에 없는 영화를 외부 API를 통해 정보 불러옴
      */
-    public AddMovieAuto saveMovieAuto(Long movieId){
+    public Movie saveMovieAuto(Long movieId){
         try{
-            return restClient
+            AddMovieAuto addMovieAuto =  restClient
                     .get()
                     .uri(buildTmdbUrl(movieId))
                     .headers(headers -> headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + tmdbToken))
                     .retrieve()
                     .body(AddMovieAuto.class);
+            return addMovieAuto(addMovieAuto);
         } catch (Exception e) {
             return null;
             //throw new CustomException(ErrorCode.VALIDATION_ERROR);
@@ -249,7 +256,6 @@ public class MovieManager {
     }
 
     private List<MovieGenre> addMovieGenres(List<AddMovieReq.MovieInfo.GenreInfo> genres, Movie movie) {
-        System.out.println("addMovieGenres");
         List<MovieGenre> movieGenres = genres.stream()
                 .map(genre -> MovieGenre.builder()
                         .movie(movie)
@@ -307,7 +313,7 @@ public class MovieManager {
         return filmCrewRepository.saveAll(filmCrews);
     }
 
-    public SuccessCode addStreamingPlatform(AddMovieReq addMovieReq, Movie movie) {
+    public void addStreamingPlatform(AddMovieReq addMovieReq, Movie movie) {
         if(addMovieReq.streamingPlatform().coupang()){
             Platform platform = Platform.builder()
                     .platformType(PlatformType.COUPANG)
@@ -350,66 +356,6 @@ public class MovieManager {
                     .build();
             platformRepository.save(platform);
         }
-        return SuccessCode.CREATE_MOVIE_SUCCESS;
-    }
-    // </editor-fold>
-    // <editor-fold desc="영화 자동 추가에 필요한 메서드">
-    public List<MovieGenre> addMovieGenresAuto(List<AddMovieReq.MovieInfo.GenreInfo> genres, Movie movie) {
-        List<MovieGenre> movieGenres = genres.stream()
-                .map(genre -> MovieGenre.builder()
-                        .movie(movie)
-                        .genreId(genre.id())
-                        .build())
-                .toList();
-        return movieGenreRepository.saveAll(movieGenres);
-    }
-
-    public List<FilmCrew> addActorsAuto(AddMovieReq.MovieInfo.Credits credits, Movie movie) {
-        List<FilmCrew> filmCrews = credits.cast().stream()
-                .limit(10)
-                .map(cast -> {
-                    MovieWorker movieWorker = movieWorkerRepository.findById(cast.id())
-                            .orElseGet(() -> movieWorkerRepository.save(
-                                    MovieWorker.builder()
-                                            .id(cast.id())
-                                            .name(cast.name())
-                                            .profileUrl(cast.profileUrl())
-                                            .build()
-                            ));
-
-                    return FilmCrew.builder()
-                            .movieWorker(movieWorker)
-                            .movie(movie)
-                            .role(cast.role())
-                            .filmCrewPosition(FilmCrewPosition.ACTOR)
-                            .build();
-                })
-                .toList();
-        return filmCrewRepository.saveAll(filmCrews);
-    }
-
-    public List<FilmCrew> addDirectorsAuto(AddMovieReq.MovieInfo.Credits credits, Movie movie) {
-        List<FilmCrew> filmCrews = credits.getDirectingCrew().stream()
-                .limit(10)
-                .map(cast -> {
-                    MovieWorker movieWorker = movieWorkerRepository.findById(cast.id())
-                            .orElseGet(() -> movieWorkerRepository.save(
-                                    MovieWorker.builder()
-                                            .id(cast.id())
-                                            .name(cast.name())
-                                            .profileUrl(cast.profileUrl())
-                                            .build()
-                            ));
-
-                    return FilmCrew.builder()
-                            .movieWorker(movieWorker)
-                            .movie(movie)
-                            .role("감독감독~!")
-                            .filmCrewPosition(FilmCrewPosition.DIRECTOR)
-                            .build();
-                })
-                .toList();
-        return filmCrewRepository.saveAll(filmCrews);
     }
     // </editor-fold>
     // <editor-fold desc="영화 수정">
@@ -685,4 +631,27 @@ public class MovieManager {
         lastMovieLikeIdValidation(lastMovieLikeId);
         return movieLikeRepository.findByUserId(userId, lastMovieLikeId, pageRequest);
     }
+
+    @Transactional(readOnly = true)
+    public List<MovieDocument> getSearchMovies(String keyword) {
+        return movieSearchRepository.findByTitle(keyword);
+    }
+
+    public void addMovieElastic(Movie movie) {
+        try {
+            MovieDocument newMovieDocument = MovieDocument.builder()
+                    .id(movie.getId())
+                    .title(movie.getTitle())
+                    .releaseDate(movie.getReleaseDate())
+                    .posterUrl(movie.getPosterUrl())
+                    .isDeleted(movie.getIsDeleted())
+                    .build();
+
+            movieSearchRepository.save(newMovieDocument);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.ELASTIC_MOVIE_CREATE_FAILED);
+        }
+    }
+
+
 }
