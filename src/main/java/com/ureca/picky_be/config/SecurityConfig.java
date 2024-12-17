@@ -84,6 +84,7 @@ public class SecurityConfig {
 
             //MOVIE
             "/api/v1/movie/*/like",
+            "/api/v1/movie/search/**",
 
             // NOTIFICATION
             "/api/v1/notification/alert",
@@ -95,6 +96,9 @@ public class SecurityConfig {
 
             // EMAIL
             "/api/v1/email/**",
+
+            // USER
+            "/api/v1/user/search/**",
 
             // FOLLOW
             "/api/v1/follow/**",
