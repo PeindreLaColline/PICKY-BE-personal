@@ -1,5 +1,6 @@
 package com.ureca.picky_be.base.business.notification;
 
+import com.ureca.picky_be.base.business.follow.dto.GetFollowUserResp;
 import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
 import com.ureca.picky_be.base.business.notification.dto.NotificationProjection;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
@@ -64,14 +65,33 @@ public class NotificationService implements NotificationUseCase {
     public void sendNewBoardNotification(Long writerId, Long movieId, Long boardId) {
         NotificationType type = NotificationType.LIKEMOVIENEWBOARD;
         List<User> users = notificationManager.findMovieLikeUsers(writerId, boardId);
+
         notificationManager.sendEmitter(users, writerId, movieId, boardId, type);
     }
 
     @Override
     public Slice<CreateNotificationResp> getUnreadNotifications(PageRequest pageRequest, Long lastNotificationId) {
         Long receiverId = authManager.getUserId();
+        Slice<CreateNotificationResp> resp = notificationManager.getNotifications(receiverId, lastNotificationId, pageRequest);
 
-        return notificationManager.getNotifications(receiverId, lastNotificationId, pageRequest);
+        // TODO : 리팩토링
+        return resp.map(this::convertProfileUrl);
+    }
+
+    private CreateNotificationResp convertProfileUrl(CreateNotificationResp noti) {
+        String presignedUrl = profileManager.getPresignedUrl(noti.senderProfileUrl());
+        return new CreateNotificationResp(
+                noti.notificationId(),
+                noti.boardId(),
+                noti.movieId(),
+                noti.movieTitle(),
+                noti.moviePosterUrl(),
+                noti.senderId(),
+                presignedUrl,
+                noti.senderNickname(),
+                noti.createdAt(),
+                noti.isRead()
+        );
     }
 
     @Override
@@ -84,5 +104,5 @@ public class NotificationService implements NotificationUseCase {
         }
         return SuccessCode.NOTIFICATION_READ_SUCCESS;
     }
-    
+
 }

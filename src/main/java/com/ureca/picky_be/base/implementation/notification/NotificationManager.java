@@ -190,13 +190,14 @@ public class NotificationManager {
                 Long notificationId = notification.getId();
                 String eventId = makeTimeIncludeId(receiver.getId());
 
-                // 특정 사용자에 대한 emitter를 찾아오는 것
-                Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterByUserId(String.valueOf(receiver.getId()));
                 // 게시글 작성자 NotificationProjection 생성
                 NotificationProjection noti = getNewBoardNotificationData(senderId, boardId, movieId);
+                CreateNotificationResp data = notificationDtoMapper.toCreateNotificationResp(noti, notificationId);
+
+                // 특정 사용자에 대한 emitter를 찾아오는 것
+                Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterByUserId(String.valueOf(receiver.getId()));
 
                 log.info("특정 게시물에 대한 알림 전송 : " + boardId);
-                CreateNotificationResp data = notificationDtoMapper.toCreateNotificationResp(noti, notificationId);
                 emitters.forEach(
                         (id, emitter) -> {
                             try {
