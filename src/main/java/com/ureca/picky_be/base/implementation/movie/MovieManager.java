@@ -29,6 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -78,8 +79,11 @@ public class MovieManager {
      * when: 사용자가 AI 영화 추천 목록 조회시 (step2)
      * what: AI로 추천된 영화를 DtoProjection으로 반환
      */
-    public List<GetSimpleMovieProjection> getRecommendsAi(List<Movie> movies){
-        return movieRepository.findMoviesByMovieIdWithAi(movies);
+    public List<GetRecommendMovieProjection> getRecommendsAi(List<Movie> movies){
+        List<Long> movieIds = movies.stream()
+                .map(Movie::getId) // ID 추출
+                .collect(Collectors.toList());
+        return movieRepository.findMoviesWithGenresAndPlatforms(movieIds);
     }
 
     /**

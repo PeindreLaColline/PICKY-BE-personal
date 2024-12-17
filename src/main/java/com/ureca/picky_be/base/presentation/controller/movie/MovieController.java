@@ -38,7 +38,7 @@ public class MovieController {
 
     @Operation(summary = "영화 추천 리스트(30개)", description = "AI가 추천하는 영화목록! 영화 자동 추가 가능")
     @GetMapping("/recommend")
-    public List<GetSimpleMovieResp> getRecommendMovies() {
+    public List<GetRecommendMovieResp> getRecommendMovies() {
         return movieUseCase.getRecommends();
     }
 

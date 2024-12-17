@@ -1,5 +1,6 @@
 package com.ureca.picky_be.base.persistence.movie;
 
+import com.ureca.picky_be.base.business.movie.dto.GetRecommendMovieProjection;
 import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieProjection;
 import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
@@ -125,19 +126,24 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<GetSimpleMovieProjection> findMoviesOrderByCreatedAtUsingCursor(Long lastMovieId, LocalDateTime createdAt, Pageable pageable);
 
     @Query("""
-    SELECT
-        m.id AS movieId,
-        m.title AS title,
-        CAST(COUNT(ml) AS int) AS likes,
-        m.totalRating AS totalRating,
-        m.posterUrl AS posterUrl,
-        m.backdropUrl AS backdropUrl
+    SELECT DISTINCT m.id AS movieId,
+           m.title AS title,
+           m.totalRating AS totalRating,
+           m.posterUrl AS posterUrl,
+           g.id AS genreId,
+           g.name AS genreName,
+           p.id AS platformId,
+           p.platformType AS platformName,
+           p.url AS platformUrl
     FROM Movie m
-    LEFT JOIN MovieLike ml ON ml.movie.id = m.id
-    WHERE m IN :movies
-    GROUP BY m.id, m.title, m.totalRating, m.posterUrl, m.backdropUrl
-    ORDER BY m.popularity DESC
-    """)
-    List<GetSimpleMovieProjection> findMoviesByMovieIdWithAi(List<Movie> movies);
+    LEFT JOIN MovieGenre mg ON mg.movie.id = m.id
+    LEFT JOIN Genre g ON g.id = mg.genreId
+    LEFT JOIN Platform p ON p.movie.id = m.id
+    WHERE m.id IN :movieIds
+""")
+    List<GetRecommendMovieProjection> findMoviesWithGenresAndPlatforms(@Param("movieIds") List<Long> movieIds);
+
+
+
 }
 
