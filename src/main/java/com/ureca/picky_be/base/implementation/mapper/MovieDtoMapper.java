@@ -1,9 +1,6 @@
 package com.ureca.picky_be.base.implementation.mapper;
 
-import com.ureca.picky_be.base.business.movie.dto.GetGenres;
-import com.ureca.picky_be.base.business.movie.dto.GetMovieDetailResp;
-import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieProjection;
-import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
+import com.ureca.picky_be.base.business.movie.dto.*;
 import com.ureca.picky_be.jpa.entity.genre.Genre;
 import com.ureca.picky_be.jpa.entity.movie.FilmCrew;
 import com.ureca.picky_be.jpa.entity.movie.Movie;
@@ -14,9 +11,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -110,4 +105,45 @@ public class MovieDtoMapper {
 
         return new SliceImpl<>(simpleMovieRespList);
     }
+
+    public List<GetRecommendMovieResp> toGetRecommendMovies(List<GetRecommendMovieProjection> simpleMovieProjections) {
+        Map<Long, GetRecommendMovieResp> movieMap = new LinkedHashMap<>();
+
+        for (GetRecommendMovieProjection projection : simpleMovieProjections) {
+            movieMap.computeIfAbsent(projection.getMovieId(), movieId -> new GetRecommendMovieResp(
+                    projection.getMovieId(),
+                    projection.getTitle(),
+                    projection.getTotalRating(),
+                    projection.getPosterUrl(),
+                    new ArrayList<>(),
+                    new ArrayList<>()
+            ));
+
+            List<GetGenres> genres = movieMap.get(projection.getMovieId()).genres();
+            if (projection.getGenreId() != null && projection.getGenreName() != null) {
+                boolean isDuplicateGenre = genres.stream()
+                        .anyMatch(g -> g.genreId().equals(projection.getGenreId()));
+                if (!isDuplicateGenre) {
+                    genres.add(new GetGenres(projection.getGenreId(), projection.getGenreName()));
+                }
+            }
+
+            // 플랫폼 중복 제거 후 추가
+            List<GetPlatform> platforms = movieMap.get(projection.getMovieId()).platforms();
+            if (projection.getPlatformId() != null && projection.getPlatformName() != null) {
+                boolean isDuplicatePlatform = platforms.stream()
+                        .anyMatch(p -> p.platformId().equals(projection.getPlatformId()));
+                if (!isDuplicatePlatform) {
+                    platforms.add(new GetPlatform(
+                            projection.getPlatformId(),
+                            projection.getPlatformName(),
+                            projection.getPlatformUrl() // null일 경우에도 추가
+                    ));
+                }
+            }
+        }
+
+        return new ArrayList<>(movieMap.values());
+    }
+
 }

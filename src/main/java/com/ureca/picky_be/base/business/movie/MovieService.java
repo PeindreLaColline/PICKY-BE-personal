@@ -62,7 +62,7 @@ public class MovieService implements MovieUseCase{
 
     @Transactional
     @Override
-    public List<GetSimpleMovieResp> getRecommends() {
+    public List<GetRecommendMovieResp> getRecommends() {
         List<Long> movieIds = movieManager.getRecommendsFromAi(authManager.getUserId());
 
         List<Movie> movies = movieIds.stream()
@@ -80,8 +80,8 @@ public class MovieService implements MovieUseCase{
                 })
                 .collect(Collectors.toList());
 
-        List<GetSimpleMovieProjection> simpleMovieProjections = movieManager.getRecommendsAi(movies);
-        return movieDtoMapper.toGetSimpleMovies(simpleMovieProjections).toList();
+        List<GetRecommendMovieProjection> simpleMovieProjections = movieManager.getRecommendsAi(movies);
+        return movieDtoMapper.toGetRecommendMovies(simpleMovieProjections);
     }
 
     @Override
