@@ -1,7 +1,9 @@
 package com.ureca.picky_be.base.business.notification;
 
 import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
+import com.ureca.picky_be.base.business.notification.dto.NotificationProjection;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
+import com.ureca.picky_be.base.implementation.content.ProfileManager;
 import com.ureca.picky_be.base.implementation.notification.NotificationManager;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
 import java.util.List;
 
 @Service
@@ -22,6 +25,7 @@ import java.util.List;
 public class NotificationService implements NotificationUseCase {
     private final NotificationManager notificationManager;
     private final AuthManager authManager;
+    private final ProfileManager profileManager;
 
     @Override
     public SseEmitter subscribe(String lastEventId) {
@@ -54,17 +58,59 @@ public class NotificationService implements NotificationUseCase {
     }
 
     @Override
-    public void sendTest(Long writerId, Long movieId, Long boardId){
+    public void sendNewBoardNotification(Long writerId, Long movieId, Long boardId) {
         NotificationType type = NotificationType.LIKEMOVIENEWBOARD;
-        List<User> users = notificationManager.sendTest(writerId, boardId);
-        notificationManager.sendEmitter(users, writerId, movieId, boardId, type);
+        List<User> users = notificationManager.findMovieLikeUsers(writerId, boardId);
+        List<CreateNotificationResp> notifications = users.stream()
+                .map(receiver -> {
+                    // NotificationProjection 조회
+                    NotificationProjection noti = notificationManager.getNewBoardNotificationData(writerId, boardId, movieId);
+
+                    // Notification 생성 및 ID 반환
+                    Long notificationId = notificationManager.createNotification(receiver, movieId, boardId, type).getId();
+                    String senderProfileUrl = profileManager.getPresignedUrl(noti.getSenderProfileUrl());
+                    // CreateNotificationResp 객체 생성 및 URL 변환
+                    return new CreateNotificationResp(
+                            notificationId,
+                            noti.getBoardId(),
+                            noti.getMovieId(),
+                            noti.getMovieTitle(),
+                            noti.getMoviePosterUrl(),
+                            noti.getSenderId(),
+                            senderProfileUrl,
+                            noti.getSenderNickname(),
+                            noti.getCreatedAt(),
+                            Boolean.FALSE
+                    );
+                })
+                .toList();
+
+        notificationManager.sendEmitter(users, notifications);
     }
 
     @Override
     public Slice<CreateNotificationResp> getUnreadNotifications(PageRequest pageRequest, Long lastNotificationId) {
         Long receiverId = authManager.getUserId();
+        Slice<CreateNotificationResp> resp = notificationManager.getNotifications(receiverId, lastNotificationId, pageRequest);
 
-        return notificationManager.getNotifications(receiverId, lastNotificationId, pageRequest);
+        // TODO : 리팩토링
+        return resp.map(this::convertProfileUrl);
+    }
+
+    private CreateNotificationResp convertProfileUrl(CreateNotificationResp noti) {
+        String presignedUrl = profileManager.getPresignedUrl(noti.senderProfileUrl());
+        return new CreateNotificationResp(
+                noti.notificationId(),
+                noti.boardId(),
+                noti.movieId(),
+                noti.movieTitle(),
+                noti.moviePosterUrl(),
+                noti.senderId(),
+                presignedUrl,
+                noti.senderNickname(),
+                noti.createdAt(),
+                noti.isRead()
+        );
     }
 
     @Override
@@ -77,4 +123,5 @@ public class NotificationService implements NotificationUseCase {
         }
         return SuccessCode.NOTIFICATION_READ_SUCCESS;
     }
+
 }

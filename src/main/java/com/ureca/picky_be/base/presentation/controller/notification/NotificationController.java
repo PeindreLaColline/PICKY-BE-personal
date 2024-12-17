@@ -1,7 +1,6 @@
 package com.ureca.picky_be.base.presentation.controller.notification;
 
 
-import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardCommentsResp;
 import com.ureca.picky_be.base.business.notification.NotificationUseCase;
 import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
@@ -61,7 +60,7 @@ public class NotificationController {
             @RequestParam Long movieId,
             @RequestParam Long writerId
     ) {
-        notificationUseCase.sendTest(writerId, movieId, boardId);
+        notificationUseCase.sendNewBoardNotification(writerId, movieId, boardId);
         return SuccessCode.NOTIFICATION_SENT_SUCCESS;
     }
 
