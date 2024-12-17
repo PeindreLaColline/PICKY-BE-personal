@@ -128,7 +128,7 @@ public class ProfileManager {
     }
 
     // 임시 접근 url 발급
-    public String getPresignedUrl(String objectKey){
+    public String getPresignedUrl(String objectKey) {
         return generatePresignedUrl(objectKey);
     }
 

@@ -111,10 +111,10 @@ public class LineReviewManager {
         }
     }
 
-    public Slice<MyPageLineReviewProjection> findLineReviewsByNickname(Long userId, UserLineReviewsReq req, PageRequest pageRequest) {
+    public Slice<MyPageLineReviewProjection> findLineReviewsByNickname(Long requestId, Long currentId, UserLineReviewsReq req, PageRequest pageRequest) {
         Long lastReviewId = req.lastReviewId();
         lastReviewIdValidation(lastReviewId);
-        return lineReviewRepository.findByUserIdAndCursor(userId, lastReviewId, pageRequest);
+        return lineReviewRepository.findByUserIdAndCursor(requestId, currentId, lastReviewId, pageRequest);
     }
 
     private void lastReviewIdValidation(Long lastReviewId) {

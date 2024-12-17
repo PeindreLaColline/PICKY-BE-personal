@@ -33,7 +33,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     IsDeleted findIsDeleted(@Param("boardId") Long boardId);
 
     @Query("""
-    SELECT b.id AS boardId, b.userId AS writerId, b.writerNickname AS writerNickname, u.profileUrl AS writerProfileUrl, b.context AS context, b.isSpoiler AS isSpoiler,
+    SELECT b.id AS boardId, b.userId AS writerId, u.nickname AS writerNickname, u.profileUrl AS writerProfileUrl, u.role AS writerRole, b.context AS context, b.isSpoiler AS isSpoiler,
         b.createdAt AS createdAt, b.updatedAt AS updatedAt,
         (SELECT COUNT(l) FROM BoardLike l WHERE l.board.id = b.id) AS likeCount,
         (SELECT COUNT(c) FROM BoardComment c WHERE c.board.id = b.id) AS commentCount,
@@ -50,7 +50,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 
     @Query("""
-    SELECT b.id AS boardId, b.userId AS writerId, b.writerNickname AS writerNickname, u.profileUrl AS writerProfileUrl, b.context AS context, b.isSpoiler AS isSpoiler,
+    SELECT b.id AS boardId, b.userId AS writerId, u.nickname AS writerNickname, u.profileUrl AS writerProfileUrl, u.role AS writerRole, b.context AS context, b.isSpoiler AS isSpoiler,
         b.createdAt AS createdAt, b.updatedAt AS updatedAt,
         (SELECT COUNT(l) FROM BoardLike l WHERE l.board.id = b.id) AS likeCount,
         (SELECT COUNT(c) FROM BoardComment c WHERE c.board.id = b.id) AS commentCount,
@@ -85,20 +85,20 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Slice<BoardCommentProjection> getBoardComments(@Param("userId") Long userId, @Param("boardId") Long boardId, @Param("lastCommentId") Long lastCommentId, Pageable pageable);
 
     @Query("""
-    SELECT b.id AS boardId, b.userId AS writerId, b.writerNickname AS writerNickname, u.profileUrl AS writerProfileUrl, b.context AS context, b.isSpoiler AS isSpoiler,
+    SELECT b.id AS boardId, b.userId AS writerId, b.writerNickname AS writerNickname, u.profileUrl AS writerProfileUrl, u.role AS writerRole, b.context AS context, b.isSpoiler AS isSpoiler,
         b.createdAt AS createdAt, b.updatedAt AS updatedAt,
         (SELECT COUNT(l) FROM BoardLike l WHERE l.board.id = b.id) AS likeCount,
         (SELECT COUNT(c) FROM BoardComment c WHERE c.board.id = b.id) AS commentCount,
-        (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.userId = :userId) THEN true ELSE false END) AS isLike,
+        (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.userId = :currentId) THEN true ELSE false END) AS isLike,
         m.title AS movieName,
-        (CASE WHEN b.userId = :userId THEN true ELSE false END) AS isAuthor
+        (CASE WHEN b.userId = :currentId THEN true ELSE false END) AS isAuthor
     FROM Board b
     JOIN User u ON b.userId = u.id
     JOIN Movie m ON b.movie.id = m.id
-    WHERE b.userId = :userId AND b.isDeleted = 'FALSE' AND (:lastBoardId IS NULL OR b.id < :lastBoardId)
+    WHERE b.userId = :searchUserId AND b.isDeleted = 'FALSE' AND (:lastBoardId IS NULL OR b.id < :lastBoardId)
     ORDER BY b.createdAt DESC
     """)
-    Slice<BoardProjection> findByIdAndCursor(@Param("userId") Long userId, @Param("lastBoardId") Long lastBoardId, Pageable pageable);
+    Slice<BoardProjection> findByIdAndCursor(@Param("searchUserId") Long searchUserId, @Param("currentId") Long currentId, @Param("lastBoardId") Long lastBoardId, Pageable pageable);
 
     Integer countByUserId(Long userId);
 

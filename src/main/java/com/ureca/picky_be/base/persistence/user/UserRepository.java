@@ -1,5 +1,6 @@
 package com.ureca.picky_be.base.persistence.user;
 
+import com.ureca.picky_be.base.business.user.dto.UserInfoProjection;
 import com.ureca.picky_be.jpa.entity.user.SocialPlatform;
 import com.ureca.picky_be.jpa.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Long findByNickname(@Param("nickname") String nickname);
 
 
+    @Query("SELECT u.id AS id, u.nickname AS nickname, u.profileUrl AS profileUrl, u.role AS role FROM User u WHERE u.id = :userId")
+    UserInfoProjection findUserInfoById(@Param("userId") Long userId);
 }

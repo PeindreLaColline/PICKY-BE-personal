@@ -1,6 +1,7 @@
 package com.ureca.picky_be.base.implementation.user;
 
 import com.ureca.picky_be.base.business.user.dto.RegisterUserReq;
+import com.ureca.picky_be.base.business.user.dto.UserInfoProjection;
 import com.ureca.picky_be.base.implementation.content.ProfileManager;
 import com.ureca.picky_be.base.persistence.follow.FollowRepository;
 import com.ureca.picky_be.base.persistence.movie.GenreRepository;
@@ -185,6 +186,11 @@ public class UserManager {
     @Transactional(readOnly = true)
     public Long getUserIdByNickname(String nickname) {
         return userRepository.findByNickname(nickname);
+    }
+
+    @Transactional(readOnly = true)
+    public UserInfoProjection getUserInfoById(Long userId) {
+        return userRepository.findUserInfoById(userId);
     }
 
 

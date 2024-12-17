@@ -7,6 +7,7 @@ import com.ureca.picky_be.base.persistence.lineReview.LineReviewLikeRepository;
 import com.ureca.picky_be.base.persistence.lineReview.LineReviewRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.lineReview.LineReview;
 import com.ureca.picky_be.jpa.entity.lineReview.LineReviewLike;
 import com.ureca.picky_be.jpa.entity.lineReview.Preference;
@@ -24,9 +25,10 @@ public class LineReviewLikeManager {
     private final LineReviewLikeRepository lineReviewLikeRepository;
     private final UserRepository userRepository;
 
-    public LineReviewLike createLineReviewLike(CreateLineReviewLikeReq req, Long userId) {
+    public SuccessCode createLineReviewLike(CreateLineReviewLikeReq req, Long userId) {
         LineReview lineReview = lineReviewRepository.findById(req.lineReviewId())
                 .orElseThrow(() -> new CustomException(ErrorCode.LINEREVIEW_NOT_FOUND));
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
@@ -35,25 +37,23 @@ public class LineReviewLikeManager {
         }
 
         Preference preferenceEnum = Preference.fromString(req.preference());
-
         Optional<LineReviewLike> existingLikeOpt = lineReviewLikeRepository.findByLineReviewIdAndUserId(req.lineReviewId(), user.getId());
 
         if (existingLikeOpt.isPresent()) {
             LineReviewLike existingLike = existingLikeOpt.get();
             if (existingLike.getPreference() == preferenceEnum) {
-                throw new CustomException(ErrorCode.LINEREVIEWLIKE_CREATE_DUPLICATE);
+                lineReviewLikeRepository.delete(existingLike);
+                return SuccessCode.DELETE_LINE_REVIEW;
             } else {
                 existingLike.updatePreference(preferenceEnum);
-                return lineReviewLikeRepository.save(existingLike);
+                lineReviewLikeRepository.save(existingLike);
+                return SuccessCode.UPDATE_LINE_REVIEW;
             }
         }
 
-        LineReviewLike lineReviewLike = LineReviewLike.builder()
-                .lineReview(lineReview)
-                .user(user)
-                .preference(preferenceEnum)
-                .build();
-        return lineReviewLikeRepository.save(lineReviewLike);
+        LineReviewLike lineReviewLike = LineReviewLike.of(lineReview, user, preferenceEnum);
+        lineReviewLikeRepository.save(lineReviewLike);
+        return SuccessCode.CREATE_LINE_REVIEW_LIKE;
     }
 
     public CountLineReviewLikeResp countLineReviewLike(Long lineReviewId) {
