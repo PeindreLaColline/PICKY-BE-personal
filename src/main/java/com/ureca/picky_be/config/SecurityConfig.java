@@ -96,6 +96,9 @@ public class SecurityConfig {
             // EMAIL
             "/api/v1/email/**",
 
+            // FOLLOW
+            "/api/v1/follow/**",
+
     };
 
     private static final String[] AUTH_USER_PATCH = {
