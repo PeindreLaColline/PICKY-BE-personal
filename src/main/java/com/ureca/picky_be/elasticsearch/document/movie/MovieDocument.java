@@ -11,7 +11,7 @@ import org.springframework.data.elasticsearch.core.suggest.Completion;
 import java.util.Date;
 import java.util.List;
 
-@Document(indexName = "movie")
+@Document(indexName = "connector-movie")
 @Getter
 @Setter
 @NoArgsConstructor
