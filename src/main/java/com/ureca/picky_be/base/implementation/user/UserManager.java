@@ -212,7 +212,7 @@ public class UserManager {
 
     @Transactional(readOnly = true)
     public Integer getUserFollowingCount(Long userId) {
-        return null;
+        return followRepository.countByFollowingId(userId);
     }
 
     @Transactional(readOnly = true)
