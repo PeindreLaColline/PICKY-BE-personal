@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class FollowController {
     private final FollowUseCase followUseCase;
 
-    @PostMapping()
+    @PostMapping
     @Operation(summary = "팔로우 신청/삭제 API", description = "현재 토큰 사용자가 Following(팔로우 할 사람)을 하는 API입니다. 현재 팔로우를 하고 있다면 팔로우 취소(삭제)가 됩니다.")
     public SuccessCode manageFollowing(
             @RequestParam Long followingId
