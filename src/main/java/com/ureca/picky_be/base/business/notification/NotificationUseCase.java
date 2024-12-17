@@ -14,7 +14,7 @@ public interface NotificationUseCase {
     SseEmitter subscribe(String lastEventId);
     CreateNotificationResp send(Long receiverId, Long movieId, Long boardId);
     void sendAll(NotificationType notificationType, Long movieId, Long boardId);
-    void sendTest(Long writerId, Long movieId, Long boardId);
+    void sendNewBoardNotification(Long writerId, Long movieId, Long boardId);
 
 
     Slice<CreateNotificationResp> getUnreadNotifications(PageRequest pageRequest, Long lastNotificationId);

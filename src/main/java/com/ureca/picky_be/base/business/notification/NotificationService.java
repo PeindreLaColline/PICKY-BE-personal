@@ -1,11 +1,14 @@
 package com.ureca.picky_be.base.business.notification;
 
 import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
+import com.ureca.picky_be.base.business.notification.dto.NotificationProjection;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
+import com.ureca.picky_be.base.implementation.content.ProfileManager;
 import com.ureca.picky_be.base.implementation.notification.NotificationManager;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
+import com.ureca.picky_be.jpa.entity.notification.Notification;
 import com.ureca.picky_be.jpa.entity.notification.NotificationType;
 import com.ureca.picky_be.jpa.entity.user.User;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +28,7 @@ import java.util.List;
 public class NotificationService implements NotificationUseCase {
     private final NotificationManager notificationManager;
     private final AuthManager authManager;
+    private final ProfileManager profileManager;
 
     @Override
     public SseEmitter subscribe(String lastEventId) {
@@ -54,9 +61,9 @@ public class NotificationService implements NotificationUseCase {
     }
 
     @Override
-    public void sendTest(Long writerId, Long movieId, Long boardId){
+    public void sendNewBoardNotification(Long writerId, Long movieId, Long boardId) {
         NotificationType type = NotificationType.LIKEMOVIENEWBOARD;
-        List<User> users = notificationManager.sendTest(writerId, boardId);
+        List<User> users = notificationManager.findMovieLikeUsers(writerId, boardId);
         notificationManager.sendEmitter(users, writerId, movieId, boardId, type);
     }
 
@@ -77,4 +84,5 @@ public class NotificationService implements NotificationUseCase {
         }
         return SuccessCode.NOTIFICATION_READ_SUCCESS;
     }
+    
 }

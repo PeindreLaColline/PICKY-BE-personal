@@ -11,7 +11,6 @@ import com.ureca.picky_be.base.persistence.notification.NotificationRepository;
 import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
-import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.board.Board;
 import com.ureca.picky_be.jpa.entity.movie.Movie;
 import com.ureca.picky_be.jpa.entity.notification.Notification;
@@ -171,7 +170,7 @@ public class NotificationManager {
 
 
     @Transactional(readOnly = true)
-    public List<User> sendTest(Long senderId, Long boardId) {
+    public List<User> findMovieLikeUsers(Long senderId, Long boardId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
         User sender = userRepository.findById(senderId)
@@ -193,7 +192,6 @@ public class NotificationManager {
 
                 // 특정 사용자에 대한 emitter를 찾아오는 것
                 Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterByUserId(String.valueOf(receiver.getId()));
-
                 // 게시글 작성자 NotificationProjection 생성
                 NotificationProjection noti = getNewBoardNotificationData(senderId, boardId, movieId);
 
