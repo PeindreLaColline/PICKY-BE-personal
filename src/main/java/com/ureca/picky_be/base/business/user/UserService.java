@@ -72,8 +72,8 @@ public class UserService implements UserUseCase {
         String profileUrl = profileManager.getPresignedUrl(proj.getProfileUrl());
 
         Integer boardCount = boardManager.getUserBoardCount(userId);
-        Integer followerCount = userManager.getUserFollowerCount(userId);
-        Integer followingCount = userManager.getUserFollowingCount(userId);
+        Integer followerCount = userManager.getUserFollowingCount(userId);
+        Integer followingCount = userManager.getUserFollowerCount(userId);
         return new GetMyPageUserInfoResp(userId, profileUrl, proj.getNickname(), proj.getRole(), boardCount, followerCount, followingCount);
     }
 }
