@@ -41,18 +41,13 @@ public class UserManager {
     public SuccessCode registerProfile(MultipartFile profile, Long userId) throws IOException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        if(profile.isEmpty()){
-            try{
-                user.registerProfile(null);
-                userRepository.save(user);
-            } catch(Exception e){
-                throw new CustomException(ErrorCode.USER_UPDATE_FAILED);
-            }
-        }
-        else{
+        try{
             user.registerProfile(profileManager.uploadProfile(profile));
             userRepository.save(user);
+        } catch(Exception e){
+            throw new CustomException(ErrorCode.USER_PROFILE_UPDATE_FAILED);
         }
+
         return SuccessCode.UPDATE_USER_PROFILE_SUCCESS;
     }
 
@@ -74,17 +69,16 @@ public class UserManager {
 
     @Transactional
     public SuccessCode updateUserNickname(Long userId, String nickname) {
-        if(nickname==null){
-            throw new CustomException(ErrorCode.USER_UPDATE_BAD_REQUEST);
-        }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        if(getNicknameValidation(nickname)){
+        try {
             user.updateNickname(nickname);
             return SuccessCode.UPDATE_USER_SUCCESS;
-        } else {
-            throw new CustomException(ErrorCode.USER_UPDATE_BAD_REQUEST);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.ALREADY_EXIST_NICKNAME);
         }
+
+
     }
 
     private void validateUpdateUserReq(RegisterUserReq req) {

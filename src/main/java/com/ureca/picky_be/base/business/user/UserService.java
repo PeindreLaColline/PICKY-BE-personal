@@ -43,13 +43,35 @@ public class UserService implements UserUseCase {
 
     @Override
     public SuccessCode updateUserInfo(String nickname, MultipartFile profile) throws IOException {
-        if(nickname==null && profile==null) {
-            throw new CustomException(ErrorCode.NO_DATA_RECEIVED);
+        // 1. 닉네임 예외처리
+        // 2. 사진 유무
+
+        if(nickname == null || nickname.isEmpty()) {        // 닉네임 비어있는 경우 무조건 에러
+            throw new CustomException(ErrorCode.NO_NICKNAME_ENTERED);
         }
-        if(nickname!=null && !authManager.getUserNickname().equals(nickname)) {
+
+        // 닉네임이 현재 사용자랑 동일하면 Pass, 동일하지 않지만 이미 존재하는 경우
+        if(!authManager.getUserNickname().equals(nickname) && !userManager.getNicknameValidation(nickname)) {
+            throw new CustomException(ErrorCode.ALREADY_EXIST_NICKNAME);
+        }
+
+
+        // TODO : 추후 예외 처리 리팩토링 예정
+        // 현재 별도의 메소드들이 내부에 예외처리 되어 있어서 별도의 Try catch 돌려야함
+        // 프로필이 null인 경우 => 프로필 변경하지 않는 경우
+        if(profile != null) {
+            try {
+                userManager.registerProfile(profile, authManager.getUserId());
+            } catch (Exception e) {
+                throw new CustomException(ErrorCode.USER_PROFILE_UPDATE_FAILED);
+            }
+        }
+
+        try {
             userManager.updateUserNickname(authManager.getUserId(), nickname);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.USER_UPDATE_FAILED);
         }
-        userManager.registerProfile(profile, authManager.getUserId());
         return SuccessCode.UPDATE_USER_SUCCESS;
     }
 

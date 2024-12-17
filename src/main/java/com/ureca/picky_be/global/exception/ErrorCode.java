@@ -28,6 +28,9 @@ public enum ErrorCode {
     NO_DATA_RECEIVED(HttpStatus.BAD_REQUEST, "USR007", "업데이트할 데이터를 받지 못했습니다."),
     USER_NAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "USR008", "해당 유저의 이름이 존재하지 않습니다."),
     USER_SUSPENDED(HttpStatus.BAD_REQUEST, "USR009", "정지된 유저입니다."),
+    ALREADY_EXIST_NICKNAME(HttpStatus.BAD_REQUEST, "USR010", "이미 존재하는 닉네임입니다."),
+    USER_PROFILE_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "USR011", "유저 프로필 사진 업데이트에 실패했습니다."),
+    NO_NICKNAME_ENTERED(HttpStatus.BAD_REQUEST, "USR012", "닉네임이 입력되지 않았습니다."),
 
     // GENRE
     GENRE_NOT_FOUND(HttpStatus.NOT_FOUND, "GEN001", "해당 영화 장르를 찾지 못했습니다."),
