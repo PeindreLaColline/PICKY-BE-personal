@@ -4,6 +4,7 @@ package com.ureca.picky_be.base.presentation.controller.lineReview;
 import com.ureca.picky_be.base.business.lineReview.LineReviewUseCase;
 import com.ureca.picky_be.base.business.lineReview.dto.*;
 import com.ureca.picky_be.base.business.user.dto.UserLineReviewsReq;
+import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.lineReview.SortType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -87,4 +88,11 @@ public class LineReviewController {
     public GetLineReviewRatingInfoResp getRatingPercentage(@PathVariable Long movieId) {
         return lineReviewUseCase.getRatingLineReviewInfo(movieId);
     }
+
+    @DeleteMapping("/delete/{lineReviewId}")
+    @Operation(summary = "한줄평 삭제", description = "물리적 삭제")
+    public SuccessCode deleteLineReview(@PathVariable Long lineReviewId) {
+        return lineReviewUseCase.deleteLineReview(lineReviewId);
+    }
+
 }
