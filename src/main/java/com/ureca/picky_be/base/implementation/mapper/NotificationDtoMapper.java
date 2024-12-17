@@ -19,7 +19,7 @@ public class NotificationDtoMapper {
                     projection.getMoviePosterUrl(),
                     projection.getSenderId(),
                     projection.getSenderProfileUrl(),
-                    projection.getUserNickName(),
+                    projection.getUserNickname(),
                     projection.getCreatedAt(),
                     Boolean.FALSE
             );

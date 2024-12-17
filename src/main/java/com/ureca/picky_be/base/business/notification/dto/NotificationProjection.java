@@ -9,7 +9,7 @@ public interface NotificationProjection {
     String getMoviePosterUrl();
     Long getSenderId();
     String getSenderProfileUrl();
-    String getUserNickName();
+    String getUserNickname();
     LocalDateTime getCreatedAt();
 //    Boolean getIsRead();
 }
