@@ -118,5 +118,6 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
 """)
     GenderLineReviewProjection findGenderRatingByMovieIdAnd(@Param("movieId") Long movieId);
 
-
+    @Query("SELECT lr.userId FROM LineReview lr WHERE lr.id = :lineReviewId")
+    Long findAuthorIdById(@Param("lineReviewId") Long lineReviewId);
 }

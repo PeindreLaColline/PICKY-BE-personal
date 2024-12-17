@@ -7,6 +7,7 @@ import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.base.persistence.lineReview.LineReviewRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.config.IsDeleted;
 import com.ureca.picky_be.jpa.entity.lineReview.LineReview;
 import com.ureca.picky_be.jpa.entity.lineReview.SortType;
@@ -170,7 +171,22 @@ public class LineReviewManager {
     }
 
 
-
+    public SuccessCode deleteLineReview(Long lineReviewId, Long userId) {
+        try {
+            Long authorId= lineReviewRepository.findAuthorIdById(lineReviewId);
+            if (!authorId.equals(userId)) {
+                throw new CustomException(ErrorCode.LINEREVIEW_DELETE_FAILED_USER);
+            }
+            lineReviewRepository.deleteById(lineReviewId);
+            return SuccessCode.DELETE_LINE_REVIEW;
+        }
+        catch (CustomException e) {
+            throw e;
+        }
+        catch (Exception e){
+            throw new CustomException(ErrorCode.LINEREVIEW_DELETE_FAILED);
+        }
+    }
 }
 
 

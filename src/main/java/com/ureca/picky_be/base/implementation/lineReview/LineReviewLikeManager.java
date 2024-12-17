@@ -43,11 +43,11 @@ public class LineReviewLikeManager {
             LineReviewLike existingLike = existingLikeOpt.get();
             if (existingLike.getPreference() == preferenceEnum) {
                 lineReviewLikeRepository.delete(existingLike);
-                return SuccessCode.DELETE_LINE_REVIEW;
+                return SuccessCode.DELETE_LINE_REVIEW_LIKE;
             } else {
                 existingLike.updatePreference(preferenceEnum);
                 lineReviewLikeRepository.save(existingLike);
-                return SuccessCode.UPDATE_LINE_REVIEW;
+                return SuccessCode.UPDATE_LINE_REVIEW_LIKE;
             }
         }
 

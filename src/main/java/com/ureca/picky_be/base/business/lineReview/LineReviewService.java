@@ -6,6 +6,7 @@ import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.lineReview.LineReviewManager;
 import com.ureca.picky_be.base.implementation.lineReview.mapper.LineReviewDtoMapper;
 import com.ureca.picky_be.base.implementation.user.UserManager;
+import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.lineReview.LineReview;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -68,6 +69,12 @@ public class LineReviewService implements LineReviewUseCase {
     public GetLineReviewGenderInfoResp getGenderLineReviewInfo(Long movieId) {
         GenderLineReviewProjection proj = lineReviewManager.getGenderRatingfInfo(movieId);
         return lineReviewDtoMapper.toGetLineReviewGenderInfoResp(proj);
+    }
+
+    @Override
+    public SuccessCode deleteLineReview(Long lineReviewId) {
+        Long userId = authManager.getUserId();
+        return lineReviewManager.deleteLineReview(lineReviewId, userId);
     }
 
 }
