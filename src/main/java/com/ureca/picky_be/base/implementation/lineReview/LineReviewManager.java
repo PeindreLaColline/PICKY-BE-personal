@@ -82,20 +82,16 @@ public class LineReviewManager {
 
     public Slice<LineReviewProjection> findLineReviewsByMovie(Long userId, LineReviewQueryRequest queryReq, PageRequest pageRequest) {
         try {
-            // 요청 데이터 변수로 저장 (가독성 향상)
             Long movieId = queryReq.movieId();
             Long lastReviewId = queryReq.lastReviewId();
             LocalDateTime lastCreatedAt = queryReq.lastCreatedAt();
             SortType sortType = queryReq.sortType();
-            // 영화 존재 여부 확인
             if (!movieRepository.existsById(movieId)) {
                 throw new CustomException(ErrorCode.MOVIE_NOT_FOUND);
             }
 
-            // 커서 유효성 검사
             validateCursor(lastReviewId, lastCreatedAt, sortType);
 
-            // 정렬 타입에 따라 쿼리 호출
             switch (sortType) {
                 case LIKES:
                     return lineReviewRepository.findByMovieAndLikesCursor(userId, movieId, lastReviewId, pageRequest);
@@ -107,7 +103,6 @@ public class LineReviewManager {
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {
-            // 일반 예외 처리
             throw new CustomException(ErrorCode.LINEREVIEW_GET_FAILED);
         }
     }
