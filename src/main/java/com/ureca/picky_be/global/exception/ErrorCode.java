@@ -92,11 +92,13 @@ public enum ErrorCode {
     LINEREVIEW_INVALID_SORTTYPE(HttpStatus.BAD_REQUEST, "LR007", "정렬은 Likes(좋아요순), Latest(최신순)만 가능합니다."),
     LINEREVIEW_INVALID_CURSOR1(HttpStatus.BAD_REQUEST, "LR008", "lastReviewId와 lastCreatedAt는 함께 제공되어야 합니다."),
     LINEREVIEW_INVALID_CURSOR2(HttpStatus.BAD_REQUEST, "LR009", "lastReviewId는 0보다 큰 값이어야 합니다."),
-    LINEREVIEW_INVALID_CURSOR3(HttpStatus.BAD_REQUEST, "LR0010", "lastCreatedAt은 현재 시점 이전이어야 합니다."),
-    LINEREVIEW_INVALID_SORT(HttpStatus.BAD_REQUEST, "LR0011", "유효하지 않은 정렬 방식입니다"),
-    LINEREVIEW_GET_FAILED(HttpStatus.BAD_REQUEST, "LR0012", "한줄평 조회에 실패했습니다."),
-    LINEREVIEW_GENDER_QUERY_FAILED(HttpStatus.BAD_REQUEST, "LR0013", "한줄평 성별에 따른 조회에 실패했습니다."),
-    LINEREVIEW_RATING_QUERY_FAILED(HttpStatus.BAD_REQUEST, "LR0014", "한줄평 평점별 조회에 실패했습니다."),
+    LINEREVIEW_INVALID_CURSOR3(HttpStatus.BAD_REQUEST, "LR010", "lastCreatedAt은 현재 시점 이전이어야 합니다."),
+    LINEREVIEW_INVALID_SORT(HttpStatus.BAD_REQUEST, "LR011", "유효하지 않은 정렬 방식입니다"),
+    LINEREVIEW_GET_FAILED(HttpStatus.BAD_REQUEST, "LR012", "한줄평 조회에 실패했습니다."),
+    LINEREVIEW_GENDER_QUERY_FAILED(HttpStatus.BAD_REQUEST, "LR013", "한줄평 성별에 따른 조회에 실패했습니다."),
+    LINEREVIEW_RATING_QUERY_FAILED(HttpStatus.BAD_REQUEST, "LR014", "한줄평 평점별 조회에 실패했습니다."),
+    LINEREVIEW_DELETE_FAILED(HttpStatus.BAD_REQUEST, "LR015", "한줄평 삭제에 실패했습니다."),
+    LINEREVIEW_DELETE_FAILED_USER(HttpStatus.BAD_REQUEST, "LR016", "본인글만 삭제가 가능합니다."),
 
 
     //LineReviewLike
