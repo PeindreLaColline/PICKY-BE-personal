@@ -15,8 +15,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
 
     @Query("""
-    SELECT b.id AS boardId, m.id AS movieId, m.title AS movieTitle, m.posterUrl AS moviePosterUrl, u.id AS userId, u.profileUrl AS userProfileUrl, u.nickname AS userNickName, 
-    b.createdAt AS createdAt 
+    SELECT b.id AS boardId, m.id AS movieId, m.title AS movieTitle, m.posterUrl AS moviePosterUrl, u.id AS senderId, u.profileUrl AS senderProfileUrl, u.nickname AS senderNickname,
+    b.createdAt AS createdAt
     FROM Board b
     JOIN User u ON b.userId = u.id
     JOIN Movie m ON b.movie.id = m.id

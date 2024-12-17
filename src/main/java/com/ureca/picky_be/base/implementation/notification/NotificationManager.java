@@ -29,6 +29,7 @@ import java.util.List;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -182,36 +183,61 @@ public class NotificationManager {
     }
 
     @Transactional
-    public void sendEmitter(List<User> receivers, Long senderId, Long movieId, Long boardId, NotificationType type) {
-        for(User receiver : receivers) {
+    public void sendEmitter(List<User> receivers, List<CreateNotificationResp> resps) {
+//        for(User receiver : receivers) {
+//            try {
+//                Notification notification = createNotification(receiver, movieId, boardId, type);
+//
+//                Long notificationId = notification.getId();
+//                String eventId = makeTimeIncludeId(receiver.getId());
+//
+//                // 게시글 작성자 NotificationProjection 생성
+//                NotificationProjection noti = getNewBoardNotificationData(senderId, boardId, movieId);
+//                CreateNotificationResp data = notificationDtoMapper.toCreateNotificationResp(noti, notificationId);
+//
+//                // 특정 사용자에 대한 emitter를 찾아오는 것
+//                Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterByUserId(String.valueOf(receiver.getId()));
+//
+//                log.info("특정 게시물에 대한 알림 전송 : " + boardId);
+//                emitters.forEach(
+//                        (id, emitter) -> {
+//                            try {
+//                                emitterRepository.saveEventCache(id, notification);
+//                                sendNotification(emitter, eventId, id, data);
+//                            } catch (Exception e) {
+//                                System.err.println("알림 전송 실패 Emitter ID " + id + ": " + e.getMessage());
+//                            }
+//                        }
+//                );
+//            } catch(Exception e) {
+//                System.err.println("알림 전송 실패 사용자 ID " + receiver.getId() + ": " + e.getMessage());
+//            }
+//        }
+
+        for (int i = 0; i < receivers.size(); i++) {
+            User receiver = receivers.get(i);
+            CreateNotificationResp data = resps.get(i);
+            Optional<Notification> notification = notificationRepository.findById(data.notificationId());
             try {
-                Notification notification = createNotification(receiver, movieId, boardId, type);
-
-                Long notificationId = notification.getId();
                 String eventId = makeTimeIncludeId(receiver.getId());
-
-                // 게시글 작성자 NotificationProjection 생성
-                NotificationProjection noti = getNewBoardNotificationData(senderId, boardId, movieId);
-                CreateNotificationResp data = notificationDtoMapper.toCreateNotificationResp(noti, notificationId);
-
-                // 특정 사용자에 대한 emitter를 찾아오는 것
+                // 특정 사용자에 대한 emitter를 찾아오기
                 Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterByUserId(String.valueOf(receiver.getId()));
 
-                log.info("특정 게시물에 대한 알림 전송 : " + boardId);
-                emitters.forEach(
-                        (id, emitter) -> {
-                            try {
-                                emitterRepository.saveEventCache(id, notification);
-                                sendNotification(emitter, eventId, id, data);
-                            } catch (Exception e) {
-                                System.err.println("알림 전송 실패 Emitter ID " + id + ": " + e.getMessage());
-                            }
-                        }
-                );
-            } catch(Exception e) {
-                System.err.println("알림 전송 실패 사용자 ID " + receiver.getId() + ": " + e.getMessage());
+                log.info("알림 전송: Board ID - {}, Receiver ID - {}", data.boardId(), receiver.getId());
+                emitters.forEach((id, emitter) -> {
+                    try {
+                        // Event Cache 저장 및 Emitter 전송
+                        if(notification.isPresent()) emitterRepository.saveEventCache(id, notification);
+                        sendNotification(emitter, eventId, id, data);
+                    } catch (Exception e) {
+                        log.error("Emitter 전송 실패: Emitter ID - {}", id, e);
+                    }
+                });
+            } catch (Exception e) {
+                log.error("알림 전송 실패: Receiver ID - {}", receiver.getId(), e);
             }
         }
+
     }
 
     @Transactional(readOnly = true)

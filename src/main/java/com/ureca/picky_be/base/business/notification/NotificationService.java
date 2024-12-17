@@ -1,6 +1,5 @@
 package com.ureca.picky_be.base.business.notification;
 
-import com.ureca.picky_be.base.business.follow.dto.GetFollowUserResp;
 import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
 import com.ureca.picky_be.base.business.notification.dto.NotificationProjection;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
@@ -9,7 +8,6 @@ import com.ureca.picky_be.base.implementation.notification.NotificationManager;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
-import com.ureca.picky_be.jpa.entity.notification.Notification;
 import com.ureca.picky_be.jpa.entity.notification.NotificationType;
 import com.ureca.picky_be.jpa.entity.user.User;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -65,8 +61,31 @@ public class NotificationService implements NotificationUseCase {
     public void sendNewBoardNotification(Long writerId, Long movieId, Long boardId) {
         NotificationType type = NotificationType.LIKEMOVIENEWBOARD;
         List<User> users = notificationManager.findMovieLikeUsers(writerId, boardId);
+        List<CreateNotificationResp> notifications = users.stream()
+                .map(receiver -> {
+                    // NotificationProjection 조회
+                    NotificationProjection noti = notificationManager.getNewBoardNotificationData(writerId, boardId, movieId);
 
-        notificationManager.sendEmitter(users, writerId, movieId, boardId, type);
+                    // Notification 생성 및 ID 반환
+                    Long notificationId = notificationManager.createNotification(receiver, movieId, boardId, type).getId();
+                    String senderProfileUrl = profileManager.getPresignedUrl(noti.getSenderProfileUrl());
+                    // CreateNotificationResp 객체 생성 및 URL 변환
+                    return new CreateNotificationResp(
+                            notificationId,
+                            noti.getBoardId(),
+                            noti.getMovieId(),
+                            noti.getMovieTitle(),
+                            noti.getMoviePosterUrl(),
+                            noti.getSenderId(),
+                            senderProfileUrl,
+                            noti.getSenderNickname(),
+                            noti.getCreatedAt(),
+                            Boolean.FALSE
+                    );
+                })
+                .toList();
+
+        notificationManager.sendEmitter(users, notifications);
     }
 
     @Override
