@@ -143,7 +143,20 @@ public class BoardService implements BoardUseCase {
     public Slice<GetAllBoardCommentsResp> getAllBoardComments(Pageable pageable, Long boardId, Long lastCommentId) {
         Long userId = authManager.getUserId();
         Slice<BoardCommentProjection> comments = boardManager.getTenBoardCommentsPerReq(userId, boardId, lastCommentId, pageable);
-        return comments.map(boardDtoMapper::toGetBoardCommentsInfoResp);
+
+        // TODO : 리팩토링
+        // 지저분하지만 4 계층 규칙으로 인해 profileManager를 여기에서 사용
+        return comments.map(comment ->
+            new GetAllBoardCommentsResp(
+                    comment.getCommentId(),
+                    comment.getWriterId(),
+                    comment.getWriterNickname(),
+                    profileManager.getPresignedUrl(comment.getWriterProfileUrl()),
+                    comment.getContext(),
+                    comment.getCreatedAt(),
+                    comment.getUpdatedAt(),
+                    comment.getIsAuthor()
+            ));
     }
 
     @Override
