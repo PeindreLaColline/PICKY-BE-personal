@@ -14,4 +14,6 @@ public interface LineReviewProjection {
     Integer getDislikes();// 좋아요 수
     LocalDateTime getCreatedAt(); // 생성 시간
     boolean getIsAuthor(); // 작성자 여부
+    Boolean getIsLiked();
+    Boolean getIsDisliked();
 }

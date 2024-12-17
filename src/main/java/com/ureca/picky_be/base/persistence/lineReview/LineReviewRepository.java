@@ -21,19 +21,24 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
     boolean existsByMovieIdAndUserId(Long movieId, Long userId);
 
     @Query("""
-        SELECT lr.id AS id, lr.userId AS userId, lr.writerNickname AS writerNickname, lr.movieId AS movieId, lr.rating AS rating,
-               lr.context AS context, lr.isSpoiler AS isSpoiler,
-               COUNT(CASE WHEN lrl.preference = 'LIKE' AND lrl.isDeleted = false THEN lrl.id END) AS likes,
-               COUNT(CASE WHEN lrl.preference = 'DISLIKE' AND lrl.isDeleted = false THEN lrl.id END) AS dislikes,
-               lr.createdAt AS createdAt,
-               (CASE WHEN lr.userId = :userId THEN true ELSE false END) AS isAuthor
-        FROM LineReview lr
-        LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
-        WHERE lr.movieId = :movieId
-          AND (:lastReviewId IS NULL OR lr.id < :lastReviewId)
-        GROUP BY lr.id, lr.userId, lr.movieId, lr.rating, lr.context, lr.isSpoiler, lr.createdAt
-        ORDER BY likes DESC, lr.id DESC
-    """)
+    SELECT lr.id AS id, lr.userId AS userId, lr.writerNickname AS writerNickname, lr.movieId AS movieId, 
+           lr.rating AS rating, lr.context AS context, lr.isSpoiler AS isSpoiler,
+           COUNT(CASE WHEN lrl.preference = 'LIKE' AND lrl.isDeleted = false THEN lrl.id END) AS likes,
+           COUNT(CASE WHEN lrl.preference = 'DISLIKE' AND lrl.isDeleted = false THEN lrl.id END) AS dislikes,
+           lr.createdAt AS createdAt,
+           (CASE WHEN lr.userId = :userId THEN true ELSE false END) AS isAuthor,
+           CASE WHEN lrl_user.preference = 'LIKE' AND lrl_user.isDeleted = false THEN true ELSE false END AS isLiked,
+           CASE WHEN lrl_user.preference = 'DISLIKE' AND lrl_user.isDeleted = false THEN true ELSE false END AS isDisliked
+    FROM LineReview lr
+    LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
+    LEFT JOIN LineReviewLike lrl_user 
+           ON lrl_user.lineReview.id = lr.id AND lrl_user.user.id = :userId
+    WHERE lr.movieId = :movieId
+      AND (:lastReviewId IS NULL OR lr.id < :lastReviewId)
+    GROUP BY lr.id, lr.userId, lr.writerNickname, lr.movieId, lr.rating, lr.context, 
+             lr.isSpoiler, lr.createdAt, lrl_user.preference, lrl_user.isDeleted
+    ORDER BY likes DESC, lr.id DESC
+""")
     Slice<LineReviewProjection> findByMovieAndLikesCursor(
             @Param("movieId") Long movieId,
             @Param("lastReviewId") Long lastReviewId,
@@ -41,20 +46,26 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
             Pageable pageable
     );
 
+
     @Query("""
-        SELECT lr.id AS id, lr.userId AS userId,  lr.writerNickname AS writerNickname,lr.movieId AS movieId, lr.rating AS rating,
-               lr.context AS context, lr.isSpoiler AS isSpoiler,
-               COUNT(CASE WHEN lrl.preference = 'LIKE' AND lrl.isDeleted = false THEN lrl.id END) AS likes,
-               COUNT(CASE WHEN lrl.preference = 'DISLIKE' AND lrl.isDeleted = false THEN lrl.id END) AS dislikes,
-               lr.createdAt AS createdAt,
-               (CASE WHEN lr.userId = :userId THEN true ELSE false END) AS isAuthor
-        FROM LineReview lr
-        LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
-        WHERE lr.movieId = :movieId
-          AND (:lastCreatedAt IS NULL OR lr.createdAt < :lastCreatedAt
-               OR (lr.createdAt = :lastCreatedAt AND lr.id < :lastReviewId))
-        GROUP BY lr.id, lr.userId, lr.movieId, lr.rating, lr.context, lr.isSpoiler, lr.createdAt
-        ORDER BY lr.createdAt DESC, lr.id DESC
+    SELECT lr.id AS id, lr.userId AS userId, lr.writerNickname AS writerNickname, lr.movieId AS movieId, 
+           lr.rating AS rating, lr.context AS context, lr.isSpoiler AS isSpoiler,
+           COUNT(CASE WHEN lrl.preference = 'LIKE' AND lrl.isDeleted = false THEN lrl.id END) AS likes,
+           COUNT(CASE WHEN lrl.preference = 'DISLIKE' AND lrl.isDeleted = false THEN lrl.id END) AS dislikes,
+           lr.createdAt AS createdAt,
+           (CASE WHEN lr.userId = :userId THEN true ELSE false END) AS isAuthor,
+           CASE WHEN lrl_user.preference = 'LIKE' AND lrl_user.isDeleted = false THEN true ELSE false END AS isLiked,
+           CASE WHEN lrl_user.preference = 'DISLIKE' AND lrl_user.isDeleted = false THEN true ELSE false END AS isDisliked
+    FROM LineReview lr
+    LEFT JOIN LineReviewLike lrl ON lrl.lineReview.id = lr.id
+    LEFT JOIN LineReviewLike lrl_user 
+           ON lrl_user.lineReview.id = lr.id AND lrl_user.user.id = :userId
+    WHERE lr.movieId = :movieId
+      AND (:lastCreatedAt IS NULL OR lr.createdAt < :lastCreatedAt
+           OR (lr.createdAt = :lastCreatedAt AND lr.id < :lastReviewId))
+    GROUP BY lr.id, lr.userId, lr.writerNickname, lr.movieId, lr.rating, lr.context, 
+             lr.isSpoiler, lr.createdAt, lrl_user.preference, lrl_user.isDeleted
+    ORDER BY lr.createdAt DESC, lr.id DESC
 """)
     Slice<LineReviewProjection> findByMovieAndLatestCursor(
             @Param("movieId") Long movieId,
@@ -63,6 +74,7 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
             @Param("userId") Long userId,
             Pageable pageable
     );
+
 
     @Query("""
         SELECT lr.id AS id, lr.writerNickname AS writerNickname, lr.userId AS userId, lr.movieId AS movieId, m.title AS movieTitle, m.posterUrl AS moviePosterUrl, lr.rating AS rating,
@@ -118,5 +130,6 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
 """)
     GenderLineReviewProjection findGenderRatingByMovieIdAnd(@Param("movieId") Long movieId);
 
-
+    @Query("SELECT lr.userId FROM LineReview lr WHERE lr.id = :lineReviewId")
+    Long findAuthorIdById(@Param("lineReviewId") Long lineReviewId);
 }

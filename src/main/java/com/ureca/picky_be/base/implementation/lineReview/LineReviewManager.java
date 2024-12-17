@@ -7,6 +7,7 @@ import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.base.persistence.lineReview.LineReviewRepository;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.config.IsDeleted;
 import com.ureca.picky_be.jpa.entity.lineReview.LineReview;
 import com.ureca.picky_be.jpa.entity.lineReview.SortType;
@@ -81,20 +82,16 @@ public class LineReviewManager {
 
     public Slice<LineReviewProjection> findLineReviewsByMovie(Long userId, LineReviewQueryRequest queryReq, PageRequest pageRequest) {
         try {
-            // 요청 데이터 변수로 저장 (가독성 향상)
             Long movieId = queryReq.movieId();
             Long lastReviewId = queryReq.lastReviewId();
             LocalDateTime lastCreatedAt = queryReq.lastCreatedAt();
             SortType sortType = queryReq.sortType();
-            // 영화 존재 여부 확인
             if (!movieRepository.existsById(movieId)) {
                 throw new CustomException(ErrorCode.MOVIE_NOT_FOUND);
             }
 
-            // 커서 유효성 검사
             validateCursor(lastReviewId, lastCreatedAt, sortType);
 
-            // 정렬 타입에 따라 쿼리 호출
             switch (sortType) {
                 case LIKES:
                     return lineReviewRepository.findByMovieAndLikesCursor(userId, movieId, lastReviewId, pageRequest);
@@ -106,7 +103,6 @@ public class LineReviewManager {
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {
-            // 일반 예외 처리
             throw new CustomException(ErrorCode.LINEREVIEW_GET_FAILED);
         }
     }
@@ -170,7 +166,22 @@ public class LineReviewManager {
     }
 
 
-
+    public SuccessCode deleteLineReview(Long lineReviewId, Long userId) {
+        try {
+            Long authorId= lineReviewRepository.findAuthorIdById(lineReviewId);
+            if (!authorId.equals(userId)) {
+                throw new CustomException(ErrorCode.LINEREVIEW_DELETE_FAILED_USER);
+            }
+            lineReviewRepository.deleteById(lineReviewId);
+            return SuccessCode.DELETE_LINE_REVIEW;
+        }
+        catch (CustomException e) {
+            throw e;
+        }
+        catch (Exception e){
+            throw new CustomException(ErrorCode.LINEREVIEW_DELETE_FAILED);
+        }
+    }
 }
 
 
