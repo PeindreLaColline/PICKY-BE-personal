@@ -44,4 +44,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
         ORDER BY f.createdAt DESC
     """)
     Slice<FollowProjection> findFollowingsByFollowerId(@Param("userId") Long userId, Pageable pageable);
+
+
+    boolean existsByFollowerIdAndFollowingId(Long currentUserId, Long userId);
 }

@@ -55,4 +55,8 @@ public class FollowManager {
     public Slice<FollowProjection> findFollowingsByUserId(Long userId, PageRequest pageRequest) {
         return followRepository.findFollowingsByFollowerId(userId, pageRequest);
     }
+
+    public boolean checkFollowing(Long currentUserId, Long userId) {
+        return followRepository.existsByFollowerIdAndFollowingId(currentUserId, userId);
+    }
 }

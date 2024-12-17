@@ -7,6 +7,7 @@ public record GetMyPageUserInfoResp(
         String userRole,
         Integer boardCount,
         Integer followerCount,
-        Integer followingCount
+        Integer followingCount,
+        boolean isFollowing
 ) {
 }
