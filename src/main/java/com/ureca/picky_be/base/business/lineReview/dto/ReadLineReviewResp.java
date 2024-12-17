@@ -12,6 +12,8 @@ public record ReadLineReviewResp(Long id,
                                  Integer likes,         // 좋아요 수
                                  Integer dislikes,         // 좋아요 수
                                  LocalDateTime createdAt, // 생성 시간
-                                 boolean isAuthor   // 작성자 boolean
+                                 boolean isAuthor,
+                                 Boolean isLiked,
+                                 Boolean isDisliked// 작성자 boolean
 ) {
 }
