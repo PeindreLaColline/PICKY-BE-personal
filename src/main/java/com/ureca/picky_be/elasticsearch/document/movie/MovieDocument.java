@@ -21,6 +21,7 @@ import java.util.List;
 public class MovieDocument {
     @Id
     @Field(type = FieldType.Long)
+    @JsonProperty("movieId")
     private Long id;
 
     @Field(type = FieldType.Text, analyzer = "mixed_ngram_analyzer", searchAnalyzer = "nori_mixed_analyzer")

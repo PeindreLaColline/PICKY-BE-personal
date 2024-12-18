@@ -83,6 +83,8 @@ public class MovieService implements MovieUseCase{
                         movieManager.addMovieGenresAuto(addMovieAuto.genres(), movie);
                         movieManager.addActorsAuto(addMovieAuto.credits(), movie);
                         movieManager.addDirectorsAuto(addMovieAuto.credits(), movie);
+                        List<Genre> genres = movieManager.getGenre(movieId);
+                        movieManager.addMovieElastic(movie,genres);
                         return movie;
                     } else {
                         return movieManager.findByMovieId(movieId);
