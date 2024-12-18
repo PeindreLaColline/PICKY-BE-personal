@@ -34,7 +34,8 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
     LEFT JOIN LineReviewLike lrl_user 
            ON lrl_user.lineReview.id = lr.id AND lrl_user.user.id = :userId
     WHERE lr.movieId = :movieId
-      AND (:lastReviewId IS NULL OR lr.id < :lastReviewId)
+      AND (:lastCreatedAt IS NULL OR lr.createdAt < :lastCreatedAt
+           OR (lr.createdAt = :lastCreatedAt AND lr.id < :lastReviewId))
     GROUP BY lr.id, lr.userId, lr.writerNickname, lr.movieId, lr.rating, lr.context, 
              lr.isSpoiler, lr.createdAt, lrl_user.preference, lrl_user.isDeleted
     ORDER BY likes DESC, lr.id DESC
@@ -42,6 +43,7 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
     Slice<LineReviewProjection> findByMovieAndLikesCursor(
             @Param("movieId") Long movieId,
             @Param("lastReviewId") Long lastReviewId,
+            @Param("lastCreatedAt") LocalDateTime lastCreatedAt,
             @Param("userId") Long userId,
             Pageable pageable
     );

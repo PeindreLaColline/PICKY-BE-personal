@@ -95,7 +95,7 @@ public class LineReviewManager {
 
             switch (sortType) {
                 case LIKES:
-                    return lineReviewRepository.findByMovieAndLikesCursor(userId, movieId, lastReviewId, pageRequest);
+                    return lineReviewRepository.findByMovieAndLikesCursor(movieId, lastReviewId, lastCreatedAt, userId, pageRequest);
                 case LATEST:
                     return lineReviewRepository.findByMovieAndLatestCursor(movieId, lastReviewId, lastCreatedAt, userId, pageRequest);
                 default:
