@@ -70,11 +70,15 @@ public class MovieService implements MovieUseCase{
     @Override
     public List<GetRecommendMovieResp> getRecommends() {
         List<Long> movieIds = movieManager.getRecommendsFromAi(authManager.getUserId());
-
         List<Movie> movies = movieIds.stream()
                 .map(movieId -> {
                     if (!movieManager.isExists(movieId)) {
-                        return movieManager.saveMovieAuto(movieId);
+                        AddMovieAuto addMovieAuto = movieManager.saveMovieAuto(movieId);
+                        Movie movie = movieManager.addMovieAuto(addMovieAuto);
+                        movieManager.addMovieGenresAuto(addMovieAuto.genres(), movie);
+                        movieManager.addActorsAuto(addMovieAuto.credits(), movie);
+                        movieManager.addDirectorsAuto(addMovieAuto.credits(), movie);
+                        return movie;
                     } else {
                         return movieManager.findByMovieId(movieId);
                     }
@@ -91,8 +95,8 @@ public class MovieService implements MovieUseCase{
     }
 
     @Override
-    public Slice<GetSimpleMovieResp> getMoviesByGenre(Long genreId, Long lastMovieId, Integer lastLikeCount) {
-        return movieManager.getMoviesByGenre(genreId, lastMovieId, lastLikeCount);
+    public Slice<GetSimpleMovieResp> getMoviesByGenre(Long genreId, Long lastMovieId, LocalDateTime createdAt) {
+        return movieManager.getMoviesByGenre(genreId, lastMovieId, createdAt);
     }
 
     @Override

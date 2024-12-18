@@ -49,7 +49,7 @@ public class PlaylistService implements PlaylistUseCase{
     @Override
     @Transactional
     public UpdatePlaylistResp updatePlaylist(UpdatePlaylistReq updatePlaylistReq) {
-        if(updatePlaylistReq.playlistId() == null || updatePlaylistReq.movieIds().isEmpty() || updatePlaylistReq.title().isEmpty()) throw new CustomException(ErrorCode.PLAYLIST_UPDATE_FAILED);
+        if(updatePlaylistReq.playlistId() == null) throw new CustomException(ErrorCode.PLAYLIST_UPDATE_FAILED);
         return playlistDtoMapper.toUpdatePlaylistResp(playlistManager.updatePlaylist(updatePlaylistReq));
     }
 
