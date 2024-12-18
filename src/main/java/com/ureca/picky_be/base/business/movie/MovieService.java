@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,6 +75,9 @@ public class MovieService implements MovieUseCase{
                 .map(movieId -> {
                     if (!movieManager.isExists(movieId)) {
                         AddMovieAuto addMovieAuto = movieManager.saveMovieAuto(movieId);
+                        if (addMovieAuto == null) {
+                            return null; // null 반환
+                        }
                         Movie movie = movieManager.addMovieAuto(addMovieAuto);
                         movieManager.addMovieGenresAuto(addMovieAuto.genres(), movie);
                         movieManager.addActorsAuto(addMovieAuto.credits(), movie);
@@ -83,6 +87,7 @@ public class MovieService implements MovieUseCase{
                         return movieManager.findByMovieId(movieId);
                     }
                 })
+                .filter(Objects::nonNull) // null 값을 필터링
                 .collect(Collectors.toList());
 
         List<GetRecommendMovieProjection> simpleMovieProjections = movieManager.getRecommendsAi(movies);
