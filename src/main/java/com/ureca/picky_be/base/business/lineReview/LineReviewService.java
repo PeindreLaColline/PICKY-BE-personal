@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class LineReviewService implements LineReviewUseCase {
 
     private final LineReviewManager lineReviewManager;
-    private final LineReviewLikeManager lineReviewLikeManager;
     private final LineReviewDtoMapper lineReviewDtoMapper;
     private final AuthManager authManager;
     private final UserManager userManager;

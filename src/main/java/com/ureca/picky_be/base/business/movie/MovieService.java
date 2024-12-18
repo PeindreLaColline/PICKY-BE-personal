@@ -4,12 +4,14 @@ import com.ureca.picky_be.base.business.movie.dto.*;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisReq;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
+import com.ureca.picky_be.base.implementation.lineReview.LineReviewManager;
 import com.ureca.picky_be.base.implementation.mapper.MovieDtoMapper;
 import com.ureca.picky_be.base.implementation.movie.MovieManager;
 import com.ureca.picky_be.base.implementation.user.UserManager;
 import com.ureca.picky_be.elasticsearch.document.movie.MovieDocument;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.genre.Genre;
+import com.ureca.picky_be.jpa.entity.lineReview.LineReview;
 import com.ureca.picky_be.jpa.entity.movie.FilmCrew;
 import com.ureca.picky_be.jpa.entity.movie.Movie;
 import com.ureca.picky_be.jpa.entity.movie.MovieBehindVideo;
@@ -31,6 +33,7 @@ public class MovieService implements MovieUseCase{
     private final MovieDtoMapper movieDtoMapper;
     private final AuthManager authManager;
     private final UserManager userManager;
+    private final LineReviewManager lineReviewManager;
 
     @Override
     public List<GetMoviesForRegisResp> getMoviesByGenre(GetMoviesForRegisReq getMoviesForRegisReq) {
@@ -54,7 +57,8 @@ public class MovieService implements MovieUseCase{
         List<FilmCrew> directors = movieManager.getDirectors(movie);
         boolean like = movieManager.getMovieLike(movieId, authManager.getUserId());
         List<Platform> platforms = movieManager.getStreamingPlatform(movie);
-        return movieDtoMapper.toGetMovieDetailResp(movie, movieBehindVideos, genres, actors, directors, like, platforms, movie.getTotalRating());
+        Long linereviewCount = lineReviewManager.getLineReviewCount(movieId);
+        return movieDtoMapper.toGetMovieDetailResp(movie, movieBehindVideos, genres, actors, directors, like, platforms, movie.getTotalRating(), linereviewCount);
     }
 
     @Transactional
