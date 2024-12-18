@@ -25,6 +25,7 @@ public class PlaylistDtoMapper {
                                         m.getMovieId(),
                                         m.getTitle(),
                                         m.getLikes(),
+                                        m.getCreatedAt(),
                                         m.getTotalRating(),
                                         m.getPosterUrl(),
                                         m.getBackdropUrl()

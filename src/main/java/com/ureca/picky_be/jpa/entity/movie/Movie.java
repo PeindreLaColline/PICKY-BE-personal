@@ -33,7 +33,7 @@ public class Movie extends BaseEntity {
     @ColumnDefault("0.0")
     private double totalRating;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String plot;
 
     @Column(nullable = false)
