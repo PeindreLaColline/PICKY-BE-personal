@@ -36,13 +36,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         m.id,
         m.title,
         CAST(COUNT(ml) AS int),
+        m.createdAt,
         m.totalRating,
         m.posterUrl,
         m.backdropUrl
     )
     FROM Movie m
     LEFT JOIN MovieLike ml ON ml.movie.id = m.id
-    GROUP BY m.id, m.title, m.totalRating, m.posterUrl, m.backdropUrl
+    GROUP BY m.id, m.title, m.createdAt, m.totalRating, m.posterUrl, m.backdropUrl
     ORDER BY m.totalRating DESC
 """)
     List<GetSimpleMovieResp> findTop30MoviesWithLikes(Pageable pageable);
@@ -52,13 +53,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         m.id,
         m.title,
         CAST(COUNT(ml) AS int),
+        m.createdAt,
         m.totalRating,
         m.posterUrl,
         m.backdropUrl
     )
     FROM Movie m
     LEFT JOIN MovieLike ml ON ml.movie.id = m.id
-    GROUP BY m.id, m.title, m.totalRating, m.posterUrl, m.backdropUrl
+    GROUP BY m.id, m.title, m.createdAt, m.totalRating, m.posterUrl, m.backdropUrl
     ORDER BY m.totalRating DESC
 """)
     List<GetSimpleMovieResp> findTop10MoviesWithLikes(Pageable pageable);
@@ -68,6 +70,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         m.id,
         m.title,
         CAST(COUNT(ml) AS int),
+        m.createdAt,
         m.totalRating,
         m.posterUrl,
         m.backdropUrl
@@ -76,17 +79,16 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     JOIN MovieGenre mg ON mg.movie = m
     LEFT JOIN MovieLike ml ON ml.movie.id = m.id
     WHERE mg.genreId = :genreId
-    GROUP BY m.id, m.title, m.totalRating, m.posterUrl, m.backdropUrl
+    GROUP BY m.id, m.title, m.createdAt, m.totalRating, m.posterUrl, m.backdropUrl
     HAVING (
-        :lastMovieId IS NULL AND :lastLikeCount IS NULL
-        OR (CAST(COUNT(ml) AS int) < :lastLikeCount)
-        OR (CAST(COUNT(ml) AS int) = :lastLikeCount)
+        :lastMovieId IS NULL AND :createdAt IS NULL
+        OR (m.createdAt < :createdAt)
     )
     ORDER BY COUNT(ml) DESC, m.totalRating DESC
 """)
     Slice<GetSimpleMovieResp> findMoviesByGenreIdWithLikesUsingCursor(
             @Param("genreId") Long genreId,
-            @Param("lastLikeCount") Integer lastLikeCount,
+            @Param("createdAt") LocalDateTime createdAt,
             @Param("lastMovieId") Long lastMovieId,
             Pageable pageable
     );

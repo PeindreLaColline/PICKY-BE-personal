@@ -18,7 +18,7 @@ public interface MovieUseCase {
     SuccessCode updateMovie(Long movieId, UpdateMovieReq updateMovieReq);
     List<GetRecommendMovieResp> getRecommends();
     List<GetSimpleMovieResp> getTop10();
-    Slice<GetSimpleMovieResp> getMoviesByGenre(Long genreId, Long lastMovieId, Integer lastLikeCount);
+    Slice<GetSimpleMovieResp> getMoviesByGenre(Long genreId, Long lastMovieId, LocalDateTime createdAt);
     boolean movieLike(Long movieId);
     List<GetGenres> getGenres();
     Slice<GetSimpleMovieResp> getMoviesOrderByCreatedAt(Long lastMovieId, LocalDateTime createdAt, int size);

@@ -113,14 +113,14 @@ public class MovieManager {
      * when: 장르별 영화 조회
      * what: 12개씩 장르별로 높은 좋아요 순으로 조회
      */
-    public Slice<GetSimpleMovieResp> getMoviesByGenre(Long genreId, Long lastMovieId, Integer lastLikeCount){
+    public Slice<GetSimpleMovieResp> getMoviesByGenre(Long genreId, Long lastMovieId, LocalDateTime createdAt){
 /*        // 영화 존재 여부 확인
         if (lastMovieId != null && !movieRepository.existsById(lastMovieId)) {
             throw new CustomException(ErrorCode.MOVIE_NOT_FOUND);
         }*/
 
         //validateCursor(genreId, lastMovieId);
-        return movieRepository.findMoviesByGenreIdWithLikesUsingCursor(genreId, lastLikeCount, lastMovieId, PageRequest.ofSize(12));
+        return movieRepository.findMoviesByGenreIdWithLikesUsingCursor(genreId, createdAt, lastMovieId, PageRequest.ofSize(12));
     }
     // </editor-fold>
     // <editor-fold desc="영화 조회에 필요한 메서드">

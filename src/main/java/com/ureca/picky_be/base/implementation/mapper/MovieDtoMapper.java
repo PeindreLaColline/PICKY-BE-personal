@@ -100,6 +100,7 @@ public class MovieDtoMapper {
                         projection.getMovieId(),
                         projection.getTitle(),
                         projection.getLikes(),
+                        projection.getCreatedAt(),
                         projection.getTotalRating(),
                         projection.getPosterUrl(),
                         projection.getBackdropUrl()

@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -51,9 +52,9 @@ public class MovieController {
     @Operation(summary = "영화 장르별 조회", description = "영화 장르별 조회")
     @GetMapping("/genre")
     public Slice<GetSimpleMovieResp> getMoviesByGenre(@RequestParam Long genreId,
-                                                     @RequestParam(required = false) Long lastMovieId,
-                                                     @RequestParam(required = false) Integer lastLikeCount) {
-        return movieUseCase.getMoviesByGenre(genreId, lastMovieId, lastLikeCount);
+                                                      @RequestParam(required = false) Long lastMovieId,
+                                                      @RequestParam(required = false) LocalDateTime createdAt) {
+        return movieUseCase.getMoviesByGenre(genreId, lastMovieId, createdAt);
     }
 
     @Operation(summary = "영화 좋아요", description = "영화 좋아요 혹은 좋아요 취소. return true일 시 좋아요 눌린 상태, false일 시 좋아요 안 눌린 상태")
