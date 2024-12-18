@@ -22,7 +22,7 @@ public class EmailManager {
     private final JavaMailSender mailSender;
 
 
-    @Async("customExecutor")
+    @Async("mailExecutor")
     public void sendOneEmail(String to, EventMessageReq req) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();

@@ -3,6 +3,7 @@ server:
   port: 8080
   shutdown: graceful
 
+
 spring:
   application:
     name: picky-backend
@@ -21,6 +22,8 @@ spring:
       - classpath:properties/tmdb.yml
       - classpath:properties/mail.yml
       - classpath:properties/elasticsearch.yml
+  security:
+    strategy: MODE_INHERITABLETHREADLOCAL
 
 
 ---
