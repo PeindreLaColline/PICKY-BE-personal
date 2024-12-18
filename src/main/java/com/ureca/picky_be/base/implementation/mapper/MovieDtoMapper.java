@@ -26,7 +26,8 @@ public class MovieDtoMapper {
             List<FilmCrew> directors,
             boolean like,
             List<Platform> platforms,
-            double rating
+            double rating,
+            Long linereviewCount
     ) {
         List<GetMovieDetailResp.MovieInfo.GenreInfo> genreInfoList = genres.stream()
                 .map(genre -> new GetMovieDetailResp.MovieInfo.GenreInfo(genre.getId()))
@@ -82,7 +83,8 @@ public class MovieDtoMapper {
                         platformTypes.contains(PlatformType.WAVVE),
                         platformTypes.contains(PlatformType.TVING),
                         platformTypes.contains(PlatformType.COUPANG)
-                )
+                ),
+                linereviewCount
         );
     }
 
