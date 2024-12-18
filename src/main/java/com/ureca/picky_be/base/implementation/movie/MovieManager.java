@@ -420,6 +420,7 @@ public class MovieManager {
     }
     // </editor-fold>
     // <editor-fold desc="영화 수정">
+    @Transactional
     public SuccessCode updateMovie (Long movieId, UpdateMovieReq updateMovieReq){
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MOVIE_NOT_FOUND));
