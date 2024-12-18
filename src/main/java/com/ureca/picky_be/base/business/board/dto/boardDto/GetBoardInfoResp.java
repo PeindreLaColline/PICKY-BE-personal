@@ -17,6 +17,7 @@ public record GetBoardInfoResp(
         Integer likesCount,
         Integer commentsCount,
         List<GetBoardContentResp> contents,
+        Long movieId,
         String movieTitle,
         Boolean isLike,
         boolean isAuthor

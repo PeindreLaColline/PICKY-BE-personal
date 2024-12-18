@@ -38,6 +38,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         (SELECT COUNT(l) FROM BoardLike l WHERE l.board.id = b.id) AS likeCount,
         (SELECT COUNT(c) FROM BoardComment c WHERE c.board.id = b.id) AS commentCount,
         (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.userId = :userId) THEN true ELSE false END) AS isLike,
+        m.id AS movieId,
         m.title AS movieName,
         (CASE WHEN b.userId = :userId THEN true ELSE false END) AS isAuthor
     FROM Board b
@@ -63,6 +64,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                     ), '[]')
             FROM BoardContent bc
             WHERE bc.board.id = b.id) AS contents,
+        m.id AS movieId,
         m.title AS movieName,
         (CASE WHEN b.userId = :userId THEN true ELSE false END) AS isAuthor
     FROM Board b
@@ -90,6 +92,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         (SELECT COUNT(l) FROM BoardLike l WHERE l.board.id = b.id) AS likeCount,
         (SELECT COUNT(c) FROM BoardComment c WHERE c.board.id = b.id) AS commentCount,
         (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.userId = :currentId) THEN true ELSE false END) AS isLike,
+        m.id AS movieId,
         m.title AS movieName,
         (CASE WHEN b.userId = :currentId THEN true ELSE false END) AS isAuthor
     FROM Board b
