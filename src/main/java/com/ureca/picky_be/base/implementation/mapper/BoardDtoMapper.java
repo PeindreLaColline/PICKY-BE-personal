@@ -66,10 +66,11 @@ public class BoardDtoMapper {
         AtomicInteger index = new AtomicInteger(0);
 
         return recentBoards.map(board -> {
+            int currentIndex = index.getAndIncrement();
             List<GetBoardContentResp> contents = boardContentMap.getOrDefault(board.getBoardId(), Collections.emptyList());
 
-            String transformedProfileUrl = profileUrls.get(index.getAndIncrement());
-            List<GetMovieDetailResp.MovieInfo.GenreInfo> genreInfo = genreInfoLists.get(index.getAndIncrement());
+            String transformedProfileUrl = profileUrls.get(currentIndex);
+            List<GetMovieDetailResp.MovieInfo.GenreInfo> genreInfo = genreInfoLists.get(currentIndex);
 
             return new GetBoardInfoResp(
                     board.getBoardId(),

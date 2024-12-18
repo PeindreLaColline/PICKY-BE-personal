@@ -99,9 +99,23 @@ public class BoardService implements BoardUseCase {
     public Slice<GetBoardInfoResp> getBoards(Pageable pageable, Long lastBoardId) {
         Long userId = authManager.getUserId();
         Slice<BoardProjection> recentBoards = boardManager.getRecentMovieBoards(userId, lastBoardId, pageable);
-        List<List<Genre>> genresList = recentBoards.getContent().stream()
-                .map(board -> movieManager.getGenre(board.getMovieId())) // 각 board의 movieId로 genres 가져오기
+        List<Long> movieIds = recentBoards.getContent().stream()
+                .map(BoardProjection::getMovieId)
+                .distinct()
                 .toList();
+        Map<Long, List<Genre>> genresByMovieId = movieIds.stream()
+                .collect(Collectors.toMap(
+                        movieId -> movieId,
+                        movieManager::getGenre
+                ));
+
+//        List<List<Genre>> genresList = recentBoards.getContent().stream()
+//                .map(board -> movieManager.getGenre(board.getMovieId())) // 각 board의 movieId로 genres 가져오기
+//                .toList();
+        List<List<Genre>> genresList = recentBoards.getContent().stream()
+                .map(board -> genresByMovieId.getOrDefault(board.getMovieId(), List.of()))
+                .toList();
+
         List<String> profileUrls = recentBoards.getContent().stream()
                 .map(BoardProjection::getWriterProfileUrl)
                 .map(url -> url != null ? profileManager.getPresignedUrl(url) : null)
@@ -221,9 +235,20 @@ public class BoardService implements BoardUseCase {
         Long searchUserId = userManager.getUserIdByNickname(req.nickname());
         Long currentId = authManager.getUserId();
         Slice<BoardProjection> boards = boardManager.findBoardsByUserId(searchUserId, currentId, req, pageRequest);
-        List<List<Genre>> genresList = boards.getContent().stream()
-                .map(board -> movieManager.getGenre(board.getMovieId())) // 각 board의 movieId로 genres 가져오기
+
+        List<Long> movieIds = boards.getContent().stream()
+                .map(BoardProjection::getMovieId)
+                .distinct()
                 .toList();
+        Map<Long, List<Genre>> genresByMovieId = movieIds.stream()
+                .collect(Collectors.toMap(
+                        movieId -> movieId,
+                        movieManager::getGenre
+                ));
+        List<List<Genre>> genresList = boards.getContent().stream()
+                .map(board -> genresByMovieId.getOrDefault(board.getMovieId(), List.of()))
+                .toList();
+
         List<String> profileUrls = boards.getContent().stream()
                 .map(BoardProjection::getWriterProfileUrl)
                 .map(url -> url != null ? profileManager.getPresignedUrl(url) : null)
