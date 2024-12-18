@@ -84,6 +84,7 @@ public class LineReviewManager {
         try {
             Long movieId = queryReq.movieId();
             Long lastReviewId = queryReq.lastReviewId();
+
             LocalDateTime lastCreatedAt = queryReq.lastCreatedAt();
             SortType sortType = queryReq.sortType();
             if (!movieRepository.existsById(movieId)) {
@@ -181,6 +182,10 @@ public class LineReviewManager {
         catch (Exception e){
             throw new CustomException(ErrorCode.LINEREVIEW_DELETE_FAILED);
         }
+    }
+
+    public Long getLineReviewCount(Long movieId) {
+        return lineReviewRepository.countByMovieId(movieId);
     }
 }
 
