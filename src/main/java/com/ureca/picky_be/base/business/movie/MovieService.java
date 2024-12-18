@@ -44,8 +44,9 @@ public class MovieService implements MovieUseCase{
     @Override
     public SuccessCode addMovie(AddMovieReq addMovieReq) {
         Movie movie = movieManager.addMovie(addMovieReq);
+        List<Genre> genre = movieManager.getGenre(movie.getId());
         movieManager.addStreamingPlatform(addMovieReq, movie);
-        movieManager.addMovieElastic(movie);
+        movieManager.addMovieElastic(movie, genre);
         return SuccessCode.CREATE_MOVIE_SUCCESS;
     }
 
