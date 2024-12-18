@@ -6,6 +6,7 @@ public record GetSimpleMovieResp(
         Long movieId,
         String title,
         Integer likes,
+        Integer lineReviews,
         LocalDateTime createdAt,
         double totalRating,
         String posterUrl,

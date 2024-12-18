@@ -8,6 +8,7 @@ public interface GetSimpleMovieProjection {
     Long getMovieId();
     String getTitle();
     Integer getLikes();
+    Integer getLineReviews();
     LocalDateTime getCreatedAt();
     double getTotalRating();
     String getPosterUrl();

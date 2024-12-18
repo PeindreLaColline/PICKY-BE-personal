@@ -31,6 +31,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -699,14 +700,21 @@ public class MovieManager {
         return movieSearchRepository.findByTitle(keyword);
     }
 
-    public void addMovieElastic(Movie movie) {
+    public void addMovieElastic(Movie movie, List<Genre> genres) {
         try {
+
+            List<GetGenres> getGenres = genres.stream()
+                    .map(genre -> new GetGenres(genre.getId(), genre.getName())) // GetGenres 객체 생성
+                    .toList();
+
             MovieDocument newMovieDocument = MovieDocument.builder()
                     .id(movie.getId())
                     .title(movie.getTitle())
                     .releaseDate(movie.getReleaseDate())
                     .posterUrl(movie.getPosterUrl())
                     .isDeleted(movie.getIsDeleted())
+                    .genre(getGenres) // 변환된 장르 리스트 추가
+                    .originalLanguage(movie.getOriginalLanguage())
                     .build();
 
             movieSearchRepository.save(newMovieDocument);

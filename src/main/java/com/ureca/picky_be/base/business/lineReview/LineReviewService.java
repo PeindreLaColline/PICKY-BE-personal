@@ -51,6 +51,7 @@ public class LineReviewService implements LineReviewUseCase {
     public Slice<ReadLineReviewResp> getLineReviewsByMovie(PageRequest pageRequest, LineReviewQueryRequest queryReq) {
         Long userId = authManager.getUserId();
         Slice<LineReviewProjection> lineReviews = lineReviewManager.findLineReviewsByMovie(userId, queryReq, pageRequest);
+        System.out.println("LineReviews Content: " + lineReviews.getContent());
         return lineReviews.map(lineReviewDtoMapper::toReadLineReviewResp);
     }
 

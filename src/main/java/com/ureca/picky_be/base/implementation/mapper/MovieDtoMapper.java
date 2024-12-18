@@ -100,6 +100,7 @@ public class MovieDtoMapper {
                         projection.getMovieId(),
                         projection.getTitle(),
                         projection.getLikes(),
+                        projection.getLineReviews(),
                         projection.getCreatedAt(),
                         projection.getTotalRating(),
                         projection.getPosterUrl(),
@@ -156,7 +157,9 @@ public class MovieDtoMapper {
                         movie.getId(),
                         movie.getTitle(),
                         movie.getPosterUrl(),
-                        movie.getReleaseDate()
+                        movie.getReleaseDate(),
+                        movie.getGenre(), // 그대로 전달
+                        movie.getOriginalLanguage()
                 )).toList();
     }
 }
