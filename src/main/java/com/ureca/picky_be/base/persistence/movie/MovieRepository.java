@@ -84,7 +84,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         :lastMovieId IS NULL AND :createdAt IS NULL
         OR (m.createdAt < :createdAt)
     )
-    ORDER BY COUNT(ml) DESC, m.totalRating DESC
+    ORDER BY m.createdAt DESC
 """)
     Slice<GetSimpleMovieResp> findMoviesByGenreIdWithLikesUsingCursor(
             @Param("genreId") Long genreId,
