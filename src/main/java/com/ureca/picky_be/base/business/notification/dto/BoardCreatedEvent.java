@@ -13,4 +13,13 @@ public class BoardCreatedEvent {
         this.movieId = movieId;
         this.boardId = boardId;
     }
+
+    @Override
+    public String toString() {
+        return "BoardCreatedEvent{" +
+                "movieId=" + movieId +
+                ", boardId=" + boardId +
+                ", writerId=" + writerId +
+                '}';
+    }
 }
