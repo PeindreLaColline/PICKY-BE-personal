@@ -18,22 +18,18 @@ public class EmailController {
     @Operation(summary = "이벤트 이메일 전송 API", description = "특정 이벤트에 대한 이메일")
     @PostMapping("/event")
     public SuccessCode sendEventEmail(
-            @Parameter(description = "보내려하는 사람의 id")
-            @RequestParam Long userId,
             @RequestBody EventMessageReq req
     )
     {
-        mailUseCase.sendEventEmail(userId, req);
+        mailUseCase.sendEventEmail(req);
         return SuccessCode.EMAIL_SEND_SUCCESS;
     }
 
     @Operation(summary = "회원가입 이메일 전송 API", description = "회원가입시 환영을 위한 이메일")
     @PostMapping("/register")
-    public SuccessCode sendRegisterCongratulationsEmail(
-            @Parameter(description = "보내려하는 사람의 id")
-            @RequestParam Long userId)
+    public SuccessCode sendRegisterCongratulationsEmail()
     {
-        mailUseCase.sendRegisterCongratulationMail(userId);
+        mailUseCase.sendRegisterCongratulationMail();
         return SuccessCode.EMAIL_SEND_SUCCESS;
     }
 
