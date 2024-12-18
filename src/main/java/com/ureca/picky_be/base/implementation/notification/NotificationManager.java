@@ -107,14 +107,14 @@ public class NotificationManager {
 
         Notification notification = createNotification(receiver, movieId, boardId, notificationType);
 
-        Long notificationId = notification.getId();
         String eventId = makeTimeIncludeId(receiver.getId());
 
         // 특정 사용자에 대한 emitter를 찾아오는 것
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterByUserId(String.valueOf(receiverId));
 
         NotificationProjection noti = getNewBoardNotificationData(senderId, boardId, movieId);
-        CreateNotificationResp data = notificationDtoMapper.toCreateNotificationResp(noti, notificationId);
+
+        CreateNotificationResp data = notificationDtoMapper.toCreateNotificationResp(noti, notification);
         emitters.forEach(
                 (id, emitter) -> {
                     emitterRepository.saveEventCache(id, notification);
@@ -139,8 +139,6 @@ public class NotificationManager {
 
         for(User receiver : users) {
             Notification notification = createNotification(receiver, movieId, boardId, notificationType);
-
-            Long notificationId = notification.getId();
             String eventId = makeTimeIncludeId(receiver.getId());
 
             // 특정 사용자에 대한 emitter를 찾아오는 것
@@ -149,7 +147,7 @@ public class NotificationManager {
             // 여기에서 사용자 id(User receiver), 게시글 id(BoardId), 영화 Id(movieId)를 활용해 NotificaitonProjection으로 생성해야함.
             NotificationProjection noti = getNewBoardNotificationData(null, boardId, movieId);
 
-            CreateNotificationResp data = notificationDtoMapper.toCreateNotificationResp(noti, notificationId);
+            CreateNotificationResp data = notificationDtoMapper.toCreateNotificationResp(noti, notification);
             emitters.forEach(
                     (id, emitter) -> {
                         emitterRepository.saveEventCache(id, notification);

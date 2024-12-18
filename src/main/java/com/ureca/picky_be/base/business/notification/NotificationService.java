@@ -8,6 +8,7 @@ import com.ureca.picky_be.base.implementation.notification.NotificationManager;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
+import com.ureca.picky_be.jpa.entity.notification.Notification;
 import com.ureca.picky_be.jpa.entity.notification.NotificationType;
 import com.ureca.picky_be.jpa.entity.user.User;
 import lombok.RequiredArgsConstructor;
@@ -65,14 +66,14 @@ public class NotificationService implements NotificationUseCase {
         List<CreateNotificationResp> notifications = users.stream()
                 .map(receiver -> {
                     // NotificationProjection 조회
+                    Notification notification = notificationManager.createNotification(receiver, movieId, boardId, type);
                     NotificationProjection noti = notificationManager.getNewBoardNotificationData(writerId, boardId, movieId);
 
                     // Notification 생성 및 ID 반환
-                    Long notificationId = notificationManager.createNotification(receiver, movieId, boardId, type).getId();
                     String senderProfileUrl = profileManager.getPresignedUrl(noti.getSenderProfileUrl());
                     // CreateNotificationResp 객체 생성 및 URL 변환
                     return new CreateNotificationResp(
-                            notificationId,
+                            notification.getId(),
                             noti.getBoardId(),
                             noti.getMovieId(),
                             noti.getMovieTitle(),
@@ -80,7 +81,7 @@ public class NotificationService implements NotificationUseCase {
                             noti.getSenderId(),
                             senderProfileUrl,
                             noti.getSenderNickname(),
-                            noti.getCreatedAt(),
+                            notification.getCreatedAt(),
                             Boolean.FALSE
                     );
                 })
