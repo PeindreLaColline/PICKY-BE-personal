@@ -16,12 +16,14 @@ import com.ureca.picky_be.base.implementation.content.ImageManager;
 import com.ureca.picky_be.base.implementation.content.ProfileManager;
 import com.ureca.picky_be.base.implementation.content.VideoManager;
 import com.ureca.picky_be.base.implementation.mapper.BoardDtoMapper;
+import com.ureca.picky_be.base.implementation.movie.MovieManager;
 import com.ureca.picky_be.base.implementation.user.UserManager;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.board.Board;
 import com.ureca.picky_be.jpa.entity.board.BoardContentType;
+import com.ureca.picky_be.jpa.entity.genre.Genre;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -34,7 +36,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +54,7 @@ public class BoardService implements BoardUseCase {
     private final ProfileManager profileManager;
     private final ApplicationEventPublisher eventPublisher;
     private final UserManager userManager;
+    private final MovieManager movieManager;
 
     @Override
     @Transactional
@@ -93,6 +99,9 @@ public class BoardService implements BoardUseCase {
     public Slice<GetBoardInfoResp> getBoards(Pageable pageable, Long lastBoardId) {
         Long userId = authManager.getUserId();
         Slice<BoardProjection> recentBoards = boardManager.getRecentMovieBoards(userId, lastBoardId, pageable);
+        List<List<Genre>> genresList = recentBoards.getContent().stream()
+                .map(board -> movieManager.getGenre(board.getMovieId())) // 각 board의 movieId로 genres 가져오기
+                .toList();
         List<String> profileUrls = recentBoards.getContent().stream()
                 .map(BoardProjection::getWriterProfileUrl)
                 .map(url -> url != null ? profileManager.getPresignedUrl(url) : null)
@@ -101,13 +110,17 @@ public class BoardService implements BoardUseCase {
                 .map(BoardProjection::getBoardId)
                 .toList();
         List<BoardContentWithBoardId> boardContentWithBoardIds = processBoardContents(boardManager.getBoardContentWithBoardId(boardIds));
-        return boardDtoMapper.toGetBoardInfoResps(recentBoards, boardContentWithBoardIds, profileUrls);
+        return boardDtoMapper.toGetBoardInfoResps(recentBoards, boardContentWithBoardIds, profileUrls, genresList);
     }
 
     @Override
     public Slice<GetBoardInfoResp> getMovieRelatedBoards(Pageable pageable, BoardMovieIdQueryReq req) {
         Long userId = authManager.getUserId();
-        Slice<BoardProjection> recentMovieRelatedBoards = boardManager.getRecentMovieRelatedBoards(userId, req.movieId(), req.lastBoardId(), pageable);
+        Long movieId = req.movieId();
+        List<Genre> genres = movieManager.getGenre(movieId);
+
+        Slice<BoardProjection> recentMovieRelatedBoards = boardManager.getRecentMovieRelatedBoards(userId, movieId, req.lastBoardId(), pageable);
+        List<Genre> genresList = genres;
         List<String> profileUrls = recentMovieRelatedBoards.getContent().stream()
                 .map(BoardProjection::getWriterProfileUrl)
                 .map(profileManager::getPresignedUrl)
@@ -116,7 +129,7 @@ public class BoardService implements BoardUseCase {
                 .map(BoardProjection::getBoardId)
                 .toList();
         List<BoardContentWithBoardId> boardContentWithBoardIds = processBoardContents(boardManager.getBoardContentWithBoardId(boardIds));
-        return boardDtoMapper.toGetBoardInfoResps(recentMovieRelatedBoards, boardContentWithBoardIds, profileUrls);
+        return boardDtoMapper.toGetBoardInfoListGenresResps(recentMovieRelatedBoards, boardContentWithBoardIds, profileUrls, genresList);
     }
 
     public List<BoardContentWithBoardId> processBoardContents(List<BoardContentWithBoardId> boardContentWithBoardIds) {
@@ -208,6 +221,9 @@ public class BoardService implements BoardUseCase {
         Long searchUserId = userManager.getUserIdByNickname(req.nickname());
         Long currentId = authManager.getUserId();
         Slice<BoardProjection> boards = boardManager.findBoardsByUserId(searchUserId, currentId, req, pageRequest);
+        List<List<Genre>> genresList = boards.getContent().stream()
+                .map(board -> movieManager.getGenre(board.getMovieId())) // 각 board의 movieId로 genres 가져오기
+                .toList();
         List<String> profileUrls = boards.getContent().stream()
                 .map(BoardProjection::getWriterProfileUrl)
                 .map(url -> url != null ? profileManager.getPresignedUrl(url) : null)
@@ -216,6 +232,6 @@ public class BoardService implements BoardUseCase {
                 .map(BoardProjection::getBoardId)
                 .toList();
         List<BoardContentWithBoardId> boardContentWithBoardIds = processBoardContents(boardManager.getBoardContentWithBoardId(boardIds));
-        return boardDtoMapper.toGetBoardInfoResps(boards, boardContentWithBoardIds , profileUrls);
+        return boardDtoMapper.toGetBoardInfoResps(boards, boardContentWithBoardIds , profileUrls, genresList);
     }
 }

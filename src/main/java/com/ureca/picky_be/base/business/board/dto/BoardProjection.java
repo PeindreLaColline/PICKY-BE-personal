@@ -3,6 +3,7 @@ package com.ureca.picky_be.base.business.board.dto;
 import com.ureca.picky_be.base.business.board.dto.contentDto.GetBoardContentResp;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 public interface BoardProjection {
 
@@ -19,6 +20,7 @@ public interface BoardProjection {
     Integer getCommentCount();  // Board 댓글 갯수
     Long getMovieId();
     String getMovieName(); // Board 영화 이름
+    Date getReleaseDate();
     Boolean getIsLike();    // Board 사용자가 좋아요 눌렀는지 여부
     boolean getIsAuthor();
 }
