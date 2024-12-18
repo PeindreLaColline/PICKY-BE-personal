@@ -60,7 +60,8 @@ public class NotificationService implements NotificationUseCase {
     @Override
     public void sendNewBoardNotification(Long writerId, Long movieId, Long boardId) {
         NotificationType type = NotificationType.LIKEMOVIENEWBOARD;
-        List<User> users = notificationManager.findMovieLikeUsers(writerId, boardId);
+        Long currentUserId = authManager.getUserId();
+        List<User> users = notificationManager.findMovieLikeUsers(writerId, boardId, currentUserId);
         List<CreateNotificationResp> notifications = users.stream()
                 .map(receiver -> {
                     // NotificationProjection 조회
