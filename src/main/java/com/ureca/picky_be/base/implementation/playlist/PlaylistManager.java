@@ -65,7 +65,10 @@ public class PlaylistManager {
     public Playlist updatePlaylist(UpdatePlaylistReq updatePlaylistReq) {
         Playlist playlist = playlistRepository.findById(updatePlaylistReq.playlistId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PLAYLIST_NOT_FOUND));
-        if(updatePlaylistReq.title() != null) playlist.updatePlaylistTitle(updatePlaylistReq.title());
+        if(updatePlaylistReq.title() != null) {
+            playlist.updatePlaylistTitle(updatePlaylistReq.title());
+            playlistRepository.saveAndFlush(playlist);
+        }
 
         moviePlaylistRepository.deleteByPlaylist(playlist);
         updatePlaylistReq.movieIds().stream()
