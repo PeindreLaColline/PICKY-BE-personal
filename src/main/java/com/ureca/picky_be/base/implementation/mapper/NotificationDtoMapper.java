@@ -4,15 +4,16 @@ import com.ureca.picky_be.base.business.notification.dto.CreateNotificationResp;
 import com.ureca.picky_be.base.business.notification.dto.NotificationProjection;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.jpa.entity.notification.Notification;
 import org.springframework.stereotype.Component;
 
 @Component
 public class NotificationDtoMapper {
 
-    public CreateNotificationResp toCreateNotificationResp(NotificationProjection projection, Long notificationId) {
+    public CreateNotificationResp toCreateNotificationResp(NotificationProjection projection, Notification notification) {
         try {
             return new CreateNotificationResp(
-                    notificationId,
+                    notification.getId(),
                     projection.getBoardId(),
                     projection.getMovieId(),
                     projection.getMovieTitle(),
@@ -20,7 +21,7 @@ public class NotificationDtoMapper {
                     projection.getSenderId(),
                     projection.getSenderProfileUrl(),
                     projection.getSenderNickname(),
-                    projection.getCreatedAt(),
+                    notification.getCreatedAt(),
                     Boolean.FALSE
             );
         } catch (Exception e) {
