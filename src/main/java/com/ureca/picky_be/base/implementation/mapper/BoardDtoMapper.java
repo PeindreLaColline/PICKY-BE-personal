@@ -13,6 +13,7 @@ import com.ureca.picky_be.global.exception.ErrorCode;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -110,13 +111,17 @@ public class BoardDtoMapper {
     }
 
     public List<AddBoardContentReq> toAddBoardContentReq(List<String> images, List<String> videos) {
-        List<AddBoardContentReq> imageContents = images.stream()
+        List<AddBoardContentReq> imageContents = images != null
+                ? images.stream()
                 .map(image -> new AddBoardContentReq(image, "IMAGE"))
-                .toList();
+                .toList()
+                : List.of();
 
-        List<AddBoardContentReq> videoContents = videos.stream()
+        List<AddBoardContentReq> videoContents = videos != null
+                ? videos.stream()
                 .map(video -> new AddBoardContentReq(video, "VIDEO"))
-                .toList();
+                .toList()
+                : List.of();
 
         return Stream.concat(imageContents.stream(), videoContents.stream())
                 .toList();
