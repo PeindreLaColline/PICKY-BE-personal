@@ -157,7 +157,9 @@ public class MovieDtoMapper {
                         movie.getId(),
                         movie.getTitle(),
                         movie.getPosterUrl(),
-                        movie.getReleaseDate()
+                        movie.getReleaseDate(),
+                        movie.getGenre(), // 그대로 전달
+                        movie.getOriginalLanguage()
                 )).toList();
     }
 }
