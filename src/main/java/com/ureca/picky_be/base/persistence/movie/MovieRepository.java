@@ -36,6 +36,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         m.id,
         m.title,
         CAST(COUNT(ml) AS int),
+        CAST(COUNT(lr) AS int),
         m.createdAt,
         m.totalRating,
         m.posterUrl,
@@ -43,6 +44,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     )
     FROM Movie m
     LEFT JOIN MovieLike ml ON ml.movie.id = m.id
+    LEFT JOIN LineReview lr ON lr.movieId = m.id
     GROUP BY m.id, m.title, m.createdAt, m.totalRating, m.posterUrl, m.backdropUrl
     ORDER BY m.totalRating DESC
 """)
@@ -53,6 +55,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         m.id,
         m.title,
         CAST(COUNT(ml) AS int),
+        CAST(COUNT(lr) AS int),
         m.createdAt,
         m.totalRating,
         m.posterUrl,
@@ -60,6 +63,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     )
     FROM Movie m
     LEFT JOIN MovieLike ml ON ml.movie.id = m.id
+    LEFT JOIN LineReview lr ON lr.movieId = m.id
     GROUP BY m.id, m.title, m.createdAt, m.totalRating, m.posterUrl, m.backdropUrl
     ORDER BY m.totalRating DESC
 """)
@@ -70,6 +74,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         m.id,
         m.title,
         CAST(COUNT(ml) AS int),
+        CAST(COUNT(lr) AS int),
         m.createdAt,
         m.totalRating,
         m.posterUrl,
@@ -78,6 +83,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     FROM Movie m
     JOIN MovieGenre mg ON mg.movie = m
     LEFT JOIN MovieLike ml ON ml.movie.id = m.id
+    LEFT JOIN LineReview lr ON lr.movieId = m.id
     WHERE mg.genreId = :genreId
     GROUP BY m.id, m.title, m.createdAt, m.totalRating, m.posterUrl, m.backdropUrl
     HAVING (
@@ -99,12 +105,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         m.id AS movieId,
         m.title AS title,
         CAST(COUNT(ml) AS int) AS likes,
+        CAST(COUNT(lr) AS int) AS lineReviews,
         m.totalRating AS totalRating,
         m.posterUrl AS posterUrl,
         m.backdropUrl AS backdropUrl
     FROM Movie m
     JOIN MoviePlaylist mpl ON mpl.movie.id = m.id
     LEFT JOIN MovieLike ml ON ml.movie.id = m.id
+    LEFT JOIN LineReview lr ON lr.movieId = m.id
     WHERE mpl.playlist.id IN :playlistIds
     GROUP BY mpl.playlist.id, m.id, m.title, m.totalRating, m.posterUrl, m.backdropUrl
     ORDER BY m.id DESC
@@ -116,11 +124,13 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         m.id AS movieId,
         m.title AS title,
         CAST(COUNT(ml) AS int) AS likes,
+        CAST(COUNT(lr) AS int) AS lineReviews,
         m.totalRating AS totalRating,
         m.posterUrl AS posterUrl,
         m.backdropUrl AS backdropUrl
     FROM Movie m
     LEFT JOIN MovieLike ml ON ml.movie.id = m.id
+    LEFT JOIN LineReview lr ON lr.movieId = m.id
     WHERE (:lastMovieId IS NULL OR m.id < :lastMovieId)
     GROUP BY m.id, m.title, m.totalRating, m.posterUrl, m.backdropUrl
     ORDER BY m.id DESC, :createdAt DESC
