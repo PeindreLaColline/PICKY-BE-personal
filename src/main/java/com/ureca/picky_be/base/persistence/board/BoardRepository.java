@@ -40,6 +40,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.userId = :userId) THEN true ELSE false END) AS isLike,
         m.id AS movieId,
         m.title AS movieName,
+        m.releaseDate AS releaseDate,
         (CASE WHEN b.userId = :userId THEN true ELSE false END) AS isAuthor
     FROM Board b
     JOIN User u ON b.userId = u.id
@@ -66,6 +67,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             WHERE bc.board.id = b.id) AS contents,
         m.id AS movieId,
         m.title AS movieName,
+        m.releaseDate AS releaseDate,
         (CASE WHEN b.userId = :userId THEN true ELSE false END) AS isAuthor
     FROM Board b
     JOIN User u ON b.userId = u.id
@@ -94,6 +96,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         (CASE WHEN EXISTS (SELECT 1 FROM BoardLike bl WHERE bl.board.id = b.id AND bl.userId = :currentId) THEN true ELSE false END) AS isLike,
         m.id AS movieId,
         m.title AS movieName,
+        m.releaseDate AS releaseDate,
         (CASE WHEN b.userId = :currentId THEN true ELSE false END) AS isAuthor
     FROM Board b
     JOIN User u ON b.userId = u.id

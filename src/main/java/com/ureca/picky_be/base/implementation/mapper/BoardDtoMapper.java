@@ -8,8 +8,10 @@ import com.ureca.picky_be.base.business.board.dto.commentDto.GetAllBoardComments
 import com.ureca.picky_be.base.business.board.dto.contentDto.AddBoardContentReq;
 import com.ureca.picky_be.base.business.board.dto.contentDto.BoardContentWithBoardId;
 import com.ureca.picky_be.base.business.board.dto.contentDto.GetBoardContentResp;
+import com.ureca.picky_be.base.business.movie.dto.GetMovieDetailResp;
 import com.ureca.picky_be.global.exception.CustomException;
 import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.jpa.entity.genre.Genre;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
@@ -41,8 +43,17 @@ public class BoardDtoMapper {
     public Slice<GetBoardInfoResp> toGetBoardInfoResps(
             Slice<BoardProjection> recentBoards,
             List<BoardContentWithBoardId> boardContentWithBoardIds,
-            List<String> profileUrls
+            List<String> profileUrls,
+            List<List<Genre>> genres
     ) {
+        List<List<GetMovieDetailResp.MovieInfo.GenreInfo>> genreInfoLists = genres.stream()
+                .map(genreList -> genreList.stream()
+                        .map(genre -> new GetMovieDetailResp.MovieInfo.GenreInfo(genre.getId()))
+                        .toList()
+                )
+                .toList();
+
+
         Map<Long, List<GetBoardContentResp>> boardContentMap = boardContentWithBoardIds.stream()
                 .collect(Collectors.groupingBy(
                         BoardContentWithBoardId::boardId,
@@ -55,9 +66,11 @@ public class BoardDtoMapper {
         AtomicInteger index = new AtomicInteger(0);
 
         return recentBoards.map(board -> {
+            int currentIndex = index.getAndIncrement();
             List<GetBoardContentResp> contents = boardContentMap.getOrDefault(board.getBoardId(), Collections.emptyList());
 
-            String transformedProfileUrl = profileUrls.get(index.getAndIncrement());
+            String transformedProfileUrl = profileUrls.get(currentIndex);
+            List<GetMovieDetailResp.MovieInfo.GenreInfo> genreInfo = genreInfoLists.get(currentIndex);
 
             return new GetBoardInfoResp(
                     board.getBoardId(),
@@ -74,6 +87,55 @@ public class BoardDtoMapper {
                     contents,
                     board.getMovieId(),
                     board.getMovieName(),
+                    board.getReleaseDate(),
+                    genreInfo,
+                    board.getIsLike(),
+                    board.getIsAuthor()
+            );
+        });
+    }
+
+    public Slice<GetBoardInfoResp> toGetBoardInfoListGenresResps(
+            Slice<BoardProjection> recentBoards,
+            List<BoardContentWithBoardId> boardContentWithBoardIds,
+            List<String> profileUrls,
+            List<Genre> genres
+    ) {
+        List<GetMovieDetailResp.MovieInfo.GenreInfo> genreInfoList = genres.stream()
+                .map(genre -> new GetMovieDetailResp.MovieInfo.GenreInfo(genre.getId()))
+                .toList();
+        Map<Long, List<GetBoardContentResp>> boardContentMap = boardContentWithBoardIds.stream()
+                .collect(Collectors.groupingBy(
+                        BoardContentWithBoardId::boardId,
+                        Collectors.mapping(
+                                content -> new GetBoardContentResp(content.contentUrl(), content.boardContentType().toString()),
+                                Collectors.toList()
+                        )
+                ));
+
+        AtomicInteger index = new AtomicInteger(0);
+
+        return recentBoards.map(board -> {
+            List<GetBoardContentResp> contents = boardContentMap.getOrDefault(board.getBoardId(), Collections.emptyList());
+
+            String transformedProfileUrl = profileUrls.get(index.getAndIncrement());
+            return new GetBoardInfoResp(
+                    board.getBoardId(),
+                    board.getWriterId(),
+                    board.getWriterNickname(),
+                    transformedProfileUrl,
+                    board.getWriterRole(),
+                    board.getContext(),
+                    board.getIsSpoiler(),
+                    board.getCreatedAt(),
+                    board.getUpdatedAt(),
+                    board.getLikeCount(),
+                    board.getCommentCount(),
+                    contents,
+                    board.getMovieId(),
+                    board.getMovieName(),
+                    board.getReleaseDate(),
+                    genreInfoList,
                     board.getIsLike(),
                     board.getIsAuthor()
             );
