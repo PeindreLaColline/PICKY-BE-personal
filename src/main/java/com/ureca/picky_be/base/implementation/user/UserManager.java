@@ -77,16 +77,12 @@ public class UserManager {
 
     @Transactional
     public SuccessCode updateUserNickname(Long userId, String nickname) {
-        if(nickname==null){
-            throw new CustomException(ErrorCode.USER_UPDATE_BAD_REQUEST);
-        }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        if(getNicknameValidation(nickname)){
+        try {
             user.updateNickname(nickname);
-            updateElasticsearchUserNickname(userId, nickname);
             return SuccessCode.UPDATE_USER_SUCCESS;
-        } else {
+        } catch (Exception e) {
             throw new CustomException(ErrorCode.ALREADY_EXIST_NICKNAME);
         }
     }
