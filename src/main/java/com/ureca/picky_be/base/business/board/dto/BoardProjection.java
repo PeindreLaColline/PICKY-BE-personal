@@ -17,6 +17,7 @@ public interface BoardProjection {
     LocalDateTime getUpdatedAt(); // Board 업데이트 일자
     Integer getLikeCount(); // Board 좋아요 갯수
     Integer getCommentCount();  // Board 댓글 갯수
+    Long getMovieId();
     String getMovieName(); // Board 영화 이름
     Boolean getIsLike();    // Board 사용자가 좋아요 눌렀는지 여부
     boolean getIsAuthor();

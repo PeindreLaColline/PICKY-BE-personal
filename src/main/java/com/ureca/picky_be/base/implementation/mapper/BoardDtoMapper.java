@@ -72,6 +72,7 @@ public class BoardDtoMapper {
                     board.getLikeCount(),
                     board.getCommentCount(),
                     contents,
+                    board.getMovieId(),
                     board.getMovieName(),
                     board.getIsLike(),
                     board.getIsAuthor()
