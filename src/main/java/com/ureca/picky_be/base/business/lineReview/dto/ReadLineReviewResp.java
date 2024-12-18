@@ -9,10 +9,10 @@ public record ReadLineReviewResp(Long id,
                                  double rating,     // 평점
                                  String context,    // 한줄평 내용
                                  Boolean isSpoiler, // 스포일러 여부
-                                 Integer likes,         // 좋아요 수
-                                 Integer dislikes,         // 좋아요 수
+                                 Long likes,         // 좋아요 수
+                                 Long dislikes,         // 좋아요 수
                                  LocalDateTime createdAt, // 생성 시간
-                                 boolean isAuthor,
+                                 Boolean isAuthor,
                                  Boolean isLiked,
                                  Boolean isDisliked// 작성자 boolean
 ) {
