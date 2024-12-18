@@ -160,8 +160,8 @@ public class NotificationManager {
         }
     }
 
-    public List<Long> getMovieLikeUsers(Long movieId) {
-        return movieLikeRepository.findUserIdsByMovieId(movieId);
+    public List<Long> getMovieLikeUsers(Long movieId, Long currentUserId) {
+        return movieLikeRepository.findUserIdsByMovieId(movieId, currentUserId);
     }
 
     public Notification createNotification(User receiver, Long movieId, Long boardId,  NotificationType notificationType) {
@@ -171,52 +171,23 @@ public class NotificationManager {
 
 
     @Transactional(readOnly = true)
-    public List<User> findMovieLikeUsers(Long senderId, Long boardId) {
+    public List<User> findMovieLikeUsers(Long senderId, Long boardId, Long currentUserId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
         User sender = userRepository.findById(senderId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Movie movie = board.getMovie();
 
-        List<Long> userIds = getMovieLikeUsers(movie.getId());
+        List<Long> userIds = getMovieLikeUsers(movie.getId(), currentUserId);
         return userRepository.findAllById(userIds);
     }
 
     @Transactional
     public void sendEmitter(List<User> receivers, List<CreateNotificationResp> resps) {
-//        for(User receiver : receivers) {
-//            try {
-//                Notification notification = createNotification(receiver, movieId, boardId, type);
-//
-//                Long notificationId = notification.getId();
-//                String eventId = makeTimeIncludeId(receiver.getId());
-//
-//                // 게시글 작성자 NotificationProjection 생성
-//                NotificationProjection noti = getNewBoardNotificationData(senderId, boardId, movieId);
-//                CreateNotificationResp data = notificationDtoMapper.toCreateNotificationResp(noti, notificationId);
-//
-//                // 특정 사용자에 대한 emitter를 찾아오는 것
-//                Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterByUserId(String.valueOf(receiver.getId()));
-//
-//                log.info("특정 게시물에 대한 알림 전송 : " + boardId);
-//                emitters.forEach(
-//                        (id, emitter) -> {
-//                            try {
-//                                emitterRepository.saveEventCache(id, notification);
-//                                sendNotification(emitter, eventId, id, data);
-//                            } catch (Exception e) {
-//                                System.err.println("알림 전송 실패 Emitter ID " + id + ": " + e.getMessage());
-//                            }
-//                        }
-//                );
-//            } catch(Exception e) {
-//                System.err.println("알림 전송 실패 사용자 ID " + receiver.getId() + ": " + e.getMessage());
-//            }
-//        }
-
         for (int i = 0; i < receivers.size(); i++) {
             User receiver = receivers.get(i);
             CreateNotificationResp data = resps.get(i);
+            log.info(data.toString());
             Optional<Notification> notification = notificationRepository.findById(data.notificationId());
             try {
                 String eventId = makeTimeIncludeId(receiver.getId());
