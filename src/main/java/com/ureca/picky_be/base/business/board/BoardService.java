@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -54,17 +55,25 @@ public class BoardService implements BoardUseCase {
     public SuccessCode addBoard(AddBoardReq req, List<MultipartFile> images, List<MultipartFile> videos) throws IOException {
         Long userId = authManager.getUserId();
         String userNickname = authManager.getUserNickname();
-        if ((images == null || images.isEmpty()) && (videos == null || videos.isEmpty())) {
+        List<String> imageUrls = new ArrayList<>();
+        List<String> videoUrls = new ArrayList<>();
+        if(images == null && videos == null){
             throw new CustomException(ErrorCode.MISSING_BOARD_CONTENT);
-        } else if (images != null && images.size() > 3) {
-            throw new CustomException(ErrorCode.BOARD_CONTENT_TOO_MANY);
-        } else if (videos != null && videos.size() > 2) {
-            throw new CustomException(ErrorCode.BOARD_CONTENT_TOO_MANY);
         }
-        List<String> imageUrls = imageManager.uploadImages(images);
-        List<String> videosUrls = videoManager.uploadVideo(videos);
+        if (images != null){
+            if(images.size() > 3){
+                throw new CustomException(ErrorCode.BOARD_CONTENT_TOO_MANY);
+            }
+            imageUrls = imageManager.uploadImages(images);
+        }
+        if (videos != null){
+            if(videos.size() > 2){
+                throw new CustomException(ErrorCode.BOARD_CONTENT_TOO_MANY);
+            }
+            videoUrls = videoManager.uploadVideo(videos);
+        }
 
-        Board board = boardManager.addBoard(userId, userNickname, req, boardDtoMapper.toAddBoardContentReq(imageUrls, videosUrls));
+        Board board = boardManager.addBoard(userId, userNickname, req, boardDtoMapper.toAddBoardContentReq(imageUrls, videoUrls));
 
         log.info("Event publish start");
         eventPublisher.publishEvent(new BoardCreatedEvent(board.getUserId(), req.movieId(), board.getId()));
