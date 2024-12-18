@@ -132,4 +132,7 @@ public interface LineReviewRepository extends JpaRepository<LineReview, Long> {
 
     @Query("SELECT lr.userId FROM LineReview lr WHERE lr.id = :lineReviewId")
     Long findAuthorIdById(@Param("lineReviewId") Long lineReviewId);
+
+    @Query("SELECT COUNT(lr) FROM LineReview lr WHERE lr.movieId = :movieId")
+    long countByMovieId(@Param("movieId") Long movieId);
 }
