@@ -54,8 +54,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     SELECT new com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp(
         m.id,
         m.title,
-        CAST(COUNT(ml) AS int),
-        CAST(COUNT(lr) AS int),
+        CAST(COUNT(DISTINCT ml.id) AS int),
+        CAST(COUNT(DISTINCT lr.id) AS int),
         m.createdAt,
         m.totalRating,
         m.posterUrl,
