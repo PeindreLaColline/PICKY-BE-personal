@@ -65,7 +65,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     LEFT JOIN MovieLike ml ON ml.movie.id = m.id
     LEFT JOIN LineReview lr ON lr.movieId = m.id
     GROUP BY m.id, m.title, m.createdAt, m.totalRating, m.posterUrl, m.backdropUrl
-    ORDER BY m.totalRating DESC
+    ORDER BY m.popularity DESC
 """)
     List<GetSimpleMovieResp> findTop10MoviesWithLikes(Pageable pageable);
 
