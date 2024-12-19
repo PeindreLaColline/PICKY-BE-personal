@@ -22,28 +22,30 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     void deleteFollowByFollowerIdAndFollowingId(Long followerId, Long followingId);
 
     @Query("""
-        SELECT f.followerId AS userId,
+        SELECT f.id AS id,
+               f.followerId AS userId,
                u.nickname AS userNickname,
                u.profileUrl AS userProfileUrl,
                u.role AS userRole
        FROM Follow f
        JOIN User u ON f.followerId = u.id
-       WHERE f.followingId = :userId
+       WHERE f.followingId = :userId AND (:lastFollowId IS NULL OR f.id < :lastFollowId)
        ORDER BY f.createdAt DESC
     """)
-    Slice<FollowProjection> findFollowersByFollowingId(@Param("userId") Long userId, Pageable pageable);
+    Slice<FollowProjection> findFollowersByFollowingId(@Param("userId") Long userId, Pageable pageable, @Param("lastFollowId") Long lastFollowId);
 
     @Query("""
-        SELECT f.followingId AS userId,
+        SELECT f.id AS id,
+                f.followingId AS userId,
                 u.nickname AS userNickname,
                 u.profileUrl AS userProfileUrl,
                 u.role AS userRole
         FROM Follow f
         JOIN User u ON f.followingId = u.id
-        WHERE f.followerId = :userId
+        WHERE f.followerId = :userId AND (:lastFollowId IS NULL OR f.id < :lastFollowId)
         ORDER BY f.createdAt DESC
     """)
-    Slice<FollowProjection> findFollowingsByFollowerId(@Param("userId") Long userId, Pageable pageable);
+    Slice<FollowProjection> findFollowingsByFollowerId(@Param("userId") Long userId, Pageable pageable, @Param("lastFollowId") Long lastFollowId);
 
 
     boolean existsByFollowerIdAndFollowingId(Long currentUserId, Long userId);

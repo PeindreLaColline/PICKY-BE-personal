@@ -48,12 +48,12 @@ public class FollowManager {
         return rel.isPresent();
     }
 
-    public Slice<FollowProjection> findFollowersByUserId(Long userId, PageRequest pageRequest) {
-        return followRepository.findFollowersByFollowingId(userId, pageRequest);
+    public Slice<FollowProjection> findFollowersByUserId(Long userId, PageRequest pageRequest, Long lastFollowId) {
+        return followRepository.findFollowersByFollowingId(userId, pageRequest, lastFollowId);
     }
 
-    public Slice<FollowProjection> findFollowingsByUserId(Long userId, PageRequest pageRequest) {
-        return followRepository.findFollowingsByFollowerId(userId, pageRequest);
+    public Slice<FollowProjection> findFollowingsByUserId(Long userId, PageRequest pageRequest, Long lastFollowId) {
+        return followRepository.findFollowingsByFollowerId(userId, pageRequest, lastFollowId);
     }
 
     public boolean checkFollowing(Long currentUserId, Long userId) {
