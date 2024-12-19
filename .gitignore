@@ -42,6 +42,19 @@ out/
 **/mysql-prod.yml
 **/redis.yml
 **/jwt.yml
-**/naver.yml
 **/frontend.yml
+**/naver.yml
 **/google.yml
+**/kakao.yml
+**/jpa.yml
+**/s3.yml
+**/temp-token.yml
+**/tmdb.yml
+**/mail.yml
+**/kibana.yml
+docker-compose.yml
+
+#Elastic Search
+.env
+elastic-agent-8.8.2-darwin-x86_64
+**/elasticsearch.yml

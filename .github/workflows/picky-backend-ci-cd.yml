@@ -3,7 +3,7 @@ name: picky-backend-ci-cd
 on:
   push:
     branches:
-      - dev
+      - main
 
 permissions:
   contents: read
@@ -26,6 +26,9 @@ jobs:
       - name: checkout
         uses: actions/checkout@main
 
+      - name: install jq
+        run: sudo apt-get install jq
+
       - name: create env and secure file
         run: |
           cd ./src/main/resources/properties
@@ -41,9 +44,25 @@ jobs:
           echo "${{ secrets.NAVER }}" >> naver.yml
           touch google.yml
           echo "${{ secrets.GOOGLE }}" >> google.yml
+          touch kakao.yml
+          echo "${{ secrets.KAKAO }}" >> kakao.yml
           touch frontend.yml
           echo "${{ secrets.FRONTEND }}" >> frontend.yml
-          
+          touch jpa.yml
+          echo "${{ secrets.JPA }}" >> jpa.yml
+          touch temp-token.yml
+          echo "${{ secrets.TEMP_TOKEN }}" >> temp-token.yml
+          touch s3.yml
+          echo "${{ secrets.S3 }}" >> s3.yml
+          touch tmdb.yml
+          echo "${{ secrets.TMDB }}" >> tmdb.yml
+          touch mail.yml
+          echo "${{ secrets.MAIL }}" >> mail.yml
+          touch kibana.yml
+          echo "${{ secrets.KIBANA }}" >> kibana.yml
+          touch elasticsearch.yml
+          echo "${{ secrets.ELASTICSEARCH }}" >> elasticsearch.yml
+        
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -56,17 +75,17 @@ jobs:
           sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest . 
           sudo docker push ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
-
+ 
       - name: docker run
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: ${{ secrets.EC2_HOST}}
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           # passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             sudo docker stop picky-backend
             sudo docker rm picky-backend
-            sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo  docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
-            sudo docker run -d -p 8080:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo docker run -d -p 80:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest

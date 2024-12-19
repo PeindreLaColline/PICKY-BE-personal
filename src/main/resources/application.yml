@@ -3,6 +3,7 @@ server:
   port: 8080
   shutdown: graceful
 
+
 spring:
   application:
     name: picky-backend
@@ -13,7 +14,16 @@ spring:
       - classpath:properties/jpa.yml
       - classpath:properties/naver.yml
       - classpath:properties/google.yml
+      - classpath:properties/kakao.yml
       - classpath:properties/frontend.yml
+      - classpath:properties/swagger.yml
+      - classpath:properties/temp-token.yml
+      - classpath:properties/s3.yml
+      - classpath:properties/tmdb.yml
+      - classpath:properties/mail.yml
+      - classpath:properties/elasticsearch.yml
+  security:
+    strategy: MODE_INHERITABLETHREADLOCAL
 
 
 ---

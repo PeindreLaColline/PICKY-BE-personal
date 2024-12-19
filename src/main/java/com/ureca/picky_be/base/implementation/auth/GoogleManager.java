@@ -1,16 +1,28 @@
 package com.ureca.picky_be.base.implementation.auth;
 
-import com.ureca.picky_be.base.business.auth.dto.LoginUserResp;
-import com.ureca.picky_be.base.business.auth.dto.OAuth2Token;
-import com.ureca.picky_be.base.persistence.UserRepository;
-import com.ureca.picky_be.base.presentation.web.JwtTokenProvider;
-import com.ureca.picky_be.base.presentation.web.LocalJwtDto;
+import com.ureca.picky_be.base.business.auth.dto.*;
+import com.ureca.picky_be.base.persistence.board.BoardCommentRepository;
+import com.ureca.picky_be.base.persistence.board.BoardLikeRepository;
+import com.ureca.picky_be.base.persistence.board.BoardRepository;
+import com.ureca.picky_be.base.persistence.lineReview.LineReviewLikeRepository;
+import com.ureca.picky_be.base.persistence.lineReview.LineReviewRepository;
+import com.ureca.picky_be.base.persistence.lineReview.LineReviewSoftDeleteRepository;
+import com.ureca.picky_be.base.persistence.movie.MovieLikeRepository;
+import com.ureca.picky_be.base.persistence.user.UserGenrePreferenceRepository;
+import com.ureca.picky_be.base.persistence.user.UserRepository;
 import com.ureca.picky_be.config.oAuth2.GoogleConfig;
-import com.ureca.picky_be.jpa.user.Role;
-import com.ureca.picky_be.jpa.user.SocialPlatform;
-import com.ureca.picky_be.jpa.user.User;
+import com.ureca.picky_be.global.exception.CustomException;
+import com.ureca.picky_be.global.exception.ErrorCode;
+import com.ureca.picky_be.global.success.SuccessCode;
+import com.ureca.picky_be.global.web.JwtTokenProvider;
+import com.ureca.picky_be.jpa.entity.user.Role;
+import com.ureca.picky_be.jpa.entity.user.SocialPlatform;
+import com.ureca.picky_be.jpa.entity.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -25,10 +37,19 @@ public class GoogleManager {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
+    private final LineReviewRepository lineReviewRepository;
+    private final LineReviewLikeRepository lineReviewLikeRepository;
+    private final LineReviewSoftDeleteRepository lineReviewSoftDeleteRepository;
+    private final MovieLikeRepository movieLikeRepository;
+    private final BoardLikeRepository boardLikeRepository;
+    private final BoardCommentRepository boardCommentRepository;
+    private final BoardRepository boardRepository;
+    private final UserGenrePreferenceRepository userGenrePreferenceRepository;
+
     RestClient restClient = RestClient.create();
 
-    public String buildCodeUrl(String state){
-        return  UriComponentsBuilder
+    public LoginUrlResp buildCodeUrl(String state){
+        return new LoginUrlResp(UriComponentsBuilder
                 .fromHttpUrl(googleConfig.getCodeUrl())
                 .queryParam("client_id", googleConfig.getClientId())
                 .queryParam("response_type", "code")
@@ -36,25 +57,25 @@ public class GoogleManager {
                 .queryParam("scope", "email")
                 .queryParam("state", state)
                 .build()
-                .toUriString();
+                .toUriString());
     }
 
-    public OAuth2Token getOAuth2Token(String state, String code){
+    public OAuth2Token getOAuth2Token(String code){
         try{
             return restClient
                     .post()
-                    .uri(buildTokenUrl(state, code))
+                    .uri(buildTokenUrl(code))
                     .retrieve()
                     .toEntity(OAuth2Token.class)
                     .getBody();
         } catch (RestClientResponseException e) {
-            throw new IllegalStateException("네이버 token 요청 호출을 실패했습니다: " + e.getMessage(), e);
+            throw new CustomException(ErrorCode.VALIDATION_ERROR);
         } catch (Exception e) {
-            throw new RuntimeException("구글 token 요청 중 예외가 발생했습니다.", e);
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private String buildTokenUrl(String state, String code){
+    private String buildTokenUrl(String code){
         return UriComponentsBuilder
                 .fromHttpUrl(googleConfig.getTokenUrl())
                 .queryParam("client_id", googleConfig.getClientId())
@@ -75,11 +96,10 @@ public class GoogleManager {
                                 .retrieve()
                                 .body(Map.class);
             return (String) response.get("email");
-
         } catch (RestClientResponseException e) {
-            throw new IllegalStateException("구글 유저 정보 요청 호출을 실패했습니다: " + e.getMessage(), e);
+            throw new CustomException(ErrorCode.VALIDATION_ERROR);
         } catch (Exception e) {
-            throw new RuntimeException("구글 유저 정보 요청 중 예외가 발생했습니다.", e);
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -90,43 +110,83 @@ public class GoogleManager {
                 .toUriString();
     }
 
-    public LocalJwtDto getLocalJwt(String email, String accessToken) {
-        User user = userRepository.findByEmailAndSocialPlatform(email, SocialPlatform.GOOGLE)
-                .orElseGet(() -> createNewUser(email));
-
-        return jwtTokenProvider.generate(user.getId(), user.getRole().toString());
-    }
-
-    private User createNewUser(String email) {
-        User newUser = User.builder()
-                .socialPlatform(SocialPlatform.GOOGLE)
-                .role(Role.USER)
-                .email(email)
-                .build();
-        return userRepository.save(newUser);
-    }
-
-    public String sendResponseToFrontend(OAuth2Token oAuth2Token, String email, LocalJwtDto jwt) {
-        LoginUserResp resp = new LoginUserResp(oAuth2Token, email, jwt);
-        try {
-            restClient
-                    .post()
-                    .uri(buildFrontendUrl())
-                    .header("Content-Type", "application/json")
-                    .body(resp)
-                    .retrieve()
-                    .toBodilessEntity();
-            return "프론트엔드로 성공적으로 반환";
-        } catch (RestClientResponseException e) {
-            return "프론트엔드로 POST 요청 실패: " + e.getMessage();
-        } catch (Exception e) {
-            return "프론트엔드로 POST 요청 중 예외 발생: " + e.getMessage();
+    public LoginUserInfo getLocalJwt(String email, String accessToken) {
+        try{
+            User user = userRepository.findByEmailAndSocialPlatform(email, SocialPlatform.GOOGLE)
+                    .orElseGet(() -> createNewUser(email));
+            return new LoginUserInfo(
+                    jwtTokenProvider.generate(user.getId(), user.getRole().toString()),
+                    user.getId(),
+                    user.getRole().toString()
+            );
+        } catch (Exception e){
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
     }
 
-    private String buildFrontendUrl(){
+    public boolean isRegistrationDone(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return user.getName() != null
+                && user.getNickname() != null
+                && user.getBirthdate() != null
+                && user.getGender() != null
+                && user.getNationality() != null;
+    }
+
+    private User createNewUser(String email) {
+        try{
+            User newUser = User.builder()
+                    .socialPlatform(SocialPlatform.GOOGLE)
+                    .role(Role.USER)
+                    .email(email)
+                    .build();
+            return userRepository.save(newUser);
+        } catch (Exception e){
+            throw new CustomException(ErrorCode.USER_SAVE_FAILED);
+        }
+    }
+
+    @Transactional
+    public SuccessCode deleteAccount(Long userId, DeleteUserReq req) {
+        restClient
+                .post()
+                .uri(buildDeleteUrl(req.oAuth2Token().accessToken()))
+                .header("Content-Type", "application/json")
+                .retrieve()
+                .toBodilessEntity();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.isAuthenticated()) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
+
+        if (!userRepository.existsById(userId)) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        // 연관된 자료 삭제
+        lineReviewLikeRepository.deleteByUserId(userId);
+        lineReviewRepository.deleteByUserId(userId);
+        lineReviewSoftDeleteRepository.deleteByUserId(userId);
+
+        movieLikeRepository.deleteByUserId(userId);
+
+        boardLikeRepository.deleteByUserId(userId);
+        boardCommentRepository.deleteByUserId(userId);
+        boardRepository.deleteByUserId(userId);
+
+        userGenrePreferenceRepository.deleteByUserId(userId);
+
+        // 유저 삭제
+        userRepository.deleteById(userId);
+        return SuccessCode.REQUEST_DELETE_ACCOUNT_SUCCESS;
+    }
+
+    private String buildDeleteUrl(String accessToken){
         return UriComponentsBuilder
-                .fromHttpUrl(googleConfig.getFrontendServer())
+                .fromHttpUrl(googleConfig.getDeleteUrl())
+                .queryParam("token", accessToken)
                 .build()
                 .toUriString();
     }
