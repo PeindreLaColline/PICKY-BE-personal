@@ -90,7 +90,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
         :lastMovieId IS NULL AND :createdAt IS NULL
         OR (m.createdAt < :createdAt)
     )
-    ORDER BY m.createdAt DESC
+    ORDER BY m.popularity, m.createdAt DESC
 """)
     Slice<GetSimpleMovieResp> findMoviesByGenreIdWithLikesUsingCursor(
             @Param("genreId") Long genreId,
@@ -152,6 +152,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     LEFT JOIN Genre g ON g.id = mg.genreId
     LEFT JOIN Platform p ON p.movie.id = m.id
     WHERE m.id IN :movieIds
+    ORDER BY m.popularity DESC
 """)
     List<GetRecommendMovieProjection> findMoviesWithGenresAndPlatforms(@Param("movieIds") List<Long> movieIds);
 
