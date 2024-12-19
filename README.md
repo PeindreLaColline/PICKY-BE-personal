@@ -2,87 +2,18 @@
 
 <br />
 
-[**PICKY**](https://www.picky-movie.com/)는 사용자가 선택한 영화 장르에 맞춰 영화를 추천받고, 영화 정보를 확인하며 리뷰를 남길 수 있는 플랫폼입니다. 또한, 영화를 사랑하는 사람들을 위한 소셜 기능을 제공하여, 특정 영화에 대한 관람평이나 관련 이야기를 다른 사용자들과 자유롭게 공유하고 소통할 수 있는 영화 리뷰 및 소셜 플랫폼 서비스입니다.
+**PICKY**는 사용자가 선택한 영화 장르에 맞춰 영화를 추천받고, 영화 정보를 확인하며 리뷰를 남길 수 있는 플랫폼입니다. 또한, 영화를 사랑하는 사람들을 위한 소셜 기능을 제공하여, 특정 영화에 대한 관람평이나 관련 이야기를 다른 사용자들과 자유롭게 공유하고 소통할 수 있는 영화 리뷰 및 소셜 플랫폼 서비스입니다.
 
 <br />
 
-PICKY 이용해 보기 🐻 https://www.picky-movie.com/
+[PICKY](https://www.picky-movie.com/) 이용해 보기 🐻 
 <br />
 <br />
 
 ![image](https://github.com/user-attachments/assets/22363d08-85f1-47db-9039-b082db4ceeaa)
 
 <br/>
-<br/>
 
-
-**Back-End Team**
-| 권예진 | 김채원 | 이승훈 |
-|:------:|:------:|:------:|
-| <img src="https://avatars.githubusercontent.com/YaeJinKwon" alt="권예진" width="150"> | <img src="https://avatars.githubusercontent.com/PeindreLaColline" alt="김채원" width="150"> | <img src="https://avatars.githubusercontent.com/lsh981127" alt="이승훈" width="150"> |
-| [GitHub](https://github.com/YaeJinKwon) | [GitHub](https://github.com/PeindreLaColline) | [GitHub](https://github.com/lsh981127) |
-
----
-<br />
-
-**아키텍처**
-![KakaoTalk_Photo_2024-12-19-17-36-53](https://github.com/user-attachments/assets/ebba1894-66f1-4852-a8b8-91abce42ea9b)
-
----
-<br />
-
-**디렉토리 구조**
-
-```planeText
- ├── main
-    │   ├── java
-    │   │   └── com
-    │   │       └── ureca
-    │   │           └── picky_be
-    │   │               ├── PickyBeApplication.java
-    │   │               ├── base
-    │   │               │   ├── business
-    │   │               │   │   └── auth
-    │   │               │   │       ├── AuthUseCase.java
-    │   │               │   │       ├── JwtAuthService.java
-    │   │               │   │       └── dto
-    │   │               │   │           └── LoginReq.java
-    │   │               │   ├── implementation
-    │   │               │   │   └── user
-    │   │               │   │       └── UserManager.java
-    │   │               │   ├── persistence
-    │   │               │   │   └── UserRepository.java
-    │   │               │   └── presentation
-    │   │               │       └── controller
-    │   │               │           └── auth
-    │   │               │               └── AuthController.java
-    │   │               ├── config
-    │   │               │   ├── SecurityConfig.java
-    │   │               │   └── SwaggerConfig.java
-    │   │               └── jpa
-    │   │                   ├── config
-    │   │                   │   ├── BaseEntity.java
-    │   │                   │   └── JpaConfig.java
-    │   │                   └── user
-    │   │                       └── User.java
-    │   └── resources
-    │       └── application.yml
-```
----
-
-### 설치 및 실행 방법
-
-```bash
-git clone https://github.com/LG-Uplus-Movie-SNS-PICKY/PICKY-BE.git
-
-도커 실행 후, docker-compose up -d 실행
-
-이후 프로젝트 실행
-```
-
----
-
-<br/>
 <br/>
 
 # 📱 기능 상세
@@ -150,14 +81,34 @@ Elasticsearch를 통해 연관 검색어 자동 완성이 가능하고 최근 �
 ### 10. 알림 페이지
 내가 좋아요한 영화 관련 게시글에 대한 알람을 받을 수 있어요!
 
+<br/>
+
 ### 11. 관리자 페이지
 관리자 기능을 통해 서비스를 관리할 수 있어요!
 
 <br/>
 
-# ℹ️ 공통
-![PICKY-ERD](https://github.com/user-attachments/assets/a3426484-77e3-4729-bebb-c71f85675754)
-[배포 주소](https://d3hxz5yj62y98w.cloudfront.net/)<br />
+---
+# 백엔드 구조도
+
+**아키텍처**
+![KakaoTalk_Photo_2024-12-19-17-36-53](https://github.com/user-attachments/assets/ebba1894-66f1-4852-a8b8-91abce42ea9b)
+
+**ERD**
+![KakaoTalk_Photo_2024-12-19-22-38-09](https://github.com/user-attachments/assets/9ee7290d-c3c5-4020-a23f-111749aaec72)
+
+<br/>
+
+---
+# 우리는요
+**Back-End Team**
+| 권예진 | 김채원 | 이승훈 |
+|:------:|:------:|:------:|
+| <img src="https://avatars.githubusercontent.com/YaeJinKwon" alt="권예진" width="150"> | <img src="https://avatars.githubusercontent.com/PeindreLaColline" alt="김채원" width="150"> | <img src="https://avatars.githubusercontent.com/lsh981127" alt="이승훈" width="150"> |
+| [GitHub](https://github.com/YaeJinKwon) | [GitHub](https://github.com/PeindreLaColline) | [GitHub](https://github.com/lsh981127) |
+
+<br />
+
+# 공통 자료
 [피그마 페이지](https://www.figma.com/design/rpAlhiLds5pygwPfPpD4lp/PICKY-%EB%94%94%EC%9E%90%EC%9D%B8-%EC%99%84%EC%84%B1%EB%B3%B8?node-id=0-1&node-type=canvas&t=pwFCyVmMoN1a41le-0)<br />
-[문서화(Notion)](https://glass-joggers-e59.notion.site/PICKY-13c9fc77f3f6802ab7f1c2ee59b3aa8c?pvs=74)
 [요구사항 정의서](https://docs.google.com/spreadsheets/d/1puQoU2lwXWyVLx6mc33PdlVW_YVREmc3yd3hdZeMDHE/edit?usp=sharing)<br />
