@@ -39,10 +39,10 @@ public class FollowService implements FollowUseCase{
 
     @Override
     @Transactional(readOnly = true)
-    public Slice<GetFollowUserResp> getFollowers(PageRequest pageRequest, String nickname, Long lastFollowerId) {
+    public Slice<GetFollowUserResp> getFollowers(PageRequest pageRequest, String nickname, Long lastFollowId) {
         Long userId = userManager.getUserIdByNickname(nickname);
         userManager.validateUserStatus(userId);
-        Slice<FollowProjection> followers = followManager.findFollowersByUserId(userId, pageRequest);
+        Slice<FollowProjection> followers = followManager.findFollowersByUserId(userId, pageRequest, lastFollowId);
 
         // TODO : 리팩토링
         // 지저분하지만 4 계층 규칙으로 인해 profileManager를 여기에서 사용
@@ -57,10 +57,10 @@ public class FollowService implements FollowUseCase{
 
     @Override
     @Transactional(readOnly = true)
-    public Slice<GetFollowUserResp> getFollowings(PageRequest pageRequest, String nickname, Long lastFollowingId) {
+    public Slice<GetFollowUserResp> getFollowings(PageRequest pageRequest, String nickname, Long lastFollowId) {
         Long userId = userManager.getUserIdByNickname(nickname);
         userManager.validateUserStatus(userId);
-        Slice<FollowProjection> followings = followManager.findFollowingsByUserId(userId, pageRequest);
+        Slice<FollowProjection> followings = followManager.findFollowingsByUserId(userId, pageRequest, lastFollowId);
 
         return followings.map(following ->
                 new GetFollowUserResp(

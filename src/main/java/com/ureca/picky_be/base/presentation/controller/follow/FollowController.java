@@ -30,8 +30,8 @@ public class FollowController {
     public Slice<GetFollowUserResp> getUserFollowers (
             @PathVariable String nickname,
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,
-            @RequestParam(required = false) Long lastFollowerId) {
-        return followUseCase.getFollowers(PageRequest.ofSize(size), nickname, lastFollowerId);
+            @RequestParam(required = false) Long lastFollowId) {
+        return followUseCase.getFollowers(PageRequest.ofSize(size), nickname, lastFollowId);
     }
 
     @GetMapping("/followings/{nickname}")
@@ -39,8 +39,8 @@ public class FollowController {
     public Slice<GetFollowUserResp> getUserFollowings (
             @PathVariable String nickname,
             @Parameter(description = "0 < size <= 10") @RequestParam(defaultValue = "10", required = false) int size,
-            @RequestParam(required = false) Long lastFollowingId) {
-        return followUseCase.getFollowings(PageRequest.ofSize(size), nickname, lastFollowingId);
+            @RequestParam(required = false) Long lastFollowId) {
+        return followUseCase.getFollowings(PageRequest.ofSize(size), nickname, lastFollowId);
     }
 
 
