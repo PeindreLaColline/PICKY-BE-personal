@@ -127,8 +127,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .requestMatchers(HttpMethod.GET, AUTH_WHITELIST_GET).permitAll()
-                        .requestMatchers(AUTH_USER).hasAnyAuthority("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, AUTH_USER_PATCH).hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers(AUTH_USER).hasAnyAuthority("USER", "CRITIC", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, AUTH_USER_PATCH).hasAnyAuthority("USER", "CRITIC", "ADMIN")
                         .requestMatchers(AUTH_ADMIN).hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, AUTH_ADMIN_POST).hasAuthority("ADMIN")
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
