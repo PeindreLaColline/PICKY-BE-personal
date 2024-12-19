@@ -26,7 +26,7 @@ PICKY 이용해 보기 🐻 https://www.picky-movie.com/
 <br />
 
 **아키텍처**
-![KakaoTalk_Photo_2024-11-20-01-06-52](https://github.com/user-attachments/assets/edd360c5-7d24-49e2-bc59-945193993086)
+![KakaoTalk_Photo_2024-12-19-17-36-53](https://github.com/user-attachments/assets/ebba1894-66f1-4852-a8b8-91abce42ea9b)
 
 ---
 <br />
