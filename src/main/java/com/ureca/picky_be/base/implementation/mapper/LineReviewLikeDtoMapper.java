@@ -1,11 +1,11 @@
-package com.ureca.picky_be.base.implementation.lineReview.mapper;
+package com.ureca.picky_be.base.implementation.mapper;
 
 import com.ureca.picky_be.base.business.lineReview.dto.CreateLineReviewLikeResp;
 import com.ureca.picky_be.jpa.entity.lineReview.LineReviewLike;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LineReviewLikeMapper {
+public class LineReviewLikeDtoMapper {
 
 
     public CreateLineReviewLikeResp createLineReviewLikeResp(LineReviewLike lineReviewLike) {

@@ -1,4 +1,4 @@
-package com.ureca.picky_be.base.implementation.lineReview.mapper;
+package com.ureca.picky_be.base.implementation.mapper;
 
 import com.ureca.picky_be.base.business.lineReview.dto.*;
 import com.ureca.picky_be.jpa.entity.lineReview.LineReview;

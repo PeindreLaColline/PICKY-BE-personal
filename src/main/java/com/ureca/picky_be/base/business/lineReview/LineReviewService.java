@@ -3,9 +3,8 @@ package com.ureca.picky_be.base.business.lineReview;
 import com.ureca.picky_be.base.business.lineReview.dto.*;
 import com.ureca.picky_be.base.business.user.dto.UserLineReviewsReq;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
-import com.ureca.picky_be.base.implementation.lineReview.LineReviewLikeManager;
 import com.ureca.picky_be.base.implementation.lineReview.LineReviewManager;
-import com.ureca.picky_be.base.implementation.lineReview.mapper.LineReviewDtoMapper;
+import com.ureca.picky_be.base.implementation.mapper.LineReviewDtoMapper;
 import com.ureca.picky_be.base.implementation.user.UserManager;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.lineReview.LineReview;
@@ -14,10 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor

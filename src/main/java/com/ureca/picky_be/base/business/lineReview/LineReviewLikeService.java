@@ -3,9 +3,8 @@ package com.ureca.picky_be.base.business.lineReview;
 import com.ureca.picky_be.base.business.lineReview.dto.*;
 import com.ureca.picky_be.base.implementation.auth.AuthManager;
 import com.ureca.picky_be.base.implementation.lineReview.LineReviewLikeManager;
-import com.ureca.picky_be.base.implementation.lineReview.mapper.LineReviewLikeMapper;
+import com.ureca.picky_be.base.implementation.mapper.LineReviewLikeDtoMapper;
 import com.ureca.picky_be.global.success.SuccessCode;
-import com.ureca.picky_be.jpa.entity.lineReview.LineReviewLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LineReviewLikeService implements LineReviewLikeUseCase {
 
     private final LineReviewLikeManager lineReviewLikeManager;
-    private final LineReviewLikeMapper lineReviewLikeMapper;
+    private final LineReviewLikeDtoMapper lineReviewLikeDtoMapper;
     private final AuthManager authManager;
 
 
