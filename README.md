@@ -100,6 +100,45 @@ Elasticsearch를 통해 연관 검색어 자동 완성이 가능하고 최근 �
 <br/>
 
 ---
+**디렉토리 구조**
+```planeText
+ ├── main
+    │   ├── java
+    │   │   └── com
+    │   │       └── ureca
+    │   │           └── picky_be
+    │   │               ├── PickyBeApplication.java
+    │   │               ├── base
+    │   │               │   ├── business
+    │   │               │   │   └── auth
+    │   │               │   │       ├── AuthUseCase.java
+    │   │               │   │       ├── JwtAuthService.java
+    │   │               │   │       └── dto
+    │   │               │   │           └── LoginReq.java
+    │   │               │   ├── implementation
+    │   │               │   │   └── user
+    │   │               │   │       └── UserManager.java
+    │   │               │   ├── persistence
+    │   │               │   │   └── UserRepository.java
+    │   │               │   └── presentation
+    │   │               │       └── controller
+    │   │               │           └── auth
+    │   │               │               └── AuthController.java
+    │   │               ├── config
+    │   │               │   ├── SecurityConfig.java
+    │   │               │   └── SwaggerConfig.java
+    │   │               └── jpa
+    │   │                   ├── config
+    │   │                   │   ├── BaseEntity.java
+    │   │                   │   └── JpaConfig.java
+    │   │                   └── user
+    │   │                       └── User.java
+    │   └── resources
+    │       └── application.yml
+```
+---
+
+
 # 우리는요
 **Back-End Team**
 | 권예진 | 김채원 | 이승훈 |
