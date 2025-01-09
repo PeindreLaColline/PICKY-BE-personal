@@ -21,7 +21,6 @@ spring:
       - classpath:properties/s3.yml
       - classpath:properties/tmdb.yml
       - classpath:properties/mail.yml
-      - classpath:properties/elasticsearch.yml
   security:
     strategy: MODE_INHERITABLETHREADLOCAL
 
@@ -33,6 +32,8 @@ spring:
       on-profile: local
     import:
       - classpath:properties/mysql-local.yml
+      - classpath:properties/elasticsearch-local.yml
+
 
 
 ---
@@ -42,3 +43,4 @@ spring:
       on-profile: aws
     import:
       - classpath:properties/mysql-prod.yml
+      - classpath:properties/elasticsearch-prod.yml

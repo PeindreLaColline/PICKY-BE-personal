@@ -1,0 +1,46 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "autocomplete_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": ["lowercase", "autocomplete"]
+        },
+        "mixed_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": ["lowercase"]
+        }
+      },
+      "filter": {
+        "autocomplete": {
+          "type": "edge_ngram",
+          "min_gram": 2,
+          "max_gram": 20
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "long"
+      },
+      "email": {
+        "type": "keyword"
+      },
+      "nickname": {
+        "type": "text",
+        "analyzer": "autocomplete_analyzer",
+        "search_analyzer": "mixed_analyzer"
+      },
+      "role": {
+        "type": "keyword"
+      },
+      "status": {
+        "type": "keyword"
+      }
+    }
+  }
+}
