@@ -58,7 +58,7 @@ jobs:
           echo "${{ secrets.MAIL }}" >> mail.yml
           touch kibana.yml
           echo "${{ secrets.KIBANA }}" >> kibana.yml
-          touch elasticsearch.yml
+          touch elasticsearch-prod.yml
           echo "${{ secrets.ELASTICSEARCH_PROD }}" >> elasticsearch-prod.yml
 
       - name: Create truststore.jks from certificate
