@@ -56,8 +56,6 @@ jobs:
           echo "${{ secrets.TMDB }}" >> tmdb.yml
           touch mail.yml
           echo "${{ secrets.MAIL }}" >> mail.yml
-          touch kibana.yml
-          echo "${{ secrets.KIBANA }}" >> kibana.yml
           touch elasticsearch-prod.yml
           echo "${{ secrets.ELASTICSEARCH_PROD }}" >> elasticsearch-prod.yml
 
@@ -89,6 +87,6 @@ jobs:
           script: |
             sudo docker stop picky-backend
             sudo docker rm picky-backend
-            sudo  docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
             sudo docker run -d -p 80:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
