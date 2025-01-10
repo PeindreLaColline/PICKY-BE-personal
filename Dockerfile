@@ -6,7 +6,8 @@ COPY ${JAR_FILE} app.jar
 RUN mkdir -p /src/main/resources/static/files/image \
              /src/main/resources/static/files/video \
              /src/main/resources/static/files/profile \
-             /certs
+             /certs \
+RUN echo "52.79.143.142 b79328b2be7b" >> /etc/hosts
 
 COPY ./certs/truststore.jks /certs/truststore.jks
 
