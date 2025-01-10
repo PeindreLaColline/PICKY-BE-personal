@@ -32,32 +32,41 @@ jobs:
       - name: create env and secure file
         run: |
           cd ./src/main/resources/properties
-          touch jwt.yml
-          echo "${{ secrets.JWT }}" >> jwt.yml
-          touch mysql-prod.yml
-          echo "${{ secrets.MYSQL_PROD }}" >> mysql-prod.yml
-          touch redis.yml
-          echo "${{ secrets.REDIS }}" >> redis.yml
+          
+          echo "security yml"
           touch naver.yml
           echo "${{ secrets.NAVER }}" >> naver.yml
           touch google.yml
           echo "${{ secrets.GOOGLE }}" >> google.yml
           touch kakao.yml
           echo "${{ secrets.KAKAO }}" >> kakao.yml
-          touch frontend.yml
-          echo "${{ secrets.FRONTEND }}" >> frontend.yml
-          touch jpa.yml
-          echo "${{ secrets.JPA }}" >> jpa.yml
           touch temp-token.yml
           echo "${{ secrets.TEMP_TOKEN }}" >> temp-token.yml
-          touch s3.yml
-          echo "${{ secrets.S3 }}" >> s3.yml
+          touch jwt.yml
+          echo "${{ secrets.JWT }}" >> jwt.yml
+          
+          echo "external yml"
           touch tmdb.yml
           echo "${{ secrets.TMDB }}" >> tmdb.yml
           touch mail.yml
           echo "${{ secrets.MAIL }}" >> mail.yml
-          touch elasticsearch-prod.yml
-          echo "${{ secrets.ELASTICSEARCH_PROD }}" >> elasticsearch-prod.yml
+          
+          echo "etc yml"
+          touch frontend.yml
+          echo "${{ secrets.FRONTEND }}" >> frontend.yml
+          
+          echo "DB yml"
+          touch mysql.yml
+          echo "${{ secrets.MYSQL }}" >> mysql.yml
+          touch jpa.yml
+          echo "${{ secrets.JPA }}" >> jpa.yml
+          touch redis.yml
+          echo "${{ secrets.REDIS }}" >> redis.yml
+          touch elasticsearch.yml
+          echo "${{ secrets.ELASTICSEARCH }}" >> elasticsearch.yml
+          touch s3.yml
+          echo "${{ secrets.S3 }}" >> s3.yml
+          
 
       - name: Create truststore.jks from certificate
         run: |
@@ -93,4 +102,4 @@ jobs:
             sudo docker rm picky-backend
             sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
-            sudo docker run --add-host b79328b2be7b:52.79.143.142 -d -p 80:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo docker run --add-host ${{secrets.ADDITIONAL_HOST}} -d -p 80:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest

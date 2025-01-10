@@ -9,38 +9,25 @@ spring:
     name: picky-backend
   config:
     import:
-      - classpath:properties/redis.yml
-      - classpath:properties/jwt.yml
-      - classpath:properties/jpa.yml
+      #security
       - classpath:properties/naver.yml
       - classpath:properties/google.yml
       - classpath:properties/kakao.yml
-      - classpath:properties/frontend.yml
-      - classpath:properties/swagger.yml
       - classpath:properties/temp-token.yml
-      - classpath:properties/s3.yml
+      - classpath:properties/jwt.yml
+      #external
       - classpath:properties/tmdb.yml
       - classpath:properties/mail.yml
+      #etc
+      - classpath:properties/frontend.yml
+      - classpath:properties/swagger.yml
+      #DB
+      - classpath:properties/mysql.yml
+      - classpath:properties/jpa.yml
+      - classpath:properties/redis.yml
+      - classpath:properties/elasticsearch.yml
+      - classpath:properties/s3.yml
+
+
   security:
     strategy: MODE_INHERITABLETHREADLOCAL
-
-
----
-spring:
-  config:
-    activate:
-      on-profile: local
-    import:
-      - classpath:properties/mysql-local.yml
-      - classpath:properties/elasticsearch-local.yml
-
-
-
----
-spring:
-  config:
-    activate:
-      on-profile: aws
-    import:
-      - classpath:properties/mysql-prod.yml
-      - classpath:properties/elasticsearch-prod.yml
