@@ -5,6 +5,8 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 .DS_Store
+.env
+certs/
 
 ### STS ###
 .apt_generated
@@ -37,26 +39,27 @@ out/
 ### VS Code ###
 .vscode/
 
-# Properties #
-**/mysql-local.yml
-**/mysql-prod.yml
-**/redis.yml
-**/jwt.yml
-**/frontend.yml
+### Properties ###
+#security
 **/naver.yml
 **/google.yml
 **/kakao.yml
-**/jpa.yml
-**/s3.yml
 **/temp-token.yml
+**/jwt.yml
+
+#external
 **/tmdb.yml
 **/mail.yml
-**/kibana.yml
-docker-compose.yml
 
-#Elastic Search
-.env
-elastic-agent-8.8.2-darwin-x86_64
-**/elasticsearch-local.yml
-**/elasticsearch-prod.yml
-certs/
+#etc
+**/frontend.yml
+
+#DB
+**/mysql.yml
+**/jpa.yml
+**/redis.yml
+**/elasticsearch.yml
+**/s3.yml
+
+#docker
+docker-compose.yml
