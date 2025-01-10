@@ -10,4 +10,4 @@ RUN mkdir -p /src/main/resources/static/files/image \
 
 COPY ./certs/truststore.jks /certs/truststore.jks
 
-ENTRYPOINT ["java", "-Djavax.net.ssl.trustStore=/certs/truststore.jks", "-Djavax.net.ssl.trustStorePassword=changeit", "-jar", "/app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]

@@ -17,8 +17,6 @@ import java.io.File;
 @RequiredArgsConstructor
 public class ElasticSearchConfig extends ElasticsearchConfiguration {
 
-    RestClient restClient = RestClient.create();
-
     @Value("${spring.data.elasticsearch.host}")
     private String host;
 

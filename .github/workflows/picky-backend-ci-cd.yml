@@ -62,8 +62,12 @@ jobs:
       - name: Create truststore.jks from certificate
         run: |
           mkdir -p ./certs
-          echo "${{ secrets.CA_CERTIFICATE }}" > ./certs/http_ca.crt
-          keytool -import -alias my_ca -file ./certs/http_ca.crt -keystore ./certs/truststore.jks -storepass changeit -noprompt
+          echo "${{ secrets.CA_CERTIFICATE }}" > ./certs/elasticsearch.crt
+          keytool -import -trustcacerts -noprompt \
+            -alias elasticsearch-cert \
+            -file ./certs/elasticsearch.crt \
+            -keystore ./certs/truststore.jks \
+            -storepass ${{secrets.CA_CERTIFICATE_PASSWORD}}
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
