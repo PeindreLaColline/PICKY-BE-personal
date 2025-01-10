@@ -17,19 +17,19 @@ import java.io.File;
 @RequiredArgsConstructor
 public class ElasticSearchConfig extends ElasticsearchConfiguration {
 
-    @Value("${spring.data.elasticsearch.host}")
+    @Value("${spring.elasticsearch.host}")
     private String host;
 
-    @Value("${spring.data.elasticsearch.username}")
+    @Value("${spring.elasticsearch.username}")
     private String username;
 
-    @Value("${spring.data.elasticsearch.password}")
+    @Value("${spring.elasticsearch.password}")
     private String password;
 
-    @Value("${spring.data.elasticsearch.ssl.trust-store}")
+    @Value("${spring.elasticsearch.ssl.trust-store}")
     private String trustStorePath;
 
-    @Value("${spring.data.elasticsearch.ssl.trust-store-password}")
+    @Value("${spring.elasticsearch.ssl.trust-store-password}")
     private String trustStorePassword;
 
     @Override
