@@ -36,6 +36,7 @@ public class SecurityConfig {
             //로그인 없이도 접근 가능
             "/api/v1/oauth/*/user",
             "/api/v1/oauth/*/login",
+            "/dummy",
 
             //GENRE
             "/api/v1/user/genres",

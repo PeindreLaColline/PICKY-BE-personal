@@ -82,4 +82,10 @@ public class MovieController {
         return movieUseCase.getSearchMovies(keyword);
     }
 
+    @GetMapping("/search-mysql")
+    @Operation(summary = "영화 검색 - MySQL")
+    public List<GetSearchMoviesResp> getSearchMoviesMysql (@RequestParam("keyword") String keyword) {
+        return movieUseCase.getSearchMoviesMysql(keyword);
+    }
+
 }

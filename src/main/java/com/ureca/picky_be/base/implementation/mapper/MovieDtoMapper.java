@@ -1,6 +1,7 @@
 package com.ureca.picky_be.base.implementation.mapper;
 
 import com.ureca.picky_be.base.business.movie.dto.*;
+import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
 import com.ureca.picky_be.elasticsearch.document.movie.MovieDocument;
 import com.ureca.picky_be.jpa.entity.genre.Genre;
 import com.ureca.picky_be.jpa.entity.movie.FilmCrew;
@@ -161,5 +162,16 @@ public class MovieDtoMapper {
                         movie.getGenre(), // 그대로 전달
                         movie.getOriginalLanguage()
                 )).toList();
+    }
+
+    public GetSearchMoviesResp toGetSearchMysqlMovies(GetSearchMoviesMysqlResp resp, List<GetGenres> genres){
+        return new GetSearchMoviesResp(
+                resp.movieId(),
+                resp.movieTitle(),
+                resp.moviePosterUrl(),
+                resp.releaseDate(),
+                genres,
+                resp.originalLanguage()
+        );
     }
 }

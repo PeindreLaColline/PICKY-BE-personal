@@ -8,6 +8,7 @@ import com.ureca.picky_be.base.implementation.lineReview.LineReviewManager;
 import com.ureca.picky_be.base.implementation.mapper.MovieDtoMapper;
 import com.ureca.picky_be.base.implementation.movie.MovieManager;
 import com.ureca.picky_be.base.implementation.user.UserManager;
+import com.ureca.picky_be.base.persistence.movie.MovieRepository;
 import com.ureca.picky_be.elasticsearch.document.movie.MovieDocument;
 import com.ureca.picky_be.global.success.SuccessCode;
 import com.ureca.picky_be.jpa.entity.genre.Genre;
@@ -16,6 +17,7 @@ import com.ureca.picky_be.jpa.entity.movie.FilmCrew;
 import com.ureca.picky_be.jpa.entity.movie.Movie;
 import com.ureca.picky_be.jpa.entity.movie.MovieBehindVideo;
 import com.ureca.picky_be.jpa.entity.platform.Platform;
+import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -138,4 +141,40 @@ public class MovieService implements MovieUseCase{
         List<MovieDocument> movies = movieManager.getSearchMovies(keyword);
         return movieDtoMapper.toGetSearchMovies(movies);
     }
+
+    private final MovieRepository movieRepository;
+    @Override
+    public List<GetSearchMoviesResp> getSearchMoviesMysql(String keyword) {
+        // MySQL에서 검색된 영화들
+        List<Tuple> tuples = movieRepository.findSearchMoviesMySQL(keyword);
+
+        List<GetSearchMoviesMysqlResp> mysqlResps = tuples.stream()
+                .map(tuple -> {
+                    Long movieId = tuple.get("movieId", Long.class);
+                    String movieTitle = tuple.get("movieTitle", String.class);
+                    String moviePosterUrl = tuple.get("moviePosterUrl", String.class);
+                    Date releaseDate = tuple.get("releaseDate", Date.class);
+                    String originalLanguage = tuple.get("originalLanguage", String.class);
+
+                    // DTO로 변환
+                    return new GetSearchMoviesMysqlResp(movieId, movieTitle, moviePosterUrl, releaseDate, originalLanguage);
+                })
+                .collect(Collectors.toList());
+
+        // Stream을 사용하여 resps 리스트 처리
+        return mysqlResps.stream()
+                .map(resp -> {
+                    // 각 영화의 movieId
+                    Long movieId = resp.movieId();
+
+                    // movieManager를 통해 장르 리스트를 가져옴
+                    List<Genre> genres = movieManager.getGenres();
+                    List<GetGenres> getGenres = movieDtoMapper.toGetGenres(genres);
+
+                    // GetSearchMoviesResp에 필요한 데이터 담기
+                    return movieDtoMapper.toGetSearchMysqlMovies(resp, getGenres);
+                })
+                .collect(Collectors.toList()); // 최종 리스트로 변환하여 반환
+    }
+
 }

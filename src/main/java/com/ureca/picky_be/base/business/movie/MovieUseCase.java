@@ -26,5 +26,6 @@ public interface MovieUseCase {
     Slice<GetUserLikeMovieResp> getUserLikeMoviesByNickname(PageRequest pageRequest, GetUserLikeMovieReq req);
 
     List<GetSearchMoviesResp> getSearchMovies(String keyword);
+    List<GetSearchMoviesResp> getSearchMoviesMysql(String keyword);
 
 }

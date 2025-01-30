@@ -1,10 +1,9 @@
 package com.ureca.picky_be.base.persistence.movie;
 
-import com.ureca.picky_be.base.business.movie.dto.GetRecommendMovieProjection;
-import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieProjection;
-import com.ureca.picky_be.base.business.movie.dto.GetSimpleMovieResp;
+import com.ureca.picky_be.base.business.movie.dto.*;
 import com.ureca.picky_be.base.business.user.dto.GetMoviesForRegisResp;
 import com.ureca.picky_be.jpa.entity.movie.Movie;
+import jakarta.persistence.Tuple;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -156,7 +155,17 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 """)
     List<GetRecommendMovieProjection> findMoviesWithGenresAndPlatforms(@Param("movieIds") List<Long> movieIds);
 
-
+    @Query(value = """
+    SELECT 
+        distinct m.id AS movieId,
+        m.title AS movieTitle,
+        m.poster_url AS moviePosterUrl,
+        m.release_date AS releaseDate,
+        m.original_language AS originalLanguage
+    FROM movie m
+    WHERE MATCH(m.title) AGAINST(:keyword IN BOOLEAN MODE)
+""", nativeQuery = true)
+    List<Tuple> findSearchMoviesMySQL(@Param("keyword") String keyword);
 
 }
 
