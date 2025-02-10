@@ -102,4 +102,12 @@ jobs:
             sudo docker rm picky-backend
             sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
-            sudo docker run --add-host ${{secrets.ADDITIONAL_HOST}} -d -p 80:8080 --name picky-backend -e SPRING_PROFILES_ACTIVE=aws ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
+            sudo docker run \
+            --add-host ${{ secrets.ADDITIONAL_HOST }} \
+            --log-driver=awslogs \
+            --log-opt awslogs-group=picky-backend \
+            --log-opt awslogs-stream=picky-backend-log \
+            --log-opt awslogs-region=ap-northeast-2 \
+            -d -p 80:8080 --name picky-backend \
+            -e SPRING_PROFILES_ACTIVE=aws \
+            ${{ secrets.DOCKER_USERNAME }}/picky-backend:latest
