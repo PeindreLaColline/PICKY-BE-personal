@@ -18,7 +18,7 @@ public class DummyController {
 
     @PostMapping
     public void addDummyMoive(@RequestParam Long newMovie) {
-        for(Long movieId=newMovie; movieId<=1426140; movieId++) {
+        for(Long movieId=newMovie; movieId<=20; movieId++) {
             AddMovieAuto addMovieAuto = movieManager.saveMovieAuto(movieId);
             if(addMovieAuto == null
                     || addMovieAuto.genres() == null || addMovieAuto.genres().isEmpty()
