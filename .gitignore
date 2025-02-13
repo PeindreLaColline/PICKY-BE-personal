@@ -63,3 +63,9 @@ out/
 
 #docker
 docker-compose.yml
+
+#Elastic
+**/*.conf
+**/logstash.yml
+Dockerfile-es
+Dockerfile-logstash
