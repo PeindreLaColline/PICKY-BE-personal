@@ -18,7 +18,7 @@ public class DummyController {
 
     @PostMapping
     public void addDummyMoive(@RequestParam Long newMovie) {
-        for(Long movieId=newMovie; movieId<=20; movieId++) {
+        for(Long movieId=newMovie; movieId<=50; movieId++) {
             AddMovieAuto addMovieAuto = movieManager.saveMovieAuto(movieId);
             if(addMovieAuto == null
                     || addMovieAuto.genres() == null || addMovieAuto.genres().isEmpty()
@@ -30,7 +30,7 @@ public class DummyController {
             movieManager.addActorsAuto(addMovieAuto.credits(), movie);
             movieManager.addDirectorsAuto(addMovieAuto.credits(), movie);
             List<Genre> genres = movieManager.getGenre(movieId);
-            movieManager.addMovieElastic(movie, genres);
+            //movieManager.addMovieElastic(movie, genres);
         }
     }
 }
