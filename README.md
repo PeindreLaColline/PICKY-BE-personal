@@ -9,3 +9,7 @@
 2. [Logstash란?](https://velog.io/@p_l_colline/Elastic-Stack-Logstash)
 3. [Logstash를 활용한 MySQL과 ElasticSearch의 동기화](https://velog.io/@p_l_colline/Logstash%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-MySQL%EA%B3%BC-ElasticSearch%EC%9D%98-%EB%8F%99%EA%B8%B0%ED%99%94-Docker)
 4. [Logstash구축 Troubleshooting](https://velog.io/@p_l_colline/Logstash-%EA%B5%AC%EC%B6%95-troubleshooting)
+
+---
+### System Architecture
+![System Architecture](https://github.com/user-attachments/assets/640b816c-4b2f-4508-9f6e-cfda479a35c0)
